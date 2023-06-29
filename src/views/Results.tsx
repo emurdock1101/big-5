@@ -44,7 +44,7 @@ const Results: React.FC<ResultsProps> = (props: ResultsProps) => {
       marginBottom: 28, // lines up with table results on xl screen
       backgroundColor: theme.palette.primary.main,
       '&:hover': {
-        backgroundColor: theme.palette.info.main,
+        backgroundColor: theme.palette.secondary.dark,
       },
       color: theme.palette.common.white,
       width: '200px',

@@ -35,7 +35,7 @@ const Contact: React.FC<ContactProps> = (props: ContactProps) => {
     },
     bookNowButton: {
       '&:hover': {
-        backgroundColor: theme.palette.info.main,
+        backgroundColor: theme.palette.secondary.dark,
       },
       backgroundColor: theme.palette.primary.main,
       color: '#F8F7F3', //off-white
