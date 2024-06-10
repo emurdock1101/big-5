@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Button,
   Grid,
@@ -105,13 +106,8 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
   const female: string = 'female';
 
   return (
-    <>
-      <Grid
-        container
-        justifyContent='center'
-        alignItems='center'
-        spacing={2}
-        className={styles.info}>
+    <React.Fragment>
+      <Grid container justifyContent='center' alignItems='center' spacing={2} className={styles.info}>
         <Grid item xs={12}>
           <Grid container justifyContent='center' alignItems='center'>
             <Grid item xs={12} md={10} lg={8}>
@@ -125,46 +121,42 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
                 <Divider />
                 <Typography variant='h5'>What is the format of this test?</Typography>
                 <Typography variant='subtitle1'>
-                  You will be presented with 100 phrases, such as: “I am sad much of the time”. You
-                  will then be asked to choose one of five options that indicates how much you agree
-                  or disagree with the phrase as it applies to you.
+                  You will be presented with 100 phrases, such as: “I am sad much of the time”. You will then be asked
+                  to choose one of five options that indicates how much you agree or disagree with the phrase as it
+                  applies to you.
                 </Typography>
                 <Typography variant='h5'>How many times can I take this test?</Typography>
                 <Typography variant='subtitle1'>
-                  You can only take the test once. A genuinely accurate personality test must be
-                  taken and scored in a standardized manner to make it as similar to those of the
-                  comparison group as possible. Furthermore, if you take the test, look at your
-                  results, and then re-take it, your second results will be subject to biases
-                  introduced by your now-expanded knowledge of your personality. That means you will
-                  change your responses, likely distorting your answers.
+                  You can only take the test once. A genuinely accurate personality test must be taken and scored in a
+                  standardized manner to make it as similar to those of the comparison group as possible. Furthermore,
+                  if you take the test, look at your results, and then re-take it, your second results will be subject
+                  to biases introduced by your now-expanded knowledge of your personality. That means you will change
+                  your responses, likely distorting your answers.
                 </Typography>
                 <Typography variant='h5'>Before the Test:</Typography>
                 <Typography variant='subtitle1'>
-                  As you can only take the test once, you should answer the 100 questions carefully
-                  and thoughtfully. Answer them so they describe you as you are, typically or on
-                  average, in your day-to-day life. Please consider the following seriously:
+                  As you can only take the test once, you should answer the 100 questions carefully and thoughtfully.
+                  Answer them so they describe you as you are, typically or on average, in your day-to-day life. Please
+                  consider the following seriously:
                 </Typography>
                 <ol>
                   <li>
-                    <Typography variant='subtitle1'>
-                      Make sure you've eaten recently and are not hungry.
-                    </Typography>
+                    <Typography variant='subtitle1'>Make sure you've eaten recently and are not hungry.</Typography>
                   </li>
                   <li>
                     <Typography variant='subtitle1'>Make sure you are well rested.</Typography>
                   </li>
                   <li>
                     <Typography variant='subtitle1'>
-                      If you are feeling unhappier or more anxious than usual, pick another time to
-                      complete the questions.
+                      If you are feeling unhappier or more anxious than usual, pick another time to complete the
+                      questions.
                     </Typography>
                   </li>
                   <li>
                     <Typography variant='subtitle1'>
-                      If you are currently depressed or suffering from an anxiety disorder, then
-                      your results will be skewed unreasonably toward the negative, so it’s better
-                      to wait to assess your personality until you are more stable in your emotional
-                      responses.
+                      If you are currently depressed or suffering from an anxiety disorder, then your results will be
+                      skewed unreasonably toward the negative, so it’s better to wait to assess your personality until
+                      you are more stable in your emotional responses.
                     </Typography>
                   </li>
                   <li>
@@ -176,23 +168,19 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
                     <Typography variant='subtitle1'>Make sure you are not rushed.</Typography>
                   </li>
                   <li>
-                    <Typography variant='subtitle1'>
-                      Find a quiet area with no other people around.
-                    </Typography>
+                    <Typography variant='subtitle1'>Find a quiet area with no other people around.</Typography>
                   </li>
                 </ol>
                 <Typography variant='h5'>While taking the test:</Typography>
                 <ol>
                   <li>
                     <Typography variant='subtitle1'>
-                      Don't spend too much time on any one question. If you are not sure of an
-                      answer, trust your instinct.
+                      Don't spend too much time on any one question. If you are not sure of an answer, trust your
+                      instinct.
                     </Typography>
                   </li>
                   <li>
-                    <Typography variant='subtitle1'>
-                      Be as honest with yourself as you can.
-                    </Typography>
+                    <Typography variant='subtitle1'>Be as honest with yourself as you can.</Typography>
                   </li>
                 </ol>
                 <div>
@@ -215,23 +203,13 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
                     <RadioGroup row={true} value={gender}>
                       <FormControlLabel
                         value={male}
-                        control={
-                          <Radio
-                            color='primary'
-                            checked={gender === male}
-                            onClick={() => setGender(male)}
-                          />
-                        }
+                        control={<Radio color='primary' checked={gender === male} onClick={() => setGender(male)} />}
                         label='Male'
                       />
                       <FormControlLabel
                         value={female}
                         control={
-                          <Radio
-                            color='primary'
-                            checked={gender === female}
-                            onClick={() => setGender(female)}
-                          />
+                          <Radio color='primary' checked={gender === female} onClick={() => setGender(female)} />
                         }
                         label='Female'
                       />
@@ -260,7 +238,7 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
           </Grid>
         </Grid>
       </Grid>
-    </>
+    </React.Fragment>
   );
 };
 

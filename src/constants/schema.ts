@@ -12,11 +12,11 @@ export enum Aspect {
 }
 
 export enum Ocean {
-  Openness = 'Openness',
-  Conscientiousness = 'Conscientiousness',
   Extraversion = 'Extraversion',
-  Agreeableness = 'Agreeableness',
   Neuroticism = 'Neuroticism',
+  Agreeableness = 'Agreeableness',
+  Conscientiousness = 'Conscientiousness',
+  Openness = 'Openness',
 }
 
 export type Big5Data = {
@@ -42,4 +42,9 @@ export type Answer = {
 export type EscsData = {
   mean: number;
   stdDev: number;
+};
+
+export type User = {
+  loggedIn?: boolean;
+  completed?: boolean;
 };

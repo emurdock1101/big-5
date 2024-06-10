@@ -1,3 +1,4 @@
+import React from 'react';
 import {makeStyles, TextField, Button, Grid, Typography, Paper, Box} from '@material-ui/core';
 import {useState} from 'react';
 import {Auth} from 'aws-amplify';
@@ -100,13 +101,11 @@ const Forgot = (props: ForgotProps) => {
       await Auth.forgotPassword(email);
       setCodeSent(true);
     } catch (error: any) {
-      console.log(JSON.stringify(error));
+      console.error(JSON.stringify(error));
       if (!email || !email.length) {
         setAlertContent('Registered email must be provided.');
       } else if (error.code === 'UserNotFoundException') {
-        setAlertContent(
-          'User is not found. Try again with a registered email, or sign up below to create an account.',
-        );
+        setAlertContent('User is not found. Try again with a registered email, or sign up below to create an account.');
       } else if (error.code.length) {
         setAlertContent(error.code);
       } else if (error.log.length) {
@@ -132,7 +131,7 @@ const Forgot = (props: ForgotProps) => {
         showAlert(true);
       }
     } catch (error: any) {
-      console.log(JSON.stringify(error));
+      console.error(JSON.stringify(error));
       if (!email || !email.length) {
         setAlertContent('Username must be provided.');
       } else if (!code || !code.length) {
@@ -153,7 +152,7 @@ const Forgot = (props: ForgotProps) => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <Banner pageTitle='Reset Password' />
       <Grid container justifyContent='center' alignItems='center'>
         <Grid item xs={10} md={7}>
@@ -167,9 +166,9 @@ const Forgot = (props: ForgotProps) => {
               {alertContent}
             </Alert>
           ) : (
-            <>
+            <React.Fragment>
               <Box className={styles.box} />
-            </>
+            </React.Fragment>
           )}
           {!codeSent && (
             <Paper elevation={2} className={styles.paper}>
@@ -182,11 +181,7 @@ const Forgot = (props: ForgotProps) => {
                 onChange={(e) => setEmail(e.target.value)}
                 className={styles.input}
               />
-              <Button
-                color='primary'
-                variant='contained'
-                onClick={sendCode}
-                className={styles.button}>
+              <Button color='primary' variant='contained' onClick={sendCode} className={styles.button}>
                 Send reset code
               </Button>
             </Paper>
@@ -240,7 +235,7 @@ const Forgot = (props: ForgotProps) => {
           )}
         </Grid>
       </Grid>
-    </>
+    </React.Fragment>
   );
 };
 

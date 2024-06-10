@@ -1,3 +1,4 @@
+import React from 'react';
 import {makeStyles, TextField, Button, Grid, Typography, Paper, Box} from '@material-ui/core';
 import {useState} from 'react';
 import {Auth} from 'aws-amplify';
@@ -87,7 +88,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
       props.onLogIn();
       handleNav('/results');
     } catch (error: any) {
-      console.log(JSON.stringify(error));
+      console.error(JSON.stringify(error));
       if (!username || !username.length) {
         setAlertContent('Username must be provided.');
       } else if (!password || !password.length) {
@@ -108,7 +109,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <Banner pageTitle='Log In' />
       <Grid container justifyContent='center' alignItems='center'>
         <Grid item xs={10} md={7}>
@@ -122,9 +123,9 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
               {alertContent}
             </Alert>
           ) : (
-            <>
+            <React.Fragment>
               <Box className={styles.box} />
-            </>
+            </React.Fragment>
           )}
           <Paper elevation={2} className={styles.paper}>
             <TextField
@@ -158,7 +159,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
           </Paper>
         </Grid>
       </Grid>
-    </>
+    </React.Fragment>
   );
 };
 

@@ -1,3 +1,4 @@
+import React from 'react';
 import {Box, Typography, makeStyles} from '@material-ui/core';
 import {useEffect, useState} from 'react';
 
@@ -75,14 +76,14 @@ const OceanBanner: React.FC<OceanBannerProps> = (props: OceanBannerProps) => {
       </div>
 
       {isMobile && (
-        <>
+        <React.Fragment>
           <div className={styles.row}>
             <Divider orientation='vertical' flexItem className={styles.vertical} />
             <Typography className={styles.aspectsBelow}> {props.aspect1}</Typography>
             <Divider orientation='vertical' flexItem className={styles.vertical} />
             <Typography className={styles.aspectsBelow}>{props.aspect2}</Typography>
           </div>
-        </>
+        </React.Fragment>
       )}
     </Box>
   );

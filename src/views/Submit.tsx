@@ -44,10 +44,10 @@ const Submit: React.FC<SubmitProps> = (props: SubmitProps) => {
     const gender: string = sessionStorage.getItem('gender') ?? 'gender_unknown';
 
     const testResultsObj = {
-      name, 
+      name,
       gender,
-      percentiles
-    }
+      percentiles,
+    };
 
     Storage.configure({
       bucket: process.env.REACT_APP_BUCKET_NAME,
@@ -63,13 +63,8 @@ const Submit: React.FC<SubmitProps> = (props: SubmitProps) => {
   };
 
   return (
-    <>
-      <Grid
-        container
-        justifyContent='center'
-        alignItems='center'
-        spacing={2}
-        className={styles.info}>
+    <React.Fragment>
+      <Grid container justifyContent='center' alignItems='center' spacing={2} className={styles.info}>
         <Grid item xs={12}>
           <Grid container justifyContent='center' alignItems='center'>
             <Grid item xs={12} md={10} lg={8}>
@@ -80,18 +75,10 @@ const Submit: React.FC<SubmitProps> = (props: SubmitProps) => {
                   If you are satisfied with your answers, submit below to see your results.
                 </Typography>
                 <div className={styles.buttons}>
-                  <Button
-                    color='primary'
-                    variant='contained'
-                    onClick={processResults}
-                    className={styles.buttonOne}>
+                  <Button color='primary' variant='contained' onClick={processResults} className={styles.buttonOne}>
                     SUBMIT
                   </Button>
-                  <Button
-                    color='default'
-                    variant='outlined'
-                    onClick={props.prevStep}
-                    className={styles.buttonTwo}>
+                  <Button color='default' variant='outlined' onClick={props.prevStep} className={styles.buttonTwo}>
                     BACK TO TEST
                   </Button>
                 </div>
@@ -100,7 +87,7 @@ const Submit: React.FC<SubmitProps> = (props: SubmitProps) => {
           </Grid>
         </Grid>
       </Grid>
-    </>
+    </React.Fragment>
   );
 };
 

@@ -2,9 +2,7 @@ import {Grid, Typography, makeStyles, Box, Button} from '@material-ui/core';
 import {useEffect, useState} from 'react';
 import {Facebook, Instagram, Twitter} from '@material-ui/icons';
 
-interface BookNowProps {}
-
-const BookNow: React.FC<BookNowProps> = (props: BookNowProps) => {
+const BookNow: React.FC = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 750);
   const useStyles = makeStyles((theme) => ({
     expert: {
@@ -77,8 +75,8 @@ const BookNow: React.FC<BookNowProps> = (props: BookNowProps) => {
             <Grid container justifyContent='center' alignItems='flex-start'>
               <Grid item xs={10}>
                 <Typography variant='h6'>
-                  Schedule a FREE 15 minute discovery call to learn more about how you can benefit
-                  from our behavioral coaching packages or how to review your Personality+ score.
+                  Schedule a FREE 15 minute discovery call to learn more about how you can benefit from our behavioral
+                  coaching packages or how to review your Personality+ score.
                 </Typography>
               </Grid>
             </Grid>
@@ -94,16 +92,10 @@ const BookNow: React.FC<BookNowProps> = (props: BookNowProps) => {
               </Button>
             </a>
             <div className={styles.socialMedia}>
-              <a
-                href='https://www.facebook.com/DiscoverPersonalityPlus/'
-                target='_blank'
-                rel='noreferrer'>
+              <a href='https://www.facebook.com/DiscoverPersonalityPlus/' target='_blank' rel='noreferrer'>
                 <Facebook className={styles.facebook} />
               </a>
-              <a
-                href='https://instagram.com/discover_personalityplus'
-                target='_blank'
-                rel='noreferrer'>
+              <a href='https://instagram.com/discover_personalityplus' target='_blank' rel='noreferrer'>
                 <Instagram className={styles.facebook} />
               </a>
               <a href='https://twitter.com/PersonalityB5' target='_blank' rel='noreferrer'>

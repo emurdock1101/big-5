@@ -5,39 +5,23 @@ import {UserContext} from '../App';
 import Loading from './Loading';
 
 interface ProtectedRouteProps {
-  route: 'results' | 'test' | 'loggedOut';
+  type: 'redirectIfLoggedIn' | 'redirectIfCompleted' | 'redirectIfUncompleted';
   component: JSX.Element;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = (props: ProtectedRouteProps) => {
   const {user} = useContext(UserContext);
 
-  if (props.route === 'results') {
-    if (user.loggedIn === undefined || user.completed === undefined) {
-      return <Loading />;
-    } else {
-      return user.loggedIn === 'loggedIn' && user.completed === 'completed' ? (
-        props.component
-      ) : (
-        <Navigate to={'/'} replace />
-      );
-    }
-  } else if (props.route === 'test') {
-    if (user.loggedIn === undefined || user.completed === undefined) {
-      return <Loading />;
-    } else {
-      return user.loggedIn === 'loggedIn' && user.completed !== 'completed' ? (
-        props.component
-      ) : (
-        <Navigate to={'/'} replace />
-      );
-    }
-  } else if (props.route === 'loggedOut') {
-    if (user.loggedIn === undefined) {
-      return <Loading />;
-    } else {
-      return user.loggedIn !== 'loggedIn' ? props.component : <Navigate to={'/'} replace />;
-    }
+  if (user.loggedIn === undefined || user.completed === undefined) {
+    return <Loading />;
+  }
+
+  if (props.type === 'redirectIfLoggedIn') {
+    return user.loggedIn ? <Navigate to={'/'} replace /> : props.component;
+  } else if (props.type === 'redirectIfCompleted') {
+    return user.completed ? <Navigate to={'/'} replace /> : props.component;
+  } else if (props.type === 'redirectIfUncompleted') {
+    return !user.completed ? <Navigate to={'/'} replace /> : props.component;
   }
 
   return <Navigate to={'/'} replace />;

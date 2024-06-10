@@ -8,12 +8,12 @@ import Equalizer from '@mui/icons-material/Equalizer';
 import {useEffect, useState} from 'react';
 
 interface TabPanelProps {
-  children?: React.ReactNode;
+  children: React.ReactNode;
   index: number;
   value: number;
 }
 
-function TabPanel(props: TabPanelProps) {
+const TabPanel = (props: TabPanelProps) => {
   const {children, value, index, ...other} = props;
 
   return (
@@ -23,14 +23,10 @@ function TabPanel(props: TabPanelProps) {
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}>
-      {value === index && (
-        <Box sx={{paddingTop: 30, paddingBottom: 30}}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{paddingTop: 30, paddingBottom: 30}}>{children}</Box>}
     </div>
   );
-}
+};
 
 function a11yProps(index: number) {
   return {
@@ -39,9 +35,7 @@ function a11yProps(index: number) {
   };
 }
 
-interface AboutTheTestProps {}
-
-const AboutTheTest: React.FC<AboutTheTestProps> = (props: AboutTheTestProps) => {
+const AboutTheTest: React.FC = () => {
   const [value, setValue] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
 
@@ -82,10 +76,7 @@ const AboutTheTest: React.FC<AboutTheTestProps> = (props: AboutTheTestProps) => 
       backgroundColor: '#F8F7F3',
       borderLeft: `6px solid ${theme.palette.primary.main}`,
     },
-    box1: {
-      width: '100%',
-    },
-    box2: {
+    tabBox: {
       borderBottom: '1px solid lightgrey',
       borderColor: 'divider',
     },
@@ -115,32 +106,12 @@ const AboutTheTest: React.FC<AboutTheTestProps> = (props: AboutTheTestProps) => 
       <Typography variant='h3' className={styles.aboutTestTitle}>
         About the test
       </Typography>
-      <Box className={styles.box1}>
-        <Box className={styles.box2}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label='basic tabs example'
-            className={styles.tabs}
-            centered>
-            <Tab
-              label={isMobile ? '' : 'LENGTH'}
-              {...a11yProps(0)}
-              icon={<Timer />}
-              className={styles.tab}
-            />
-            <Tab
-              label={isMobile ? '' : 'RESULTS'}
-              {...a11yProps(1)}
-              icon={<Equalizer />}
-              className={styles.tab}
-            />
-            <Tab
-              label={isMobile ? '' : 'BACKGROUND'}
-              {...a11yProps(2)}
-              icon={<MenuBook />}
-              className={styles.tab}
-            />
+      <Box>
+        <Box className={styles.tabBox}>
+          <Tabs value={value} onChange={handleChange} aria-label='basic tabs example' className={styles.tabs} centered>
+            <Tab label={isMobile ? '' : 'LENGTH'} {...a11yProps(0)} icon={<Timer />} className={styles.tab} />
+            <Tab label={isMobile ? '' : 'RESULTS'} {...a11yProps(1)} icon={<Equalizer />} className={styles.tab} />
+            <Tab label={isMobile ? '' : 'BACKGROUND'} {...a11yProps(2)} icon={<MenuBook />} className={styles.tab} />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>

@@ -76,32 +76,8 @@ app.post('/webhook', async function (req, res) {
     throw new Error("Can't find email of payor");
   }
 
-  console.log(userEmail);
-
   const cognito = new aws.CognitoIdentityServiceProvider();
   const UserPoolId = process.env.AUTH_STRIPEDEMO1C66A4D4_USERPOOLID ?? 'us-east-1_QlzfM0BUX';
-
-  // const userExists = false;
-
-  // try {
-  //   const existingUser = await cognito.getUser({
-  //     UserPoolId,
-  //     Username: userEmail,
-  //   });
-
-  //   if (existingUser) {
-  //     userExists = true;
-  //   }
-  // } catch (adminGetUserError) {
-  //   if (adminGetUserError.name && adminGetUserError.name === "UserNotFoundException") {
-  //     // The user does not exist
-  //   } else {
-  //     // It was another type of error
-  //     throw adminGetUserError;
-  //   }
-  // }
-
-  // if (userExists) {}
 
   cognito.adminCreateUser(
     {

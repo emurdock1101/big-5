@@ -1,11 +1,10 @@
+import React from 'react';
 import {Grid, Paper, Typography, makeStyles} from '@material-ui/core';
 
 import Banner from '../components/Banner';
 import {useEffect, useState} from 'react';
 
-interface PrivacyProps {}
-
-const Privacy: React.FC<PrivacyProps> = (props: PrivacyProps) => {
+const Privacy: React.FC = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 750);
   const useStyles = makeStyles((theme) => ({
     info: {
@@ -47,27 +46,26 @@ const Privacy: React.FC<PrivacyProps> = (props: PrivacyProps) => {
   }, []);
 
   return (
-    <>
+    <React.Fragment>
       <Banner pageTitle='Privacy' />
       <Grid container justifyContent='center' alignItems='center' className={styles.container}>
         <Grid item xs={10}>
           <Paper elevation={2} className={styles.paper}>
             <Typography variant='subtitle1' className={styles.top}>
-              Part of the information you share on our website is stored and used. We collect your
-              email and test results. Your credit card info is collected by Stripe. Your browser
-              info, IP address, and fingerprint are not stored.
+              Part of the information you share on our website is stored and used. We collect your email and test
+              results. Your credit card info is collected by Stripe. Your browser info, IP address, and fingerprint are
+              not stored.
             </Typography>
             <Typography variant='subtitle1' className={styles.info}>
               No personal data is sold or shared with anyone. Never have, never will.
             </Typography>
             <Typography variant='subtitle1' className={styles.info}>
-              If you have any questions about this privacy policy, please reach out on our contact
-              page.
+              If you have any questions about this privacy policy, please reach out on our contact page.
             </Typography>
           </Paper>
         </Grid>
       </Grid>
-    </>
+    </React.Fragment>
   );
 };
 

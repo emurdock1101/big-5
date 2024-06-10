@@ -2,9 +2,7 @@ import {Box, Grid, Typography, makeStyles} from '@material-ui/core';
 import {Facebook, Instagram, Twitter} from '@material-ui/icons';
 import {useEffect, useState} from 'react';
 
-interface BigFooterProps {}
-
-const BigFooter: React.FC<BigFooterProps> = (props: BigFooterProps) => {
+const BigFooter: React.FC = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 750);
   const useStyles = makeStyles((theme) => ({
     followUs: {
@@ -61,16 +59,10 @@ const BigFooter: React.FC<BigFooterProps> = (props: BigFooterProps) => {
               Follow us on social media
             </Typography>
             <div className={styles.row}>
-              <a
-                href='https://www.facebook.com/DiscoverPersonalityPlus/'
-                target='_blank'
-                rel='noreferrer'>
+              <a href='https://www.facebook.com/DiscoverPersonalityPlus/' target='_blank' rel='noreferrer'>
                 <Facebook className={styles.facebook} />
               </a>
-              <a
-                href='https://instagram.com/discover_personalityplus'
-                target='_blank'
-                rel='noreferrer'>
+              <a href='https://instagram.com/discover_personalityplus' target='_blank' rel='noreferrer'>
                 <Instagram className={styles.facebook} />
               </a>
               <a href='https://twitter.com/PersonalityB5' target='_blank' rel='noreferrer'>

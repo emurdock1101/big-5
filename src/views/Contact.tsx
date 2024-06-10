@@ -1,12 +1,11 @@
+import React from 'react';
 import {Facebook, Instagram, Mail, Twitter} from '@material-ui/icons';
 import {Grid, Paper, Typography, Button, makeStyles} from '@material-ui/core';
 import {useEffect, useState} from 'react';
 
 import Banner from '../components/Banner';
 
-interface ContactProps {}
-
-const Contact: React.FC<ContactProps> = (props: ContactProps) => {
+const Contact: React.FC = () => {
   const useStyles = makeStyles((theme) => ({
     facebook: {
       fontSize: isMobile ? 37 : 45,
@@ -18,7 +17,7 @@ const Contact: React.FC<ContactProps> = (props: ContactProps) => {
     },
     help: {
       fontSize: isMobile ? 20 : 25,
-      marginBottom: 30
+      marginBottom: 30,
     },
     reachOut: {
       fontSize: isMobile ? 17 : 20,
@@ -42,15 +41,15 @@ const Contact: React.FC<ContactProps> = (props: ContactProps) => {
       width: '250px',
       height: '50px',
       borderRadius: '30px',
-      marginTop: 30
+      marginTop: 30,
     },
     bookNowLink: {
       textDecoration: 'none',
       color: '#F8F7F3', //off-white
     },
     email: {
-      fontWeight: 600
-    }
+      fontWeight: 600,
+    },
   }));
   const [isMobile, setIsMobile] = useState(window.innerWidth < 750);
 
@@ -70,7 +69,7 @@ const Contact: React.FC<ContactProps> = (props: ContactProps) => {
 
   const styles = useStyles();
   return (
-    <>
+    <React.Fragment>
       <Banner pageTitle='Contact Us' />
       <Grid container justifyContent='center' alignItems='center'>
         <Grid item xs={10}>
@@ -79,11 +78,12 @@ const Contact: React.FC<ContactProps> = (props: ContactProps) => {
               How can we help?
             </Typography>
             <Typography variant='subtitle1' className={styles.reachOut}>
-              Ask about the Personality+ test or our data-driven psychological coaching services: <span className={styles.email}>discoverpersonalityplus@gmail.com</span>
+              Ask about the Personality+ test or our data-driven psychological coaching services:{' '}
+              <span className={styles.email}>discoverpersonalityplus@gmail.com</span>
             </Typography>
             <Typography variant='subtitle1' className={styles.reachOut}>
-              Schedule a FREE 15 minute discovery call to learn more about how you can benefit from
-              our behavioral coaching packages or how to review your Personality+ score.
+              Schedule a FREE 15 minute discovery call to learn more about how you can benefit from our behavioral
+              coaching packages or how to review your Personality+ score.
             </Typography>
             <a
               href='https://calendly.com/discoverpersonalityplus'
@@ -95,16 +95,10 @@ const Contact: React.FC<ContactProps> = (props: ContactProps) => {
               </Button>
             </a>
             <div className={styles.socialLinks}>
-              <a
-                href='https://www.facebook.com/DiscoverPersonalityPlus/'
-                target='_blank'
-                rel='noreferrer'>
+              <a href='https://www.facebook.com/DiscoverPersonalityPlus/' target='_blank' rel='noreferrer'>
                 <Facebook className={styles.facebook} />
               </a>
-              <a
-                href='https://instagram.com/discover_personalityplus'
-                target='_blank'
-                rel='noreferrer'>
+              <a href='https://instagram.com/discover_personalityplus' target='_blank' rel='noreferrer'>
                 <Instagram className={styles.facebook} />
               </a>
               <a href='https://twitter.com/PersonalityB5' target='_blank' rel='noreferrer'>
@@ -117,7 +111,7 @@ const Contact: React.FC<ContactProps> = (props: ContactProps) => {
           </Paper>
         </Grid>
       </Grid>
-    </>
+    </React.Fragment>
   );
 };
 

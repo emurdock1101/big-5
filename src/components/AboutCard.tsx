@@ -96,12 +96,8 @@ const AboutCard = (props: AboutCardProps) => {
 
       <CardActions disableSpacing>
         {props.member === 'elliot' && (
-          <>
-            <a
-              className={styles.link}
-              href='https://github.com/emurdock1101'
-              target='_blank'
-              rel='noreferrer'>
+          <React.Fragment>
+            <a className={styles.link} href='https://github.com/emurdock1101' target='_blank' rel='noreferrer'>
               <IconButton aria-label="elliot's github">
                 <GitHub className={styles.icon} />
               </IconButton>
@@ -115,19 +111,15 @@ const AboutCard = (props: AboutCardProps) => {
                 <LinkedIn className={styles.icon} />
               </IconButton>
             </a>
-            <a
-              className={styles.link}
-              href='https://www.elliotchanningmurdock.com/'
-              target='_blank'
-              rel='noreferrer'>
+            <a className={styles.link} href='https://www.elliotchanningmurdock.com/' target='_blank' rel='noreferrer'>
               <IconButton aria-label="elliot's website">
                 <Web className={styles.icon} />
               </IconButton>
             </a>
-          </>
+          </React.Fragment>
         )}
         {props.member === 'patrick' && (
-          <>
+          <React.Fragment>
             <a
               className={styles.link}
               href='https://www.facebook.com/DiscoverPersonalityPlus/'
@@ -146,22 +138,14 @@ const AboutCard = (props: AboutCardProps) => {
                 <Instagram className={styles.icon} />
               </IconButton>
             </a>
-            <a
-              className={styles.link}
-              href='https://twitter.com/PersonalityB5'
-              target='_blank'
-              rel='noreferrer'>
+            <a className={styles.link} href='https://twitter.com/PersonalityB5' target='_blank' rel='noreferrer'>
               <IconButton aria-label="patrick's twitter">
                 <Twitter className={styles.icon} />
               </IconButton>
             </a>
-          </>
+          </React.Fragment>
         )}
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label='show more'>
+        <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label='show more'>
           <ExpandMoreIcon fontSize='large' className={styles.icon} />
         </ExpandMore>
       </CardActions>

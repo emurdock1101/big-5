@@ -100,7 +100,7 @@ const Signup = (props: SignupProps) => {
       const userCognito = await Auth.signIn(email, password);
       setUser(userCognito);
     } catch (error: any) {
-      console.log(JSON.stringify(error));
+      console.error(JSON.stringify(error));
       if (!email || !email.length) {
         setAlertContent('Username must be provided.');
       } else if (!password || !password.length) {
@@ -137,13 +137,8 @@ const Signup = (props: SignupProps) => {
         handleNav('/test');
       }
     } catch (error: any) {
-      console.log(JSON.stringify(error));
-      if (
-        !newPassword ||
-        !newPassword.length ||
-        !newPasswordConfirm ||
-        !newPasswordConfirm.length
-      ) {
+      console.error(JSON.stringify(error));
+      if (!newPassword || !newPassword.length || !newPasswordConfirm || !newPasswordConfirm.length) {
         setAlertContent('Password must be provided.');
       } else if (error.code === 'InvalidPasswordException') {
         setAlertContent(
@@ -159,7 +154,7 @@ const Signup = (props: SignupProps) => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <Banner pageTitle='Register' />
       <Grid container justifyContent='center' alignItems='center'>
         <Grid item xs={10} md={7}>
@@ -173,9 +168,9 @@ const Signup = (props: SignupProps) => {
               {alertContent}
             </Alert>
           ) : (
-            <>
+            <React.Fragment>
               <Box className={styles.box} />
-            </>
+            </React.Fragment>
           )}
           {!user && (
             <Paper elevation={2} className={styles.paper}>
@@ -196,11 +191,7 @@ const Signup = (props: SignupProps) => {
               />
               <br></br>
               <br></br>
-              <Button
-                color='primary'
-                variant='contained'
-                onClick={signUp}
-                className={styles.button}>
+              <Button color='primary' variant='contained' onClick={signUp} className={styles.button}>
                 SIGN UP
               </Button>
             </Paper>
@@ -246,18 +237,14 @@ const Signup = (props: SignupProps) => {
                 onChange={(e) => setNewPasswordConfirm(e.target.value)}
                 className={styles.input}
               />
-              <Button
-                color='primary'
-                variant='contained'
-                onClick={register}
-                className={styles.button}>
+              <Button color='primary' variant='contained' onClick={register} className={styles.button}>
                 CREATE PASSWORD
               </Button>
             </Paper>
           )}
         </Grid>
       </Grid>
-    </>
+    </React.Fragment>
   );
 };
 

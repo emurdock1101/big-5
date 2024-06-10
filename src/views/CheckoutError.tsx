@@ -1,11 +1,10 @@
+import React from 'react';
 import {Grid, Typography, makeStyles, Button} from '@material-ui/core';
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import Banner from '../components/Banner';
 
-interface CheckoutErrorPageProps {}
-
-const CheckoutErrorPage: React.FC<CheckoutErrorPageProps> = (props: CheckoutErrorPageProps) => {
+const CheckoutErrorPage: React.FC = () => {
   const useStyles = makeStyles((theme) => ({
     buttonContainer: {
       marginTop: 60,
@@ -30,13 +29,13 @@ const CheckoutErrorPage: React.FC<CheckoutErrorPageProps> = (props: CheckoutErro
   }, []);
 
   return (
-    <>
+    <React.Fragment>
       <Banner pageTitle='Checkout Error' />
       <Grid container justifyContent='center' alignItems='center'>
         <Grid item xs={10} className={styles.info}>
           <Typography variant='h5'>
-            Something went wrong with processing your payment. If you have created an account with
-            us before using the same email, that could be the issue.
+            Something went wrong with processing your payment. If you have created an account with us before using the
+            same email, that could be the issue.
           </Typography>
           <br></br>
           <br></br>
@@ -45,11 +44,7 @@ const CheckoutErrorPage: React.FC<CheckoutErrorPageProps> = (props: CheckoutErro
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          <Grid
-            container
-            justifyContent='center'
-            alignItems='center'
-            className={styles.buttonContainer}>
+          <Grid container justifyContent='center' alignItems='center' className={styles.buttonContainer}>
             <Grid item xs={4} sm={2} className={styles.buttonItem}>
               <Button color='default' variant='contained' onClick={() => handleNav('/')}>
                 Go to home
@@ -58,7 +53,7 @@ const CheckoutErrorPage: React.FC<CheckoutErrorPageProps> = (props: CheckoutErro
           </Grid>
         </Grid>
       </Grid>
-    </>
+    </React.Fragment>
   );
 };
 

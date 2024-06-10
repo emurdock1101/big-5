@@ -15,15 +15,13 @@ import {Auth} from 'aws-amplify';
 import React from 'react';
 import {generatePdfDoc} from '../util';
 
-interface ResultsProps {}
-
 interface S3Results {
   name: string;
   gender: string;
   percentiles: Record<string, number>;
 }
 
-const Results: React.FC<ResultsProps> = (props: ResultsProps) => {
+const Results: React.FC = () => {
   const [percentiles, setPercentiles] = useState<Record<string, number> | null>(null);
   const [gender, setGender] = useState('gender');
 
@@ -164,25 +162,22 @@ const Results: React.FC<ResultsProps> = (props: ResultsProps) => {
               Your results are shown in the table and in the bar charts below.{' '}
             </Typography>
             <Typography variant='subtitle1' className={styles.info}>
-              Remember that each personality trait and aspect and your relative position with
-              respect to them has advantages and disadvantages. It is for that reason that variation
-              exists in the human population: there is a niche for each personality configuration.
-              Much of what constitutes success in life is therefore the consequence of finding the
-              place in relationships, work and personal commitment that corresponds to your unique
-              personality structure. Good luck with your personality journey!
+              Remember that each personality trait and aspect and your relative position with respect to them has
+              advantages and disadvantages. It is for that reason that variation exists in the human population: there
+              is a niche for each personality configuration. Much of what constitutes success in life is therefore the
+              consequence of finding the place in relationships, work and personal commitment that corresponds to your
+              unique personality structure. Good luck with your personality journey!
             </Typography>
             <Typography variant='subtitle1' className={styles.info}>
-              Note that if you find that the descriptions harsher than you might consider
-              appropriate this may mean that you were more self-critical than necessary when
-              completing the questions. Remember, the results are based on your own self-report,
-              compared to that of other {genderedResults}. This can occur if you were feeling
-              temporarily or chronically unhappy or anxious, or hungry, angry or judgmental when you
-              completed the questions.
+              Note that if you find that the descriptions harsher than you might consider appropriate this may mean that
+              you were more self-critical than necessary when completing the questions. Remember, the results are based
+              on your own self-report, compared to that of other {genderedResults}. This can occur if you were feeling
+              temporarily or chronically unhappy or anxious, or hungry, angry or judgmental when you completed the
+              questions.
             </Typography>
             <Typography variant='subtitle1' className={styles.info}>
               <strong>
-                To learn more about our behavioral coaching services, click to schedule a FREE 15
-                minute discovery call.
+                To learn more about our behavioral coaching services, click to schedule a FREE 15 minute discovery call.
               </strong>
             </Typography>
             <a

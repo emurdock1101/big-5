@@ -4,9 +4,7 @@ import {useEffect} from 'react';
 import AboutCard from '../components/AboutCard';
 import Banner from '../components/Banner';
 
-interface AboutProps {}
-
-const About: React.FC<AboutProps> = (props: AboutProps) => {
+const About: React.FC = () => {
   useEffect(() => {
     document?.querySelector('body')?.scrollTo({top: 0, left: 0, behavior: 'smooth'});
   }, []);

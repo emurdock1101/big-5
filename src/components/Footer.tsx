@@ -1,9 +1,7 @@
 import {Box, Grid, Typography, makeStyles} from '@material-ui/core';
 import {useEffect, useState} from 'react';
 
-interface FooterProps {}
-
-const Footer: React.FC<FooterProps> = (props: FooterProps) => {
+const Footer: React.FC = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 750);
   const useStyles = makeStyles((theme) => ({
     box: {
@@ -54,7 +52,7 @@ const Footer: React.FC<FooterProps> = (props: FooterProps) => {
       <Grid item xs={12}>
         <Box className={styles.box}>
           <Typography variant='subtitle1' className={styles.copyright}>
-            © 2022 Personality+ All rights reserved.
+            © 2024 Personality+ All rights reserved.
           </Typography>
         </Box>
       </Grid>

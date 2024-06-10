@@ -1,3 +1,4 @@
+import React from 'react';
 import {Grid, Typography, makeStyles} from '@material-ui/core';
 
 import Percent from '../components/Percent';
@@ -94,43 +95,34 @@ interface InterpretationListProps {
 
 export default Interpretations;
 
-export const InterpretationList: React.FC<InterpretationListProps> = (
-  props: InterpretationListProps,
-) => {
-  const scoredSection: string =
-    interpretations[props.index][props.type][scoreAdjective(props.score)];
+export const InterpretationList: React.FC<InterpretationListProps> = (props: InterpretationListProps) => {
+  const scoredSection: string = interpretations[props.index][props.type][scoreAdjective(props.score)];
 
   return (
-    <>
+    <React.Fragment>
       {Object.keys(scoredSection).map((part: any) => {
         // add bold and don't include line break if part 1
         if (part === 'part1') {
           return (
-            <>
-              <Typography
-                variant='subtitle1'
-                style={{paddingLeft: props.type !== 'category' ? 30 : 0}}>
-                <strong>
-                  {interpretations[props.index][props.type][scoreAdjective(props.score)][part]}
-                </strong>
+            <React.Fragment>
+              <Typography variant='subtitle1' style={{paddingLeft: props.type !== 'category' ? 30 : 0}}>
+                <strong>{interpretations[props.index][props.type][scoreAdjective(props.score)][part]}</strong>
               </Typography>
-            </>
+            </React.Fragment>
           );
         } else if (scoredSection[part]) {
           return (
-            <>
+            <React.Fragment>
               <br></br>
-              <Typography
-                variant='subtitle1'
-                style={{paddingLeft: props.type !== 'category' ? 30 : 0}}>
+              <Typography variant='subtitle1' style={{paddingLeft: props.type !== 'category' ? 30 : 0}}>
                 {interpretations[props.index][props.type][scoreAdjective(props.score)][part]}
               </Typography>
-            </>
+            </React.Fragment>
           );
         } else {
-          return <></>;
+          return <React.Fragment></React.Fragment>;
         }
       })}
-    </>
+    </React.Fragment>
   );
 };

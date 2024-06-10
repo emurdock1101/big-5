@@ -9,7 +9,7 @@ import {Aspect, Ocean} from './constants/schema';
  */
 export const getPercentiles = (): Record<string, number> => {
   if (sessionStorage.length - 2 !== questionData.length) {
-    console.log(
+    console.error(
       "Answer list isn't correct length. storageLength - 2: " +
         (sessionStorage.length - 2) +
         ', questionDataLength: ' +
@@ -68,9 +68,7 @@ export const getPercentiles = (): Record<string, number> => {
  *
  * @param averages the map of averages for all 15 categories
  */
-export const getPercentilesFromAverages = (
-  averages: Map<string, [number, number]>,
-): Record<string, number> => {
+export const getPercentilesFromAverages = (averages: Map<string, [number, number]>): Record<string, number> => {
   const percentiles: Record<string, number> = {};
   let currMean: number | undefined;
   let currStdDev: number | undefined;
@@ -84,17 +82,13 @@ export const getPercentilesFromAverages = (
     currStdDev = dataMap.get(key)?.stdDev;
 
     if (currMean && currStdDev) {
-      currFormattedPerc = Math.round(
-        cumulativeStdNormalProbability(zScore(value[1], currMean, currStdDev)) * 100,
-      );
+      currFormattedPerc = Math.round(cumulativeStdNormalProbability(zScore(value[1], currMean, currStdDev)) * 100);
 
       if (currFormattedPerc <= 0) currFormattedPerc = 1;
       else if (currFormattedPerc >= 100) currFormattedPerc = 99;
       percentiles[`${key}`] = currFormattedPerc;
     } else {
-      throw new Error(
-        'Mean or std dev from data map not defined. value: ' + value + ', key: ' + key,
-      );
+      throw new Error('Mean or std dev from data map not defined. value: ' + value + ', key: ' + key);
     }
   });
 
@@ -148,10 +142,7 @@ export const shuffle = <T>(array: T[]): T[] => {
   return array;
 };
 
-export const generatePdfDoc = (
-  email: string,
-  percentiles: Record<string, number> | null,
-): void => {
+export const generatePdfDoc = (email: string, percentiles: Record<string, number> | null): void => {
   const doc = new jsPDF();
   doc.setFont('Monaco', undefined, 700);
   let xPosition: number;
@@ -182,7 +173,7 @@ export const generatePdfDoc = (
   const enthusiasmText: string = Aspect.Enthusiasm.toString();
   const enthusiasmScore: number = percentiles?.[`${enthusiasmText}`] ?? 99;
   doc.setFontSize(18);
-  doc.text(enthusiasmText + ': ' + enthusiasmScore, 100, (yPosition));
+  doc.text(enthusiasmText + ': ' + enthusiasmScore, 100, yPosition);
   // Assertiveness
   const assertivenessText: string = Aspect.Assertiveness.toString();
   const assertivenessScore: number = percentiles?.[`${assertivenessText}`] ?? 99;
@@ -201,7 +192,7 @@ export const generatePdfDoc = (
   const withdrawalText: string = Aspect.Withdrawal.toString();
   const withdrawalScore: number = percentiles?.[`${withdrawalText}`] ?? 99;
   doc.setFontSize(18);
-  doc.text(withdrawalText + ': ' + withdrawalScore, 100, (yPosition));
+  doc.text(withdrawalText + ': ' + withdrawalScore, 100, yPosition);
   // Volatility
   const volatilityText: string = Aspect.Volatility.toString();
   const volatilityScore: number = percentiles?.[`${volatilityText}`] ?? 99;
@@ -220,7 +211,7 @@ export const generatePdfDoc = (
   const compassionText: string = Aspect.Compassion.toString();
   const compassionScore: number = percentiles?.[`${compassionText}`] ?? 99;
   doc.setFontSize(18);
-  doc.text(compassionText + ': ' + compassionScore, 100, (yPosition));
+  doc.text(compassionText + ': ' + compassionScore, 100, yPosition);
   // Politeness
   const politenessText: string = Aspect.Politeness.toString();
   const politenessScore: number = percentiles?.[`${politenessText}`] ?? 99;
@@ -239,7 +230,7 @@ export const generatePdfDoc = (
   const industriousnessText: string = Aspect.Industriousness.toString();
   const industriousnessScore: number = percentiles?.[`${industriousnessText}`] ?? 99;
   doc.setFontSize(18);
-  doc.text(industriousnessText + ': ' + industriousnessScore, 100, (yPosition));
+  doc.text(industriousnessText + ': ' + industriousnessScore, 100, yPosition);
   // Orderliness
   const orderlinessText: string = Aspect.Orderliness.toString();
   const orderlinessScore: number = percentiles?.[`${orderlinessText}`] ?? 99;
@@ -258,7 +249,7 @@ export const generatePdfDoc = (
   const aestheticOpennessText: string = Aspect.AestheticOpenness.toString();
   const aestheticOpennessScore: number = percentiles?.[`${aestheticOpennessText}`] ?? 99;
   doc.setFontSize(18);
-  doc.text(aestheticOpennessText + ': ' + aestheticOpennessScore, 100, (yPosition));
+  doc.text(aestheticOpennessText + ': ' + aestheticOpennessScore, 100, yPosition);
   // Interest
   const interestText: string = Aspect.Interest.toString();
   const interestScore: number = percentiles?.[`${interestText}`] ?? 99;

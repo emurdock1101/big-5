@@ -34,9 +34,7 @@ export const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface BuyTestProps {}
-
-const BuyTest: React.FC<BuyTestProps> = (props: BuyTestProps) => {
+const BuyTest: React.FC = () => {
   const styles = useStyles();
   const navigate = useNavigate();
   const handleNav = (path: string) => {
@@ -70,7 +68,7 @@ const BuyTest: React.FC<BuyTestProps> = (props: BuyTestProps) => {
         });
       }
     } catch (error) {
-      console.log(JSON.stringify(error));
+      console.error(JSON.stringify(error));
       handleNav('/checkouterror');
     }
   };
@@ -86,32 +84,25 @@ const BuyTest: React.FC<BuyTestProps> = (props: BuyTestProps) => {
               </Typography>
               <Divider />
               <Typography variant='subtitle1' className={styles.listFirst}>
-                1. One copy of a 100-question, scientifically-backed, peer-reviewed assessment of
-                personality.
+                1. One copy of a 100-question, scientifically-backed, peer-reviewed assessment of personality.
               </Typography>
               <br></br>
-              <Typography variant='subtitle1'>
-                2. In-depth analysis of results, specific to your scores.
-              </Typography>
+              <Typography variant='subtitle1'>2. In-depth analysis of results, specific to your scores.</Typography>
               <br></br>
               <Typography variant='subtitle1'>3. Access to view your scores anytime.</Typography>
               <br></br>
               <Typography variant='subtitle1'>
-                4. Discount offerings towards coaching services with Personality+ staff, where you
-                can further learn about your behaviors and discover more about yourself.
+                4. Discount offerings towards coaching services with Personality+ staff, where you can further learn
+                about your behaviors and discover more about yourself.
               </Typography>
               <br></br>
               <br></br>
               <Typography variant='subtitle1'>
-                Note: if you have purchased a Personality+ account before, you will have to provide
-                a a different email to checkout.
+                Note: if you have purchased a Personality+ account before, you will have to provide a a different email
+                to checkout.
               </Typography>
               <div className={styles.buttons}>
-                <Button
-                  color='primary'
-                  variant='contained'
-                  onClick={signUp}
-                  className={styles.button}>
+                <Button color='primary' variant='contained' onClick={signUp} className={styles.button}>
                   PURCHASE PERSONALITY+
                 </Button>
               </div>
