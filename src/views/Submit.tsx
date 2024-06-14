@@ -3,6 +3,7 @@ import {Storage} from '@aws-amplify/storage';
 import {Auth} from 'aws-amplify';
 import {getPercentiles} from '../util';
 import {useNavigate} from 'react-router-dom';
+import {Aspect, Ocean} from '../constants/schema';
 import React from 'react';
 
 export const useStyles = makeStyles((theme) => ({
@@ -42,11 +43,35 @@ const Submit: React.FC<SubmitProps> = (props: SubmitProps) => {
     const percentiles: Record<string, number> = getPercentiles();
     const name: string = sessionStorage.getItem('name') ?? 'name_unknown';
     const gender: string = sessionStorage.getItem('gender') ?? 'gender_unknown';
+    const school: string = sessionStorage.getItem('school') ?? 'school_unknown';
+
+    const orderedPercentiles: Record<string, number> = {
+      [Ocean.Extraversion]: percentiles[Ocean.Extraversion],
+      [Aspect.Enthusiasm]: percentiles[Aspect.Enthusiasm],
+      [Aspect.Assertiveness]: percentiles[Aspect.Assertiveness],
+
+      [Ocean.Neuroticism]: percentiles[Ocean.Neuroticism],
+      [Aspect.Withdrawal]: percentiles[Aspect.Withdrawal],
+      [Aspect.Volatility]: percentiles[Aspect.Volatility],
+
+      [Ocean.Agreeableness]: percentiles[Ocean.Agreeableness],
+      [Aspect.Compassion]: percentiles[Aspect.Compassion],
+      [Aspect.Politeness]: percentiles[Aspect.Politeness],
+
+      [Ocean.Conscientiousness]: percentiles[Ocean.Conscientiousness],
+      [Aspect.Industriousness]: percentiles[Aspect.Industriousness],
+      [Aspect.Orderliness]: percentiles[Aspect.Orderliness],
+
+      [Ocean.Openness]: percentiles[Ocean.Openness],
+      [Aspect.AestheticOpenness]: percentiles[Aspect.AestheticOpenness],
+      [Aspect.Interest]: percentiles[Aspect.Interest],
+    };
 
     const testResultsObj = {
       name,
       gender,
-      percentiles,
+      school,
+      percentiles: orderedPercentiles,
     };
 
     Storage.configure({

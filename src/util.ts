@@ -5,10 +5,15 @@ import jsPDF from 'jspdf';
 import {Aspect, Ocean} from './constants/schema';
 
 /**
+ * Name, Gender, and School are stored in session storage.
+ **/
+const NUM_OF_SESSION_STORAGE_ITEMS = 3;
+
+/**
  * Returns a map of percentiles for each category key string.
  */
 export const getPercentiles = (): Record<string, number> => {
-  if (sessionStorage.length - 2 !== questionData.length) {
+  if (sessionStorage.length - NUM_OF_SESSION_STORAGE_ITEMS !== questionData.length) {
     console.error(
       "Answer list isn't correct length. storageLength - 2: " +
         (sessionStorage.length - 2) +

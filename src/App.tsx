@@ -57,7 +57,10 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const styles = useStyles();
   const questionData = shuffle(qd);
-  const [user, setUser] = useState<User>({});
+  const [user, setUser] = useState<User>({
+    loggedIn: false,
+    completed: false,
+  });
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true); // Add loading state
 
@@ -87,7 +90,9 @@ function App() {
         response = await fetch(url);
         const responseData = await response.json();
 
-        if (responseData.percentiles) {
+        console.log('responseData', JSON.stringify(responseData, null, 2), '\n');
+
+        if (responseData && Object.keys(responseData).length > 0) {
           setUser({...user, completed: true});
         } else {
           setUser({...user, completed: false});
@@ -133,43 +138,34 @@ function App() {
               path='/test'
               element={
                 <ProtectedRoute
-                  type={'redirectIfCompleted'}
+                  type={'loggedInAndUncompleted'}
                   component={<Quiz onComplete={completeTest} questionData={questionData} />}
                 />
-              }
-            />
-            <Route
-              path='/results'
-              element={<ProtectedRoute type={'redirectIfUncompleted'} component={<Results />} />}
-            />
-            <Route
-              path='/reset'
-              element={
-                <ProtectedRoute type={'redirectIfLoggedIn'} component={<Forgot onLogIn={assessLoggedInState} />} />
-              }
-            />
-            <Route
-              path='/login'
-              element={
-                <ProtectedRoute type={'redirectIfLoggedIn'} component={<Login onLogIn={assessLoggedInState} />} />
-              }
-            />
-            <Route
-              path='/signup'
-              element={
-                <ProtectedRoute type={'redirectIfLoggedIn'} component={<Signup onLogIn={assessLoggedInState} />} />
               }
             />
             <Route
               path='/submit'
               element={
                 <ProtectedRoute
-                  type={'redirectIfCompleted'}
+                  type={'loggedInAndUncompleted'}
                   component={<Submit onComplete={() => {}} prevStep={() => {}} />}
                 />
               }
             />
-            <Route path='/buy' element={<ProtectedRoute type={'redirectIfCompleted'} component={<BuyTest />} />} />
+            <Route path='/results' element={<ProtectedRoute type={'loggedInAndCompleted'} component={<Results />} />} />
+            <Route
+              path='/reset'
+              element={<ProtectedRoute type={'loggedOut'} component={<Forgot onLogIn={assessLoggedInState} />} />}
+            />
+            <Route
+              path='/login'
+              element={<ProtectedRoute type={'loggedOut'} component={<Login onLogIn={assessLoggedInState} />} />}
+            />
+            <Route
+              path='/signup'
+              element={<ProtectedRoute type={'loggedOut'} component={<Signup onLogIn={assessLoggedInState} />} />}
+            />
+            <Route path='/buy' element={<ProtectedRoute type={'loggedOut'} component={<BuyTest />} />} />
 
             <Route path='/' element={<Home loggedIn={!!user.loggedIn} completed={!!user.completed} />} />
             <Route path='/about' element={<About />} />

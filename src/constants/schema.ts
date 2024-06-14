@@ -1,16 +1,22 @@
+// These should always be ordered this way
 export enum Aspect {
-  Withdrawal = 'Withdrawal',
-  Volatility = 'Volatility',
-  Politeness = 'Politeness',
-  Compassion = 'Compassion',
-  Industriousness = 'Industriousness',
-  Orderliness = 'Orderliness',
   Enthusiasm = 'Enthusiasm',
   Assertiveness = 'Assertiveness',
+
+  Withdrawal = 'Withdrawal',
+  Volatility = 'Volatility',
+
+  Compassion = 'Compassion',
+  Politeness = 'Politeness',
+
+  Industriousness = 'Industriousness',
+  Orderliness = 'Orderliness',
+
   AestheticOpenness = 'Aesthetic Openness',
   Interest = 'Interest in Ideas',
 }
 
+// These should also always be ordered this way
 export enum Ocean {
   Extraversion = 'Extraversion',
   Neuroticism = 'Neuroticism',

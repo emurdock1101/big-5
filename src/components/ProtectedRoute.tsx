@@ -5,7 +5,7 @@ import {UserContext} from '../App';
 import Loading from './Loading';
 
 interface ProtectedRouteProps {
-  type: 'redirectIfLoggedIn' | 'redirectIfCompleted' | 'redirectIfUncompleted';
+  type: 'loggedOut' | 'loggedInAndCompleted' | 'loggedInAndUncompleted';
   component: JSX.Element;
 }
 
@@ -14,14 +14,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = (props: ProtectedRouteProp
 
   if (user.loggedIn === undefined || user.completed === undefined) {
     return <Loading />;
-  }
-
-  if (props.type === 'redirectIfLoggedIn') {
-    return user.loggedIn ? <Navigate to={'/'} replace /> : props.component;
-  } else if (props.type === 'redirectIfCompleted') {
-    return user.completed ? <Navigate to={'/'} replace /> : props.component;
-  } else if (props.type === 'redirectIfUncompleted') {
-    return !user.completed ? <Navigate to={'/'} replace /> : props.component;
+  } else if (props.type === 'loggedOut' && !user.loggedIn) {
+    return props.component;
+  } else if (props.type === 'loggedInAndCompleted' && user.loggedIn && user.completed) {
+    return props.component;
+  } else if (props.type === 'loggedInAndUncompleted' && user.loggedIn && !user.completed) {
+    return props.component;
   }
 
   return <Navigate to={'/'} replace />;

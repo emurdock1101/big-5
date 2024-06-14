@@ -14,6 +14,7 @@ import {
 import Divider from '@mui/material/Divider';
 import {useNavigate} from 'react-router-dom';
 import {useEffect, useState} from 'react';
+import SchoolsDropdown from '../components/SchoolsDropdown';
 
 interface PreTestProps {
   nextStep: () => void;
@@ -58,10 +59,17 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
       fontSize: isMobile ? 18 : 20,
       marginBottom: 40,
     },
+    formField: {
+      marginBottom: 10,
+    },
+    schoolsDropdown: {
+      marginBottom: 40,
+    },
   }));
   const [isMobile, setIsMobile] = useState(window.innerWidth < 750);
   const [gender, setGender] = useState('');
   const [name, setName] = useState('');
+  const [school, setSchool] = useState('');
 
   const navigate = useNavigate();
 
@@ -82,7 +90,6 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
   };
 
   useEffect(() => {
-    sessionStorage.clear();
     document?.querySelector('body')?.scrollTo({top: 0, left: 0});
   }, []);
 
@@ -98,7 +105,11 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
     if (gender !== '') {
       sessionStorage.setItem('gender', gender);
     }
-  }, [name, gender]);
+
+    if (school !== '') {
+      sessionStorage.setItem('school', school);
+    }
+  }, [name, gender, school]);
 
   const styles = useStyles();
 
@@ -199,8 +210,9 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
                       label='Full name'
                       name='name'
                       autoFocus
+                      className={styles.formField}
                     />
-                    <RadioGroup row={true} value={gender}>
+                    <RadioGroup row={true} value={gender} className={styles.formField}>
                       <FormControlLabel
                         value={male}
                         control={<Radio color='primary' checked={gender === male} onClick={() => setGender(male)} />}
@@ -214,6 +226,9 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
                         label='Female'
                       />
                     </RadioGroup>
+                    <div className={styles.schoolsDropdown}>
+                      <SchoolsDropdown onChange={(event) => setSchool(event.target.value)} />
+                    </div>
                   </FormControl>
                 </div>
                 <div className={styles.buttons}>
@@ -222,7 +237,7 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
                     variant='contained'
                     onClick={props.nextStep}
                     className={styles.buttonOne}
-                    disabled={gender === '' || name === ''}>
+                    disabled={gender === '' || name === '' || school === ''}>
                     BEGIN TEST
                   </Button>
                   <Button
