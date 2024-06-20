@@ -67,6 +67,7 @@ function App() {
   // Check Cognito for user
   useEffect(() => {
     assessLoggedInState();
+    //eslint-disable-next-line
   }, []);
 
   // Check S3 for user results
@@ -90,8 +91,6 @@ function App() {
         response = await fetch(url);
         const responseData = await response.json();
 
-        console.log('responseData', JSON.stringify(responseData, null, 2), '\n');
-
         if (responseData && Object.keys(responseData).length > 0) {
           setUser({...user, completed: true});
         } else {
@@ -106,6 +105,7 @@ function App() {
     };
 
     fetchResultsFromS3();
+    //eslint-disable-next-line
   }, [loggedIn]);
 
   const completeTest = () => {
