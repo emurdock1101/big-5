@@ -5,9 +5,9 @@ import jsPDF from 'jspdf';
 import {Aspect, Ocean} from './constants/schema';
 
 /**
- * Name, Gender, and School are stored in session storage.
+ * Name and Gender are stored in session storage.
  **/
-const NUM_OF_SESSION_STORAGE_ITEMS = 3;
+const NUM_OF_SESSION_STORAGE_ITEMS = 2;
 
 /**
  * Returns a map of percentiles for each category key string.

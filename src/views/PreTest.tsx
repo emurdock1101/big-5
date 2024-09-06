@@ -14,7 +14,7 @@ import {
 import Divider from '@mui/material/Divider';
 import {useNavigate} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import SchoolsDropdown from '../components/SchoolsDropdown';
+// import SchoolsDropdown from '../components/SchoolsDropdown';
 
 interface PreTestProps {
   nextStep: () => void;
@@ -62,14 +62,14 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
     formField: {
       marginBottom: 10,
     },
-    schoolsDropdown: {
-      marginBottom: 40,
-    },
+    // schoolsDropdown: {
+    //   marginBottom: 40,
+    // },
   }));
   const [isMobile, setIsMobile] = useState(window.innerWidth < 750);
   const [gender, setGender] = useState('');
   const [name, setName] = useState('');
-  const [school, setSchool] = useState('');
+  // const [school, setSchool] = useState('');
 
   const navigate = useNavigate();
 
@@ -106,10 +106,10 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
       sessionStorage.setItem('gender', gender);
     }
 
-    if (school !== '') {
-      sessionStorage.setItem('school', school);
-    }
-  }, [name, gender, school]);
+    // if (school !== '') {
+    //   sessionStorage.setItem('school', school);
+    // }
+  }, [name, gender]);
 
   const styles = useStyles();
 
@@ -226,9 +226,9 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
                         label='Female'
                       />
                     </RadioGroup>
-                    <div className={styles.schoolsDropdown}>
+                    {/* <div className={styles.schoolsDropdown}>
                       <SchoolsDropdown onChange={(event) => setSchool(event.target.value)} />
-                    </div>
+                    </div> */}
                   </FormControl>
                 </div>
                 <div className={styles.buttons}>
@@ -237,7 +237,7 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
                     variant='contained'
                     onClick={props.nextStep}
                     className={styles.buttonOne}
-                    disabled={gender === '' || name === '' || school === ''}>
+                    disabled={gender === '' || name === ''}>
                     BEGIN TEST
                   </Button>
                   <Button
