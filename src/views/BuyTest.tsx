@@ -80,7 +80,7 @@ const BuyTest: React.FC = () => {
           <Grid item xs={12} md={10} lg={7}>
             <Paper elevation={2} className={styles.paper}>
               <Typography variant='h3' className={styles.included}>
-                What's included for <span className={styles.price}>$49.99?</span>
+                What's included for <span className={styles.price}>$9.99?</span>
               </Typography>
               <Divider />
               <Typography variant='subtitle1' className={styles.listFirst}>
