@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Typography, makeStyles } from '@material-ui/core';
 
 import Percent from '../components/Percent';
-import { getInterpretation } from '../utils/interpretations';
+import { getInterpretation } from '../utils/interpretations.utils';
 
 export const useStyles = makeStyles((theme) => ({
   oceanScoreRow: {
