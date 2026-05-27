@@ -9,7 +9,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Collapse from '@mui/material/Collapse';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
-import content from '../constants/content';
+import { about } from '../constants/content';
 import elliot from '../images/elliot.jpeg';
 import patrick from '../images/patrick.jpeg';
 import {styled} from '@mui/material/styles';
@@ -90,7 +90,7 @@ const AboutCard = (props: AboutCardProps) => {
       />
       <CardContent>
         <Typography variant='subtitle1' className={styles.part1}>
-          {content['about'][props.member]['part1']}
+          {about[props.member]['part1']}
         </Typography>
       </CardContent>
 
@@ -151,7 +151,7 @@ const AboutCard = (props: AboutCardProps) => {
       </CardActions>
       <Collapse in={expanded} timeout='auto' unmountOnExit>
         <CardContent>
-          <Typography variant={'subtitle2'}>{content['about'][props.member]['part2']}</Typography>
+          <Typography variant={'subtitle2'}>{about[props.member]['part2']}</Typography>
         </CardContent>
       </Collapse>
     </Card>

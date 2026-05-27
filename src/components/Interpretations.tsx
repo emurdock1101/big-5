@@ -1,9 +1,8 @@
 import React from 'react';
-import {Grid, Typography, makeStyles} from '@material-ui/core';
+import { Grid, Typography, makeStyles } from '@material-ui/core';
 
 import Percent from '../components/Percent';
-import interpretations from '../constants/interpretations';
-import {scoreAdjective} from '../util';
+import { getInterpretation } from '../utils/interpretations';
 
 export const useStyles = makeStyles((theme) => ({
   oceanScoreRow: {
@@ -54,7 +53,7 @@ const Interpretations: React.FC<InterpretationsProps> = (props: InterpretationsP
           <Percent progress={props.oceanScore} hex={props.hex} size={90} />
         </Grid>
         <Grid item xs={12} sm={10}>
-          <InterpretationList type='category' score={props.oceanScore} index={props.index} />
+          <InterpretationList traitName={props.oceanName} score={props.oceanScore} indent={false} />
         </Grid>
         <Grid item xs={9} sm={10} className={styles.aspectScoreRow}>
           <Typography variant='h5' className={styles.aspects}>
@@ -67,7 +66,7 @@ const Interpretations: React.FC<InterpretationsProps> = (props: InterpretationsP
           </div>
         </Grid>
         <Grid item xs={12} sm={10}>
-          <InterpretationList type='aspect1' score={props.aspect1Score} index={props.index} />
+          <InterpretationList traitName={props.aspect1Name} score={props.aspect1Score} indent={true} />
         </Grid>
         <Grid item xs={9} sm={10} className={styles.aspectScoreRow}>
           <Typography variant='h5' className={styles.aspects}>
@@ -80,7 +79,7 @@ const Interpretations: React.FC<InterpretationsProps> = (props: InterpretationsP
           </div>
         </Grid>
         <Grid item xs={12} sm={10}>
-          <InterpretationList type='aspect2' score={props.aspect2Score} index={props.index} />
+          <InterpretationList traitName={props.aspect2Name} score={props.aspect2Score} indent={true} />
         </Grid>
       </Grid>
     </div>
@@ -88,41 +87,36 @@ const Interpretations: React.FC<InterpretationsProps> = (props: InterpretationsP
 };
 
 interface InterpretationListProps {
+  traitName: string;
   score: number;
-  type: 'category' | 'aspect1' | 'aspect2';
-  index: number;
+  indent: boolean;
 }
 
-export default Interpretations;
+export const InterpretationList: React.FC<InterpretationListProps> = ({ traitName, score, indent }) => {
+  const interpretation = getInterpretation(traitName, score);
 
-export const InterpretationList: React.FC<InterpretationListProps> = (props: InterpretationListProps) => {
-  const scoredSection: string = interpretations[props.index][props.type][scoreAdjective(props.score)];
+  if (!interpretation) return <React.Fragment />;
 
   return (
     <React.Fragment>
-      {Object.keys(scoredSection).map((part: any) => {
-        // add bold and don't include line break if part 1
-        if (part === 'part1') {
-          return (
+      {interpretation.paragraphs.map((paragraph, i) => (
+        <React.Fragment key={i}>
+          {i === 0 ? (
+            <Typography variant='subtitle1' style={{ paddingLeft: indent ? 30 : 0 }}>
+              <strong>{paragraph}</strong>
+            </Typography>
+          ) : (
             <React.Fragment>
-              <Typography variant='subtitle1' style={{paddingLeft: props.type !== 'category' ? 30 : 0}}>
-                <strong>{interpretations[props.index][props.type][scoreAdjective(props.score)][part]}</strong>
+              <br />
+              <Typography variant='subtitle1' style={{ paddingLeft: indent ? 30 : 0 }}>
+                {paragraph}
               </Typography>
             </React.Fragment>
-          );
-        } else if (scoredSection[part]) {
-          return (
-            <React.Fragment>
-              <br></br>
-              <Typography variant='subtitle1' style={{paddingLeft: props.type !== 'category' ? 30 : 0}}>
-                {interpretations[props.index][props.type][scoreAdjective(props.score)][part]}
-              </Typography>
-            </React.Fragment>
-          );
-        } else {
-          return <React.Fragment></React.Fragment>;
-        }
-      })}
+          )}
+        </React.Fragment>
+      ))}
     </React.Fragment>
   );
 };
+
+export default Interpretations;

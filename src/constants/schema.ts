@@ -54,3 +54,18 @@ export type User = {
   loggedIn?: boolean;
   completed?: boolean;
 };
+
+export type ScoreLevel = 'veryLow' | 'low' | 'modLow' | 'average' | 'modHigh' | 'high' | 'veryHigh';
+
+export interface Interpretation {
+  trait: string; // Ocean or Aspect value
+  scoreLevel: ScoreLevel;
+  paragraphs: string[]; // replaces part1/part2/etc
+}
+
+export interface TraitOverview {
+  trait: Ocean;
+  label: string;
+  paragraphs: string[]; // replaces part1/part2/etc
+  color: string;
+}
