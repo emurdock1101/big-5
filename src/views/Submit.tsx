@@ -1,7 +1,7 @@
 import {Button, Grid, Typography, makeStyles, Paper} from '@material-ui/core';
 import {Storage} from '@aws-amplify/storage';
 import {Auth} from 'aws-amplify';
-import {getPercentiles} from '../util';
+import { getPercentiles } from '../utils/scoring.utils';
 import {useNavigate} from 'react-router-dom';
 import {Aspect, Ocean} from '../constants/schema';
 import React from 'react';

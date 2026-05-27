@@ -13,7 +13,7 @@ import {oceanOptions} from '../constants/oceanSpecs';
 import {theme} from '../theme';
 import {Auth} from 'aws-amplify';
 import React from 'react';
-import {generatePdfDoc} from '../util';
+import { generatePdfDoc } from '../utils/pdf.utils';
 
 interface S3Results {
   name: string;

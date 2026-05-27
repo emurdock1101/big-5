@@ -3,7 +3,7 @@ import {Grid, Typography, makeStyles} from '@material-ui/core';
 
 import Percent from '../components/Percent';
 import interpretations from '../constants/interpretations';
-import {scoreAdjective} from '../util';
+import { scoreAdjective } from '../utils/scoring.utils';
 
 export const useStyles = makeStyles((theme) => ({
   oceanScoreRow: {
