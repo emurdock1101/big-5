@@ -34,7 +34,7 @@ import {Storage} from '@aws-amplify/storage';
 // Utils & Constants
 import {questionData as qd} from './constants/questionData';
 import {User} from './constants/schema';
-import {shuffle} from './util';
+import { shuffle } from './utils/array.utils';
 
 Amplify.configure(awsconfig);
 
