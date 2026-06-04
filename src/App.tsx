@@ -1,5 +1,5 @@
 // React
-import React, {useEffect, useState, createContext} from 'react';
+import React, {useEffect, useState, useCallback, createContext} from 'react';
 import {Route, Routes, Navigate} from 'react-router-dom';
 // Material UI
 import {makeStyles} from '@material-ui/core';
@@ -38,7 +38,15 @@ import { shuffle } from './utils/array.utils';
 
 Amplify.configure(awsconfig);
 
-export const UserContext = createContext<any>({});
+export interface UserContextType {
+  user: User;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
+}
+
+export const UserContext = createContext<UserContextType>({
+  user: { loggedIn: false, completed: false },
+  setUser: () => {},
+});
 
 const useStyles = makeStyles((theme) => ({
   footer: {
@@ -64,16 +72,27 @@ function App() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true); // Add loading state
 
-  // Check Cognito for user
-  useEffect(() => {
-    assessLoggedInState();
-    //eslint-disable-next-line
+  const assessLoggedInState = useCallback(async () => {
+    try {
+      await Auth.currentAuthenticatedUser();
+      setUser((prev) => ({...prev, loggedIn: true}));
+      setLoggedIn(true);
+    } catch (error) {
+      setUser((prev) => ({...prev, loggedIn: false}));
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  // Check S3 for user results
+  // Check Cognito for user on mount
+  useEffect(() => {
+    assessLoggedInState();
+  }, [assessLoggedInState]);
+
+  // Check S3 for user results whenever loggedIn changes
   useEffect(() => {
     const fetchResultsFromS3 = async (): Promise<void> => {
-      if (!user.loggedIn) return;
+      if (!loggedIn) return;
 
       const cognitoUser = await Auth.currentAuthenticatedUser();
       const email: string = cognitoUser.attributes?.email;
@@ -92,36 +111,23 @@ function App() {
         const responseData = await response.json();
 
         if (responseData && Object.keys(responseData).length > 0) {
-          setUser({...user, completed: true});
+          setUser((prev) => ({...prev, completed: true}));
         } else {
-          setUser({...user, completed: false});
+          setUser((prev) => ({...prev, completed: false}));
         }
       } catch (error) {
         console.error('Fetch error: ', response?.status, response?.statusText);
-        setUser({...user, completed: false});
+        setUser((prev) => ({...prev, completed: false}));
       } finally {
-        setLoading(false); // Set loading to false after fetching results
+        setLoading(false);
       }
     };
 
     fetchResultsFromS3();
-    //eslint-disable-next-line
   }, [loggedIn]);
 
   const completeTest = () => {
-    setUser({...user, completed: true});
-  };
-
-  const assessLoggedInState = async () => {
-    try {
-      await Auth.currentAuthenticatedUser();
-      setUser({...user, loggedIn: true});
-      setLoggedIn(true);
-    } catch (error) {
-      setUser({...user, loggedIn: false});
-    } finally {
-      setLoading(false);
-    }
+    setUser((prev) => ({...prev, completed: true}));
   };
 
   if (loading) {

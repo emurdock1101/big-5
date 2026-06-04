@@ -62,14 +62,10 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
     formField: {
       marginBottom: 10,
     },
-    // schoolsDropdown: {
-    //   marginBottom: 40,
-    // },
   }));
   const [isMobile, setIsMobile] = useState(window.innerWidth < 750);
   const [gender, setGender] = useState('');
   const [name, setName] = useState('');
-  // const [school, setSchool] = useState('');
 
   const navigate = useNavigate();
 
@@ -106,9 +102,6 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
       sessionStorage.setItem('gender', gender);
     }
 
-    // if (school !== '') {
-    //   sessionStorage.setItem('school', school);
-    // }
   }, [name, gender]);
 
   const styles = useStyles();
@@ -226,9 +219,7 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
                         label='Female'
                       />
                     </RadioGroup>
-                    {/* <div className={styles.schoolsDropdown}>
-                      <SchoolsDropdown onChange={(event) => setSchool(event.target.value)} />
-                    </div> */}
+
                   </FormControl>
                 </div>
                 <div className={styles.buttons}>

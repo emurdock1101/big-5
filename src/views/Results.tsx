@@ -18,7 +18,7 @@ import { generatePdfDoc } from '../utils/pdf.utils';
 interface S3Results {
   name: string;
   gender: string;
-  // school?: string;
+
   percentiles: Record<string, number>;
 }
 
