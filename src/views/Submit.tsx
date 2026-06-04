@@ -43,8 +43,6 @@ const Submit: React.FC<SubmitProps> = (props: SubmitProps) => {
     const percentiles: Record<string, number> = getPercentiles();
     const name: string = sessionStorage.getItem('name') ?? 'name_unknown';
     const gender: string = sessionStorage.getItem('gender') ?? 'gender_unknown';
-    // const school: string = sessionStorage.getItem('school') ?? 'school_unknown';
-
     const orderedPercentiles: Record<string, number> = {
       [Ocean.Extraversion]: percentiles[Ocean.Extraversion],
       [Aspect.Enthusiasm]: percentiles[Aspect.Enthusiasm],
@@ -70,7 +68,6 @@ const Submit: React.FC<SubmitProps> = (props: SubmitProps) => {
     const testResultsObj = {
       name,
       gender,
-      // school,
       percentiles: orderedPercentiles,
     };
 
