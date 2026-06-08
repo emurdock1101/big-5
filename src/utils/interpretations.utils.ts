@@ -22,6 +22,23 @@ export function getInterpretation(trait: string, percentile: number): Interpreta
   return interpretations.find((i) => i.trait === trait && i.scoreLevel === level);
 }
 
+/**
+ * Returns the correct English ordinal suffix for a given integer.
+ * e.g. 1 → "st", 2 → "nd", 3 → "rd", 4–20 → "th", 21 → "st", 22 → "nd", …
+ */
+function ordinalSuffix(n: number): string {
+  const abs = Math.abs(n);
+  const lastTwo = abs % 100;
+  // 11th, 12th, 13th are irregular
+  if (lastTwo >= 11 && lastTwo <= 13) return 'th';
+  switch (abs % 10) {
+    case 1: return 'st';
+    case 2: return 'nd';
+    case 3: return 'rd';
+    default: return 'th';
+  }
+}
+
 function getScoreLevelLabel(level: ScoreLevel): string {
   const labels: Record<ScoreLevel, string> = {
     veryLow: 'Very Low',
@@ -54,7 +71,7 @@ export function buildAIContext(percentiles: Record<string, number>): string {
     const interp = getInterpretation(trait, percentile);
     if (!interp) continue;
     const label = getScoreLevelLabel(interp.scoreLevel);
-    lines.push(`${trait.toUpperCase()} — ${percentile}th percentile (${label})`);
+    lines.push(`${trait.toUpperCase()} — ${percentile}${ordinalSuffix(percentile)} percentile (${label})`);
     lines.push(interp.paragraphs.join('\n\n'));
     lines.push('');
   }
