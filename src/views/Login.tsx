@@ -80,29 +80,30 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
     navigate(path);
   };
 
-  const logIn = async (e: any) => {
+  const logIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     showAlert(false);
     try {
       await Auth.signIn(username, password);
       props.onLogIn();
       handleNav('/results');
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { code?: string; log?: string };
       console.error(JSON.stringify(error));
       if (!username || !username.length) {
         setAlertContent('Username must be provided.');
       } else if (!password || !password.length) {
         setAlertContent('Password must be provided.');
-      } else if (error.code === 'UserNotFoundException') {
+      } else if (err.code === 'UserNotFoundException') {
         setAlertContent(
           'User is not found. Try again with the correct credentials, or sign up below to create an account.',
         );
-      } else if (error.code === 'NotAuthorizedException') {
+      } else if (err.code === 'NotAuthorizedException') {
         setAlertContent('Incorrect password or email.');
-      } else if (error.code.length) {
-        setAlertContent(error.code);
-      } else if (error.log.length) {
-        setAlertContent(error.code);
+      } else if (err.code?.length) {
+        setAlertContent(err.code);
+      } else if (err.log?.length) {
+        setAlertContent(err.code ?? '');
       }
       showAlert(true);
     }
