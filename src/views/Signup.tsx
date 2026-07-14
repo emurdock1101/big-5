@@ -93,7 +93,7 @@ const Signup = (props: SignupProps) => {
     navigate(path, {replace: true});
   };
 
-  const signUp = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const signUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     showAlert(false);
     try {
@@ -121,7 +121,7 @@ const Signup = (props: SignupProps) => {
     }
   };
 
-  const register = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const register = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     showAlert(false);
     try {
@@ -179,23 +179,33 @@ const Signup = (props: SignupProps) => {
               <Typography variant='h5' className={styles.title}>
                 Check your email for your temporary password.
               </Typography>
-              <TextField
-                type='text'
-                placeholder='email'
-                onChange={(e) => setEmail(e.target.value)}
-                className={styles.input}
-              />
-              <TextField
-                type='password'
-                placeholder='temporary password'
-                onChange={(e) => setPassword(e.target.value)}
-                className={styles.input}
-              />
-              <br></br>
-              <br></br>
-              <Button color='primary' variant='contained' onClick={signUp} className={styles.button}>
-                SIGN UP
-              </Button>
+              <form onSubmit={signUp} noValidate>
+                <TextField
+                  id='signup-email'
+                  name='email'
+                  type='email'
+                  label='Email'
+                  autoComplete='email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={styles.input}
+                />
+                <TextField
+                  id='signup-temp-password'
+                  name='password'
+                  type='password'
+                  label='Temporary Password'
+                  autoComplete='current-password'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={styles.input}
+                />
+                <br />
+                <br />
+                <Button type='submit' color='primary' variant='contained' className={styles.button}>
+                  SIGN UP
+                </Button>
+              </form>
             </Paper>
           )}
           {user && (
@@ -227,21 +237,31 @@ const Signup = (props: SignupProps) => {
                   </List>
                 </Grid>
               </Grid>
-              <TextField
-                type='password'
-                placeholder='new password'
-                onChange={(e) => setNewPassword(e.target.value)}
-                className={styles.input}
-              />
-              <TextField
-                type='password'
-                placeholder='confirm password'
-                onChange={(e) => setNewPasswordConfirm(e.target.value)}
-                className={styles.input}
-              />
-              <Button color='primary' variant='contained' onClick={register} className={styles.button}>
-                CREATE PASSWORD
-              </Button>
+              <form onSubmit={register} noValidate>
+                <TextField
+                  id='signup-new-password'
+                  name='newPassword'
+                  type='password'
+                  label='New Password'
+                  autoComplete='new-password'
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className={styles.input}
+                />
+                <TextField
+                  id='signup-confirm-password'
+                  name='confirmPassword'
+                  type='password'
+                  label='Confirm Password'
+                  autoComplete='new-password'
+                  value={newPasswordConfirm}
+                  onChange={(e) => setNewPasswordConfirm(e.target.value)}
+                  className={styles.input}
+                />
+                <Button type='submit' color='primary' variant='contained' className={styles.button}>
+                  CREATE PASSWORD
+                </Button>
+              </form>
             </Paper>
           )}
         </Grid>
