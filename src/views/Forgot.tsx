@@ -93,29 +93,30 @@ const Forgot = (props: ForgotProps) => {
     navigate(path, {replace: true});
   };
 
-  const sendCode = async (e: any) => {
+  const sendCode = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     showAlert(false);
     try {
       // Send confirmation code to user's email
       await Auth.forgotPassword(email);
       setCodeSent(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { code?: string; log?: string };
       console.error(JSON.stringify(error));
       if (!email || !email.length) {
         setAlertContent('Registered email must be provided.');
-      } else if (error.code === 'UserNotFoundException') {
+      } else if (err.code === 'UserNotFoundException') {
         setAlertContent('User is not found. Try again with a registered email, or sign up below to create an account.');
-      } else if (error.code.length) {
-        setAlertContent(error.code);
-      } else if (error.log.length) {
-        setAlertContent(error.code);
+      } else if (err.code?.length) {
+        setAlertContent(err.code);
+      } else if (err.log?.length) {
+        setAlertContent(err.code ?? '');
       }
       showAlert(true);
     }
   };
 
-  const reset = async (e: any) => {
+  const reset = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     showAlert(false);
     try {
@@ -130,7 +131,8 @@ const Forgot = (props: ForgotProps) => {
         setAlertContent('Password reset was not successful.');
         showAlert(true);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { code?: string; log?: string };
       console.error(JSON.stringify(error));
       if (!email || !email.length) {
         setAlertContent('Username must be provided.');
@@ -138,14 +140,14 @@ const Forgot = (props: ForgotProps) => {
         setAlertContent('Confirmation code must be provided.');
       } else if (!password || !password.length) {
         setAlertContent('Password must be provided.');
-      } else if (error.code === 'InvalidPasswordException') {
+      } else if (err.code === 'InvalidPasswordException') {
         setAlertContent(
           'Invalid password. Make sure that you contain lowercase, uppercase, numerical, and special characters',
         );
-      } else if (error.code.length) {
-        setAlertContent(error.code);
-      } else if (error.log.length) {
-        setAlertContent(error.code);
+      } else if (err.code?.length) {
+        setAlertContent(err.code);
+      } else if (err.log?.length) {
+        setAlertContent(err.code ?? '');
       }
       showAlert(true);
     }

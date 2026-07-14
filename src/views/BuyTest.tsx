@@ -1,3 +1,4 @@
+import React from 'react';
 import {Button, Grid, Typography, makeStyles, Paper} from '@material-ui/core';
 import {loadStripe} from '@stripe/stripe-js';
 import {useNavigate} from 'react-router-dom';
@@ -49,7 +50,7 @@ const BuyTest: React.FC = () => {
     document?.querySelector('body')?.scrollTo({top: 0, left: 0, behavior: 'smooth'});
   });
 
-  const signUp = async (e: any) => {
+  const signUp = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY ?? '');

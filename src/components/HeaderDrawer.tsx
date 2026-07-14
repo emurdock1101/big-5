@@ -122,7 +122,7 @@ const HeaderDrawer = (props: HeaderDrawerProps) => {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
 
-  const ref = useRef<any>();
+  const ref = useRef<HTMLDivElement>(null);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -149,7 +149,7 @@ const HeaderDrawer = (props: HeaderDrawerProps) => {
   };
 
   // Log out will redirect to Home
-  const logOut = async (e: any) => {
+  const logOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       await Auth.signOut();
@@ -163,11 +163,11 @@ const HeaderDrawer = (props: HeaderDrawerProps) => {
   const styles = useStyles();
 
   useEffect(() => {
-    const checkIfClickedOutside = (event: any) => {
+    const checkIfClickedOutside = (event: MouseEvent) => {
       // If the menu is open and the clicked target is not within the menu,
       // then close the menu
 
-      if (open && ref.current && !ref.current.contains(event.target)) {
+      if (open && ref.current && !ref.current.contains(event.target as Node)) {
         handleDrawerClose();
       }
     };
