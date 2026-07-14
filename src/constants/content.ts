@@ -1,4 +1,4 @@
-import { Ocean, TraitOverview } from './schema';
+import {Ocean, TraitOverview} from './schema';
 
 // ─── Trait Overviews (OCEAN) ────────────────────────────────────────────────
 
@@ -81,32 +81,42 @@ export interface Faq {
 export const faqs: Faq[] = [
   {
     title: 'How was this test created?',
-    part1: 'This test was formatted by using the work of Dr. Colling DeYoung and Dr. Jordan B Peterson (see DeYoung, C.G., Quilty, L.C. & Peterson, J.B. Between facets and domains: 10 aspects of the Big Five. Journal of Personality and Social Psychology, 93, 880-896.).',
-    part2: "The goal of Personality+ is to offer a more streamlined personality test with results that can be clearly understood and implemented. The interpretations of the test have come from diligent research, study, and clinical practice. If you are curious about conducting your own research, we would point you the Oxford Handbook of the Five Factor Model, Dr. C.G. DeYoung and Dr. J.B. Peterson\u2019s published research, or a trusted mental health therapist/researcher.",
+    part1:
+      'This test was formatted by using the work of Dr. Colling DeYoung and Dr. Jordan B Peterson (see DeYoung, C.G., Quilty, L.C. & Peterson, J.B. Between facets and domains: 10 aspects of the Big Five. Journal of Personality and Social Psychology, 93, 880-896.).',
+    part2:
+      'The goal of Personality+ is to offer a more streamlined personality test with results that can be clearly understood and implemented. The interpretations of the test have come from diligent research, study, and clinical practice. If you are curious about conducting your own research, we would point you the Oxford Handbook of the Five Factor Model, Dr. C.G. DeYoung and Dr. J.B. Peterson\u2019s published research, or a trusted mental health therapist/researcher.',
   },
   {
     title: "Aren't there other free personality tests?",
-    part1: 'The Big Five Aspect Scale in its original paper/pencil format is in the public domain, and there are other free versions with reports available elsewhere. However, this test was created so that the results and reports generate after the test could be cost effective, clearer, more precise, more user friendly, and most importantly, useable. By useable, we mean providing the results in a way that can help you implement practical changes in your life, allow for self-reflections, or better connect with a mental health therapist.',
-    part2: "Our research team has created reports that lay out both individual strengths and weaknesses succinctly and practically. Our team has worked hard to compile the results from some of the world\u2019s best personality psychologist to help you discover a new you and chance to undertake a new adventure.",
+    part1:
+      'The Big Five Aspect Scale in its original paper/pencil format is in the public domain, and there are other free versions with reports available elsewhere. However, this test was created so that the results and reports generate after the test could be cost effective, clearer, more precise, more user friendly, and most importantly, useable. By useable, we mean providing the results in a way that can help you implement practical changes in your life, allow for self-reflections, or better connect with a mental health therapist.',
+    part2:
+      'Our research team has created reports that lay out both individual strengths and weaknesses succinctly and practically. Our team has worked hard to compile the results from some of the world\u2019s best personality psychologist to help you discover a new you and chance to undertake a new adventure.',
   },
   {
     title: 'Why can I only take the test a single time?',
-    part1: 'An accurate personality test must be taken and scored in a standardized manner for accurate results. Furthermore, if you take the test, and then look at your results, and then re-take it, your second results could introduce biases by your now-expanded knowledge of your personality. That means you could alter your responses (consciously or unconsciously), which would change your results.',
+    part1:
+      'An accurate personality test must be taken and scored in a standardized manner for accurate results. Furthermore, if you take the test, and then look at your results, and then re-take it, your second results could introduce biases by your now-expanded knowledge of your personality. That means you could alter your responses (consciously or unconsciously), which would change your results.',
   },
   {
     title: 'What can I do to improve my personality?',
-    part1: 'Personality+ is unique in that it offers multiple options to improve your personality. You can schedule a one time review of the test results or schedule weekly or monthly sessions with someone from Personality+.',
+    part1:
+      'Personality+ is unique in that it offers multiple options to improve your personality. You can schedule a one time review of the test results or schedule weekly or monthly sessions with someone from Personality+.',
   },
   {
     title: 'What if I want to see if my personality has changed?',
-    part1: 'Personality is quite stable. If you have done a lot of work to change a trait or an aspect, there is, however, the possibility of change and improvement. However, this is a process that will occur over months or years, not days or weeks. Thus, it is best not to take the test again soon. Do what you need or want to do to change your personality, and then try the test again in six months or a year.',
+    part1:
+      'Personality is quite stable. If you have done a lot of work to change a trait or an aspect, there is, however, the possibility of change and improvement. However, this is a process that will occur over months or years, not days or weeks. Thus, it is best not to take the test again soon. Do what you need or want to do to change your personality, and then try the test again in six months or a year.',
     part2: 'Reach out to us if you have taken the test over six months ago and would like to try again.',
   },
   {
     title: 'What if I disagree with the results, or feel that they do not accurately represent my personality?',
-    part1: 'First, remember that this is a self-report test, scored comparatively, using statistical processes. The manner in which you describe yourself has been compared to the manner in which many other people described themselves. If you received results that you do not regard as accurate (and this is more likely to be the case when the report describes more negative personality attributes) it is possible that you were too hard on yourself when you answered the questions.',
-    part2: 'Second, remember that the traits and aspects have to be considered in combination, rather than singly. So, for example, you might be very or extremely high in Agreeableness. You therefore received feedback on the report stating that you have a hard time standing up for yourself, and are generally more concerned with the feelings and desires of other people. However, if you are also high in assertiveness (an aspect of Extraversion) and/or low in Neuroticism then you are more likely to say what you want and put your needs forward than an agreeable person low in the former and high in the latter.',
-    part3: 'Remember, your personality is part of your story and adventure. Learn who you are and discover the strenghts that lie within!',
+    part1:
+      'First, remember that this is a self-report test, scored comparatively, using statistical processes. The manner in which you describe yourself has been compared to the manner in which many other people described themselves. If you received results that you do not regard as accurate (and this is more likely to be the case when the report describes more negative personality attributes) it is possible that you were too hard on yourself when you answered the questions.',
+    part2:
+      'Second, remember that the traits and aspects have to be considered in combination, rather than singly. So, for example, you might be very or extremely high in Agreeableness. You therefore received feedback on the report stating that you have a hard time standing up for yourself, and are generally more concerned with the feelings and desires of other people. However, if you are also high in assertiveness (an aspect of Extraversion) and/or low in Neuroticism then you are more likely to say what you want and put your needs forward than an agreeable person low in the former and high in the latter.',
+    part3:
+      'Remember, your personality is part of your story and adventure. Learn who you are and discover the strenghts that lie within!',
   },
 ];
 
@@ -119,12 +129,16 @@ export interface BioEntry {
 
 export const about: Record<string, BioEntry> = {
   elliot: {
-    part1: 'Elliot Murdock is a software engineer with a B.A. in Computer Science from the University of Virginia. He creates websites for small businesses. In his free time, Elliot enjoys climbing, snowboarding, and traveling.',
-    part2: 'Elliot specializes in React, Java, Typescript, and AWS infrastructure-as-code development. He has experience with front-end, back-end, automated testing, and DevOps. Feel free to check out more of his work in the links above.',
+    part1:
+      'Elliot Murdock is a software engineer with a B.A. in Computer Science from the University of Virginia. He creates websites for small businesses. In his free time, Elliot enjoys climbing, snowboarding, and traveling.',
+    part2:
+      'Elliot specializes in React, Java, Typescript, and AWS infrastructure-as-code development. He has experience with front-end, back-end, automated testing, and DevOps. Feel free to check out more of his work in the links above.',
   },
   patrick: {
-    part1: 'Patrick Knicely has a B.A from Roaonke College and a M.S. from Radford University. He is a clinical mental health threapist and clinical consultant for inpatient and ambulatory healthcare settings.',
-    part2: 'Patrick helps clients discover who they are by showing them their unique personality and how that personality affects their emotions, behavior, cognition, and motivations. This allows individuals to discover their natural strengths as well as areas of growth. By understanding a client\u2019s personality, Patrick helps clients organize their past, present, and future with self-authoring, behavioral learning, and goal setting to help mitigate depression, anxiety, and trauma.',
+    part1:
+      'Patrick Knicely has a B.A from Roaonke College and a M.S. from Radford University. He is a clinical mental health threapist and clinical consultant for inpatient and ambulatory healthcare settings.',
+    part2:
+      'Patrick helps clients discover who they are by showing them their unique personality and how that personality affects their emotions, behavior, cognition, and motivations. This allows individuals to discover their natural strengths as well as areas of growth. By understanding a client\u2019s personality, Patrick helps clients organize their past, present, and future with self-authoring, behavioral learning, and goal setting to help mitigate depression, anxiety, and trauma.',
   },
 };
 
@@ -137,9 +151,12 @@ export interface AboutTheTestContent {
 }
 
 export const aboutTheTest: AboutTheTestContent = {
-  length: "The test takes 10 - 20 minutes and consists of 100 questions. It\u2019s recommended you take some time to prepare by getting a good sleep, eating well, and finding a relaxing environment to take the test.",
-  results: 'You will receive information about your unique personality as it relates to the dimensions of the Big Five: Extraversion (positive emotion), Neurotocism (negative emotion), Agreeableness (care for others), Conscientiousness (order and responsibility) and Openness (interest in ideas and aesthetics). You will also receive a percentage and detailed paragraphs about how that might affect your emotions, behavior, thinking, and desires.',
-  background: 'These questions are based on open-sourced research. This includes such notable personality researchers as Dr. Collin DeYoung, Dr. Paul Costa, Jr., Dr. Jordan Peterson, Dr. Joshua Wilt, and Dr. Joshua Revelle.',
+  length:
+    'The test takes 10 - 20 minutes and consists of 100 questions. It\u2019s recommended you take some time to prepare by getting a good sleep, eating well, and finding a relaxing environment to take the test.',
+  results:
+    'You will receive information about your unique personality as it relates to the dimensions of the Big Five: Extraversion (positive emotion), Neurotocism (negative emotion), Agreeableness (care for others), Conscientiousness (order and responsibility) and Openness (interest in ideas and aesthetics). You will also receive a percentage and detailed paragraphs about how that might affect your emotions, behavior, thinking, and desires.',
+  background:
+    'These questions are based on open-sourced research. This includes such notable personality researchers as Dr. Collin DeYoung, Dr. Paul Costa, Jr., Dr. Jordan Peterson, Dr. Joshua Wilt, and Dr. Joshua Revelle.',
 };
 
 // ─── Legacy default export (keeps old consumers working) ─────────────────────

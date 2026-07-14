@@ -100,7 +100,7 @@ const Signup = (props: SignupProps) => {
       const userCognito = await Auth.signIn(email, password);
       setUser(userCognito);
     } catch (error: unknown) {
-      const err = error as { code?: string; log?: string };
+      const err = error as {code?: string; log?: string};
       console.error(JSON.stringify(error));
       if (!email || !email.length) {
         setAlertContent('Username must be provided.');
@@ -138,7 +138,7 @@ const Signup = (props: SignupProps) => {
         handleNav('/test');
       }
     } catch (error: unknown) {
-      const err = error as { code?: string; log?: string };
+      const err = error as {code?: string; log?: string};
       console.error(JSON.stringify(error));
       if (!newPassword || !newPassword.length || !newPasswordConfirm || !newPasswordConfirm.length) {
         setAlertContent('Password must be provided.');

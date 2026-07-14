@@ -7,6 +7,8 @@ import {ThemeProvider} from '@material-ui/core/styles';
 import {theme} from './theme';
 // Views
 import About from './views/About';
+import AdminView from './views/AdminView';
+import AdminUserResults from './views/AdminUserResults';
 import Contact from './views/Contact';
 import FAQs from './views/Faqs';
 import ErrorPage from './views/Error';
@@ -34,7 +36,7 @@ import {Storage} from '@aws-amplify/storage';
 // Utils & Constants
 import {questionData as qd} from './constants/questionData';
 import {User} from './constants/schema';
-import { shuffle } from './utils/array.utils';
+import {shuffle} from './utils/array.utils';
 
 Amplify.configure(awsconfig);
 
@@ -44,7 +46,7 @@ export interface UserContextType {
 }
 
 export const UserContext = createContext<UserContextType>({
-  user: { loggedIn: false, completed: false },
+  user: {loggedIn: false, completed: false},
   setUser: () => {},
 });
 
@@ -74,11 +76,13 @@ function App() {
 
   const assessLoggedInState = useCallback(async () => {
     try {
-      await Auth.currentAuthenticatedUser();
-      setUser((prev) => ({...prev, loggedIn: true}));
+      const cognitoUser = await Auth.currentAuthenticatedUser();
+      const groups: string[] = cognitoUser.signInUserSession?.accessToken?.payload?.['cognito:groups'] ?? [];
+      const isAdmin = groups.includes('admins');
+      setUser((prev) => ({...prev, loggedIn: true, isAdmin}));
       setLoggedIn(true);
     } catch (error) {
-      setUser((prev) => ({...prev, loggedIn: false}));
+      setUser((prev) => ({...prev, loggedIn: false, isAdmin: false}));
     } finally {
       setLoading(false);
     }
@@ -138,7 +142,12 @@ function App() {
     <ThemeProvider theme={theme}>
       <UserContext.Provider value={{user, setUser}}>
         <div className={styles.container}>
-          <HeaderDrawer loggedIn={!!user.loggedIn} completed={!!user.completed} onLogOut={assessLoggedInState} />
+          <HeaderDrawer
+            loggedIn={!!user.loggedIn}
+            completed={!!user.completed}
+            isAdmin={!!user.isAdmin}
+            onLogOut={assessLoggedInState}
+          />
           <Routes>
             <Route
               path='/test'
@@ -173,6 +182,11 @@ function App() {
             />
             <Route path='/buy' element={<ProtectedRoute type={'loggedOut'} component={<BuyTest />} />} />
 
+            <Route path='/admin' element={<ProtectedRoute type={'admin'} component={<AdminView />} />} />
+            <Route
+              path='/admin/user/:email/:subId'
+              element={<ProtectedRoute type={'admin'} component={<AdminUserResults />} />}
+            />
             <Route path='/' element={<Home loggedIn={!!user.loggedIn} completed={!!user.completed} />} />
             <Route path='/about' element={<About />} />
             <Route path='/faqs' element={<FAQs />} />

@@ -101,7 +101,7 @@ const Forgot = (props: ForgotProps) => {
       await Auth.forgotPassword(email);
       setCodeSent(true);
     } catch (error: unknown) {
-      const err = error as { code?: string; log?: string };
+      const err = error as {code?: string; log?: string};
       console.error(JSON.stringify(error));
       if (!email || !email.length) {
         setAlertContent('Registered email must be provided.');
@@ -132,7 +132,7 @@ const Forgot = (props: ForgotProps) => {
         showAlert(true);
       }
     } catch (error: unknown) {
-      const err = error as { code?: string; log?: string };
+      const err = error as {code?: string; log?: string};
       console.error(JSON.stringify(error));
       if (!email || !email.length) {
         setAlertContent('Username must be provided.');

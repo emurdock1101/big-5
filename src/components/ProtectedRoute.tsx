@@ -5,7 +5,7 @@ import {UserContext} from '../App';
 import Loading from './Loading';
 
 interface ProtectedRouteProps {
-  type: 'loggedOut' | 'loggedInAndCompleted' | 'loggedInAndUncompleted';
+  type: 'loggedOut' | 'loggedInAndCompleted' | 'loggedInAndUncompleted' | 'admin';
   component: JSX.Element;
 }
 
@@ -19,6 +19,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = (props: ProtectedRouteProp
   } else if (props.type === 'loggedInAndCompleted' && user.loggedIn && user.completed) {
     return props.component;
   } else if (props.type === 'loggedInAndUncompleted' && user.loggedIn && !user.completed) {
+    return props.component;
+  } else if (props.type === 'admin' && user.loggedIn && user.isAdmin) {
     return props.component;
   }
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Grid, Typography, makeStyles } from '@material-ui/core';
+import {Grid, Typography, makeStyles} from '@material-ui/core';
 
 import Percent from '../components/Percent';
-import { getInterpretation } from '../utils/interpretations.utils';
+import {getInterpretation} from '../utils/interpretations.utils';
 
 export const useStyles = makeStyles((theme) => ({
   oceanScoreRow: {
@@ -92,7 +92,7 @@ interface InterpretationListProps {
   indent: boolean;
 }
 
-export const InterpretationList: React.FC<InterpretationListProps> = ({ traitName, score, indent }) => {
+export const InterpretationList: React.FC<InterpretationListProps> = ({traitName, score, indent}) => {
   const interpretation = getInterpretation(traitName, score);
 
   if (!interpretation) return <React.Fragment />;
@@ -102,13 +102,13 @@ export const InterpretationList: React.FC<InterpretationListProps> = ({ traitNam
       {interpretation.paragraphs.map((paragraph, i) => (
         <React.Fragment key={i}>
           {i === 0 ? (
-            <Typography variant='subtitle1' style={{ paddingLeft: indent ? 30 : 0 }}>
+            <Typography variant='subtitle1' style={{paddingLeft: indent ? 30 : 0}}>
               <strong>{paragraph}</strong>
             </Typography>
           ) : (
             <React.Fragment>
               <br />
-              <Typography variant='subtitle1' style={{ paddingLeft: indent ? 30 : 0 }}>
+              <Typography variant='subtitle1' style={{paddingLeft: indent ? 30 : 0}}>
                 {paragraph}
               </Typography>
             </React.Fragment>

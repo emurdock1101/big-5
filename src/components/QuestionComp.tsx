@@ -48,57 +48,27 @@ const QuestionComp: React.FC<QuestionProps> = (props: QuestionProps) => {
       <RadioGroup row={!isMobile} value={selected}>
         <FormControlLabel
           value={radio1}
-          control={
-            <Radio
-              color='primary'
-              checked={selected === radio1}
-              onClick={() => setSelected(radio1)}
-            />
-          }
+          control={<Radio color='primary' checked={selected === radio1} onClick={() => setSelected(radio1)} />}
           label='Strongly Disagree'
         />
         <FormControlLabel
           value={radio2}
-          control={
-            <Radio
-              color='primary'
-              checked={selected === radio2}
-              onClick={() => setSelected(radio2)}
-            />
-          }
+          control={<Radio color='primary' checked={selected === radio2} onClick={() => setSelected(radio2)} />}
           label='Disagree'
         />
         <FormControlLabel
           value={radio3}
-          control={
-            <Radio
-              color='primary'
-              checked={selected === radio3}
-              onClick={() => setSelected(radio3)}
-            />
-          }
+          control={<Radio color='primary' checked={selected === radio3} onClick={() => setSelected(radio3)} />}
           label='Neutral'
         />
         <FormControlLabel
           value={radio4}
-          control={
-            <Radio
-              color='primary'
-              checked={selected === radio4}
-              onClick={() => setSelected(radio4)}
-            />
-          }
+          control={<Radio color='primary' checked={selected === radio4} onClick={() => setSelected(radio4)} />}
           label='Agree'
         />
         <FormControlLabel
           value={radio5}
-          control={
-            <Radio
-              color='primary'
-              checked={selected === radio5}
-              onClick={() => setSelected(radio5)}
-            />
-          }
+          control={<Radio color='primary' checked={selected === radio5} onClick={() => setSelected(radio5)} />}
           label='Strongly Agree'
         />
       </RadioGroup>

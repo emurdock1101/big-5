@@ -53,6 +53,7 @@ export type EscsData = {
 export type User = {
   loggedIn?: boolean;
   completed?: boolean;
+  isAdmin?: boolean;
 };
 
 export type ScoreLevel = 'veryLow' | 'low' | 'modLow' | 'average' | 'modHigh' | 'high' | 'veryHigh';

@@ -88,7 +88,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
       props.onLogIn();
       handleNav('/results');
     } catch (error: unknown) {
-      const err = error as { code?: string; log?: string };
+      const err = error as {code?: string; log?: string};
       console.error(JSON.stringify(error));
       if (!username || !username.length) {
         setAlertContent('Username must be provided.');

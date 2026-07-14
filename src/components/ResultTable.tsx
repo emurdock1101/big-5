@@ -37,7 +37,11 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
   },
 }));
 
-interface TableRowData { category: string; aspect: string; percentile: string; }
+interface TableRowData {
+  category: string;
+  aspect: string;
+  percentile: string;
+}
 
 function createData(percentiles: Record<string, number>): TableRowData[] {
   const tableData: TableRowData[] = [];

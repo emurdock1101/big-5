@@ -1,9 +1,6 @@
 import * as React from 'react';
 
-import LinearProgress, {
-  LinearProgressProps,
-  linearProgressClasses,
-} from '@mui/material/LinearProgress';
+import LinearProgress, {LinearProgressProps, linearProgressClasses} from '@mui/material/LinearProgress';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -28,9 +25,7 @@ function LinearProgressWithLabel(props: LinearProgressProps & {value: number}) {
         <LinearProgress variant='determinate' {...props} color='primary' />
       </Box>
       <Box sx={{minWidth: 35}}>
-        <Typography variant='body2' color='text.secondary'>{`${Math.round(
-          props.value,
-        )}%`}</Typography>
+        <Typography variant='body2' color='text.secondary'>{`${Math.round(props.value)}%`}</Typography>
       </Box>
     </Box>
   );

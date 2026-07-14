@@ -6,6 +6,7 @@ import Banner from '../components/Banner';
 import BookNow from '../components/BookNow';
 import Interpretations from '../components/Interpretations';
 import OceanAccordion from '../components/OceanAccordion';
+import type {ApexOptions} from 'apexcharts';
 import ReactApexChart from 'react-apexcharts';
 import ResultTable from '../components/ResultTable';
 import {aspectOptions} from '../constants/aspectSpecs';
@@ -13,7 +14,7 @@ import {oceanOptions} from '../constants/oceanSpecs';
 import {theme} from '../theme';
 import {Auth} from 'aws-amplify';
 import React from 'react';
-import { generatePdfDoc } from '../utils/pdf.utils';
+import {generatePdfDoc} from '../utils/pdf.utils';
 
 interface S3Results {
   name: string;
@@ -200,12 +201,12 @@ const Results: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={11} lg={5}>
           <Paper elevation={2} style={{borderRadius: '10px'}}>
-            <ReactApexChart options={oceanOptions} series={oceanSeries} type='bar' height={550} />
+            <ReactApexChart options={oceanOptions as ApexOptions} series={oceanSeries} type='bar' height={550} />
           </Paper>
         </Grid>
         <Grid item xs={12} sm={11} lg={5}>
           <Paper elevation={2} style={{borderRadius: '10px'}}>
-            <ReactApexChart options={aspectOptions} series={aspectSeries} type='bar' height={550} />
+            <ReactApexChart options={aspectOptions as ApexOptions} series={aspectSeries} type='bar' height={550} />
           </Paper>
         </Grid>
         <Grid item xs={12} className={styles.interpretationTitle}>

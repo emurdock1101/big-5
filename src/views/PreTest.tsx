@@ -101,7 +101,6 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
     if (gender !== '') {
       sessionStorage.setItem('gender', gender);
     }
-
   }, [name, gender]);
 
   const styles = useStyles();
@@ -219,7 +218,6 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
                         label='Female'
                       />
                     </RadioGroup>
-
                   </FormControl>
                 </div>
                 <div className={styles.buttons}>
