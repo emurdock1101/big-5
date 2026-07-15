@@ -12,3 +12,12 @@ First time setting up:
 To run:
 
 1. "npm start" to run frontend locally on port 3000
+
+## Admin Access
+
+Admin features are protected via Cognito group membership. To grant admin access to a user:
+
+1. AWS Console → Cognito → User Pools
+2. Select the Personality+ User Pool
+3. Go to **Groups** → create an `admins` group (if it doesn't exist yet)
+4. Add the user to the `admins` group
