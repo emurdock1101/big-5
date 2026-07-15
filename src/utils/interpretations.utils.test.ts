@@ -1,5 +1,5 @@
-import { getScoreLevel, getInterpretation, buildAIContext } from './interpretations.utils';
-import { Ocean, Aspect } from '../constants/schema';
+import {getScoreLevel, getInterpretation, buildAIContext} from './interpretations.utils';
+import {Ocean, Aspect} from '../constants/schema';
 
 // ─── getScoreLevel ────────────────────────────────────────────────────────────
 
@@ -128,11 +128,11 @@ describe('buildAIContext', () => {
   it('includes score level labels', () => {
     const result = buildAIContext(samplePercentiles);
     expect(result).toContain('Moderately High'); // 65 → modHigh
-    expect(result).toContain('Very High');        // 91 → veryHigh
+    expect(result).toContain('Very High'); // 91 → veryHigh
   });
 
   it('returns an empty context (just header) for unknown traits', () => {
-    const result = buildAIContext({ UnknownTrait: 50 });
+    const result = buildAIContext({UnknownTrait: 50});
     expect(result).toContain('=== Personality Assessment Results ===');
     expect(result).not.toContain('UNKNOWNTRAIT');
   });

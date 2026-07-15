@@ -1,4 +1,4 @@
-import { shuffle } from './array.utils';
+import {shuffle} from './array.utils';
 
 describe('shuffle', () => {
   it('returns the same array reference (in-place)', () => {
@@ -48,9 +48,9 @@ describe('shuffle', () => {
   });
 
   it('works with object arrays without corrupting references', () => {
-    const obj1 = { id: 1 };
-    const obj2 = { id: 2 };
-    const obj3 = { id: 3 };
+    const obj1 = {id: 1};
+    const obj2 = {id: 2};
+    const obj3 = {id: 3};
     const arr = [obj1, obj2, obj3];
     shuffle(arr);
     expect(arr).toContain(obj1);

@@ -72,7 +72,6 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
   const styles = useStyles();
   const navigate = useNavigate();
 
-  // On clicking log in, redirect to Login page
   const handleNav = (path: string) => {
     if (sessionStorage.length > 0) {
       sessionStorage.clear();
@@ -80,7 +79,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
     navigate(path);
   };
 
-  const logIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const logIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     showAlert(false);
     try {
@@ -88,7 +87,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
       props.onLogIn();
       handleNav('/results');
     } catch (error: unknown) {
-      const err = error as { code?: string; log?: string };
+      const err = error as {code?: string; log?: string};
       console.error(JSON.stringify(error));
       if (!username || !username.length) {
         setAlertContent('Username must be provided.');
@@ -129,28 +128,38 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
             </React.Fragment>
           )}
           <Paper elevation={2} className={styles.paper}>
-            <TextField
-              type='text'
-              placeholder='email'
-              onChange={(e) => setUsername(e.target.value)}
-              className={styles.input}
-            />
-            <TextField
-              type='password'
-              placeholder='password'
-              onChange={(e) => setPassword(e.target.value)}
-              className={styles.input}
-            />
-            <br></br>
-            <br></br>
-            <Link className={styles.forgot} to={'/reset'}>
-              Forgot password?
-            </Link>
-            <br></br>
-            <br></br>
-            <Button color='primary' variant='contained' onClick={logIn} className={styles.button}>
-              LOG IN
-            </Button>
+            <form onSubmit={logIn} noValidate>
+              <TextField
+                id='login-email'
+                name='email'
+                type='email'
+                label='Email'
+                autoComplete='email'
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className={styles.input}
+              />
+              <TextField
+                id='login-password'
+                name='password'
+                type='password'
+                label='Password'
+                autoComplete='current-password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={styles.input}
+              />
+              <br />
+              <br />
+              <Link className={styles.forgot} to={'/reset'}>
+                Forgot password?
+              </Link>
+              <br />
+              <br />
+              <Button type='submit' color='primary' variant='contained' className={styles.button}>
+                LOG IN
+              </Button>
+            </form>
             <Typography className={styles.noAccount}>
               Don't have an account?{' '}
               <Link className={styles.plus} to={'/buy'}>

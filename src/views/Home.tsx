@@ -161,26 +161,17 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
               </Typography>
               <Typography className={styles.secondTitle}>Discover a New You.</Typography>
               {!props.loggedIn && (
-                <Button
-                  variant='contained'
-                  onClick={() => handleNav('/buy')}
-                  className={styles.buyNowButton}>
+                <Button variant='contained' onClick={() => handleNav('/buy')} className={styles.buyNowButton}>
                   BUY NOW
                 </Button>
               )}
               {props.loggedIn && !props.completed && (
-                <Button
-                  variant='contained'
-                  onClick={() => handleNav('/test')}
-                  className={styles.buyNowButton}>
+                <Button variant='contained' onClick={() => handleNav('/test')} className={styles.buyNowButton}>
                   TAKE TEST
                 </Button>
               )}
               {props.loggedIn && props.completed && (
-                <Button
-                  variant='contained'
-                  onClick={() => handleNav('/results')}
-                  className={styles.buyNowButton}>
+                <Button variant='contained' onClick={() => handleNav('/results')} className={styles.buyNowButton}>
                   VIEW RESULTS
                 </Button>
               )}
@@ -194,28 +185,22 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
               </Typography>
               <Divider />
               <Typography variant='subtitle1' className={styles.thirdTitleDescription}>
-                Why do you think or act the way you do? What moves you to feel emotions or stirs
-                your desires? Better yet, can you change those things?
+                Why do you think or act the way you do? What moves you to feel emotions or stirs your desires? Better
+                yet, can you change those things?
               </Typography>
               <Typography variant='subtitle1' className={styles.thirdTitleDescription}>
-                Who we are stems from our personality, and Personality+ is an test based on the Big
-                Five 10 Aspect Model of personality.
+                Who we are stems from our personality, and Personality+ is an test based on the Big Five 10 Aspect Model
+                of personality.
               </Typography>
               <Typography variant='subtitle1' className={styles.thirdTitleDescription}>
-                Also known as the Five Factor Model or OCEAN, it is an empirical model of
-                personality within psychology that reveals the core of your personality, your
-                strengths, and areas you can grow.
+                Also known as the Five Factor Model or OCEAN, it is an empirical model of personality within psychology
+                that reveals the core of your personality, your strengths, and areas you can grow.
               </Typography>
               <Typography variant='subtitle1' className={styles.thirdTitleDescription}>
                 Discover a new you and start a new journey!
               </Typography>
             </div>
-            <Grid
-              container
-              spacing={8}
-              justifyContent='center'
-              alignItems='center'
-              className={styles.oceanRow}>
+            <Grid container spacing={8} justifyContent='center' alignItems='center' className={styles.oceanRow}>
               <Grid item xs={12} md={4}>
                 <HomeCard
                   title='Why Take It?'
@@ -250,9 +235,9 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
               <Typography className={styles.big5Title}>Big Five Traits and Aspects</Typography>
               <br></br>
               <Typography variant={'subtitle1'} className={styles.big5Desc}>
-                Your results will explain your unique personality as it relates to the Big Five and
-                its 10 aspects, which are 2 subcategories for each of the 5 dimensions. These
-                categories and subcategories are listed below.
+                Your results will explain your unique personality as it relates to the Big Five and its 10 aspects,
+                which are 2 subcategories for each of the 5 dimensions. These categories and subcategories are listed
+                below.
               </Typography>
             </div>
           </Grid>

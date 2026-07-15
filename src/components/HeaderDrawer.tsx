@@ -1,6 +1,6 @@
 import {Button, makeStyles} from '@material-ui/core';
 import {Facebook, Group, Instagram, Phone, Twitter} from '@material-ui/icons';
-import {HelpCenter, PrivacyTip} from '@mui/icons-material';
+import {AdminPanelSettings, HelpCenter, PrivacyTip} from '@mui/icons-material';
 import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
 import React, {useEffect, useRef} from 'react';
 
@@ -112,6 +112,7 @@ const useStyles = makeStyles((theme) => ({
 interface HeaderDrawerProps {
   loggedIn: boolean;
   completed: boolean;
+  isAdmin: boolean;
   onLogOut: () => void;
 }
 
@@ -289,6 +290,18 @@ const HeaderDrawer = (props: HeaderDrawerProps) => {
               </ListItemButton>
             </ListItem>
           </div>
+          {props.isAdmin && (
+            <div style={{color: '#1b1d21', textDecoration: 'none'}}>
+              <ListItem disablePadding>
+                <ListItemButton onClick={() => handleSidebarNav('/admin')}>
+                  <ListItemIcon>
+                    <AdminPanelSettings />
+                  </ListItemIcon>
+                  <ListItemText primary={'Admin'} />
+                </ListItemButton>
+              </ListItem>
+            </div>
+          )}
         </List>
         <Divider />
         <List>

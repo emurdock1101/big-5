@@ -9,7 +9,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Collapse from '@mui/material/Collapse';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
-import { about } from '../constants/content';
+import {about} from '../constants/content';
 import elliot from '../images/elliot.jpeg';
 import patrick from '../images/patrick.jpeg';
 import {styled} from '@mui/material/styles';

@@ -1,7 +1,7 @@
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import {Box, Typography, makeStyles, Paper} from '@material-ui/core';
-import { aboutTheTest } from '../constants/content';
+import {aboutTheTest} from '../constants/content';
 import MenuBook from '@mui/icons-material/MenuBook';
 import Timer from '@mui/icons-material/Timer';
 import Equalizer from '@mui/icons-material/Equalizer';

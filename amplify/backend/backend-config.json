@@ -10,6 +10,17 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "API Gateway"
+    },
+    "adminApi": {
+      "dependsOn": [
+        {
+          "attributes": ["Name", "Arn"],
+          "category": "function",
+          "resourceName": "adminResultsLambda"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
     }
   },
   "auth": {
@@ -40,6 +51,18 @@
           "attributes": ["UserPoolId"],
           "category": "auth",
           "resourceName": "big5amplifye0115051"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "adminResultsLambda": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": ["BucketName"],
+          "category": "storage",
+          "resourceName": "testResultStorage"
         }
       ],
       "providerPlugin": "awscloudformation",

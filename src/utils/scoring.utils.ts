@@ -1,6 +1,6 @@
-import { cumulativeStdNormalProbability, zScore } from 'simple-statistics';
-import { maleDataMap, femaleDataMap } from '../constants/escsData';
-import { questionData } from '../constants/questionData';
+import {cumulativeStdNormalProbability, zScore} from 'simple-statistics';
+import {maleDataMap, femaleDataMap} from '../constants/escsData';
+import {questionData} from '../constants/questionData';
 
 /** Name and Gender are stored in session storage alongside answers. */
 const NUM_OF_SESSION_STORAGE_ITEMS = 2;

@@ -1,5 +1,5 @@
-import { scoreAdjective, getPercentilesFromAverages } from './scoring.utils';
-import { Ocean, Aspect } from '../constants/schema';
+import {scoreAdjective, getPercentilesFromAverages} from './scoring.utils';
+import {Ocean, Aspect} from '../constants/schema';
 
 // ─── scoreAdjective ───────────────────────────────────────────────────────────
 
@@ -71,18 +71,14 @@ describe('getPercentilesFromAverages', () => {
 
     it('returns ~50th percentile when average equals the normative mean', () => {
       // Male Openness: mean=3.6, stdDev=0.51 → z=0 → P≈50
-      const averages = new Map<string, [number, number]>([
-        [Ocean.Openness.toString(), [1, 3.6]],
-      ]);
+      const averages = new Map<string, [number, number]>([[Ocean.Openness.toString(), [1, 3.6]]]);
       const result = getPercentilesFromAverages(averages);
       expect(result[Ocean.Openness]).toBeCloseTo(50, 0);
     });
 
     it('returns ~84th percentile when average is one std dev above the mean', () => {
       // Male Openness: mean=3.6, stdDev=0.51 → avg=4.11 → z≈1 → P≈84
-      const averages = new Map<string, [number, number]>([
-        [Ocean.Openness.toString(), [1, 3.6 + 0.51]],
-      ]);
+      const averages = new Map<string, [number, number]>([[Ocean.Openness.toString(), [1, 3.6 + 0.51]]]);
       const result = getPercentilesFromAverages(averages);
       expect(result[Ocean.Openness]).toBeGreaterThanOrEqual(82);
       expect(result[Ocean.Openness]).toBeLessThanOrEqual(86);
@@ -90,9 +86,7 @@ describe('getPercentilesFromAverages', () => {
 
     it('returns ~16th percentile when average is one std dev below the mean', () => {
       // Male Openness: mean=3.6, stdDev=0.51 → avg=3.09 → z≈-1 → P≈16
-      const averages = new Map<string, [number, number]>([
-        [Ocean.Openness.toString(), [1, 3.6 - 0.51]],
-      ]);
+      const averages = new Map<string, [number, number]>([[Ocean.Openness.toString(), [1, 3.6 - 0.51]]]);
       const result = getPercentilesFromAverages(averages);
       expect(result[Ocean.Openness]).toBeGreaterThanOrEqual(14);
       expect(result[Ocean.Openness]).toBeLessThanOrEqual(18);
@@ -100,16 +94,14 @@ describe('getPercentilesFromAverages', () => {
 
     it('clamps extreme scores to 1–99', () => {
       // A wildly low average should clamp to 1, not go below
-      const averages = new Map<string, [number, number]>([
-        [Ocean.Openness.toString(), [1, 0]],
-      ]);
+      const averages = new Map<string, [number, number]>([[Ocean.Openness.toString(), [1, 0]]]);
       const result = getPercentilesFromAverages(averages);
       expect(result[Ocean.Openness]).toBe(1);
     });
 
     it('returns percentiles for multiple traits simultaneously', () => {
       const averages = new Map<string, [number, number]>([
-        [Ocean.Openness.toString(), [1, 3.6]],        // ~50th
+        [Ocean.Openness.toString(), [1, 3.6]], // ~50th
         [Ocean.Conscientiousness.toString(), [1, 3.32]], // ~50th
       ]);
       const result = getPercentilesFromAverages(averages);
@@ -119,12 +111,8 @@ describe('getPercentilesFromAverages', () => {
     });
 
     it('throws when a key has no matching normative data', () => {
-      const averages = new Map<string, [number, number]>([
-        ['UnknownTrait', [1, 3.0]],
-      ]);
-      expect(() => getPercentilesFromAverages(averages)).toThrow(
-        /mean or std dev not found/i,
-      );
+      const averages = new Map<string, [number, number]>([['UnknownTrait', [1, 3.0]]]);
+      expect(() => getPercentilesFromAverages(averages)).toThrow(/mean or std dev not found/i);
     });
   });
 
@@ -135,18 +123,14 @@ describe('getPercentilesFromAverages', () => {
 
     it('returns ~50th percentile when average equals the female normative mean', () => {
       // Female Openness: mean=3.61, stdDev=0.52 → z=0 → P≈50
-      const averages = new Map<string, [number, number]>([
-        [Ocean.Openness.toString(), [1, 3.61]],
-      ]);
+      const averages = new Map<string, [number, number]>([[Ocean.Openness.toString(), [1, 3.61]]]);
       const result = getPercentilesFromAverages(averages);
       expect(result[Ocean.Openness]).toBeCloseTo(50, 0);
     });
 
     it('produces different percentiles for male vs female given the same raw average', () => {
       // Same raw score of 3.65 → different percentile depending on gender norms
-      const averages = new Map<string, [number, number]>([
-        [Ocean.Openness.toString(), [1, 3.65]],
-      ]);
+      const averages = new Map<string, [number, number]>([[Ocean.Openness.toString(), [1, 3.65]]]);
 
       sessionStorage.setItem('gender', 'male');
       const maleResult = getPercentilesFromAverages(averages);
@@ -166,9 +150,7 @@ describe('getPercentilesFromAverages', () => {
 
     it('returns ~50th percentile for Enthusiasm at its normative mean (male)', () => {
       // Male Enthusiasm: mean=3.4, stdDev=0.66
-      const averages = new Map<string, [number, number]>([
-        [Aspect.Enthusiasm.toString(), [1, 3.4]],
-      ]);
+      const averages = new Map<string, [number, number]>([[Aspect.Enthusiasm.toString(), [1, 3.4]]]);
       const result = getPercentilesFromAverages(averages);
       expect(result[Aspect.Enthusiasm]).toBeCloseTo(50, 0);
     });

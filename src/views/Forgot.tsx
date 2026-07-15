@@ -93,15 +93,14 @@ const Forgot = (props: ForgotProps) => {
     navigate(path, {replace: true});
   };
 
-  const sendCode = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const sendCode = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     showAlert(false);
     try {
-      // Send confirmation code to user's email
       await Auth.forgotPassword(email);
       setCodeSent(true);
     } catch (error: unknown) {
-      const err = error as { code?: string; log?: string };
+      const err = error as {code?: string; log?: string};
       console.error(JSON.stringify(error));
       if (!email || !email.length) {
         setAlertContent('Registered email must be provided.');
@@ -116,11 +115,10 @@ const Forgot = (props: ForgotProps) => {
     }
   };
 
-  const reset = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const reset = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     showAlert(false);
     try {
-      // Collect confirmation code and new password, then
       const success = await Auth.forgotPasswordSubmit(email, code, password);
 
       if (success) {
@@ -132,7 +130,7 @@ const Forgot = (props: ForgotProps) => {
         showAlert(true);
       }
     } catch (error: unknown) {
-      const err = error as { code?: string; log?: string };
+      const err = error as {code?: string; log?: string};
       console.error(JSON.stringify(error));
       if (!email || !email.length) {
         setAlertContent('Username must be provided.');
@@ -177,15 +175,21 @@ const Forgot = (props: ForgotProps) => {
               <Typography variant='h5' className={styles.title}>
                 Click to send a reset code to your email.
               </Typography>
-              <TextField
-                type='text'
-                placeholder='email'
-                onChange={(e) => setEmail(e.target.value)}
-                className={styles.input}
-              />
-              <Button color='primary' variant='contained' onClick={sendCode} className={styles.button}>
-                Send reset code
-              </Button>
+              <form onSubmit={sendCode} noValidate>
+                <TextField
+                  id='forgot-email'
+                  name='email'
+                  type='email'
+                  label='Email'
+                  autoComplete='email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={styles.input}
+                />
+                <Button type='submit' color='primary' variant='contained' className={styles.button}>
+                  Send reset code
+                </Button>
+              </form>
             </Paper>
           )}
           {codeSent && (
@@ -217,22 +221,31 @@ const Forgot = (props: ForgotProps) => {
                   </List>
                 </Grid>
               </Grid>
-              <TextField
-                type='text'
-                placeholder='confirmation code'
-                onChange={(e) => setCode(e.target.value)}
-                className={styles.input}
-              />
-              <TextField
-                type='password'
-                placeholder='new password'
-                onChange={(e) => setPassword(e.target.value)}
-                className={styles.input}
-              />
-
-              <Button color='primary' variant='contained' onClick={reset} className={styles.button}>
-                RESET PASSWORD
-              </Button>
+              <form onSubmit={reset} noValidate>
+                <TextField
+                  id='forgot-code'
+                  name='code'
+                  type='text'
+                  label='Reset Code'
+                  autoComplete='one-time-code'
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  className={styles.input}
+                />
+                <TextField
+                  id='forgot-new-password'
+                  name='password'
+                  type='password'
+                  label='New Password'
+                  autoComplete='new-password'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={styles.input}
+                />
+                <Button type='submit' color='primary' variant='contained' className={styles.button}>
+                  RESET PASSWORD
+                </Button>
+              </form>
             </Paper>
           )}
         </Grid>

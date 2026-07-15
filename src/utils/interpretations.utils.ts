@@ -1,5 +1,5 @@
-import { ScoreLevel, Interpretation } from '../constants/schema';
-import { interpretations } from '../constants/interpretations';
+import {ScoreLevel, Interpretation} from '../constants/schema';
+import {interpretations} from '../constants/interpretations';
 
 /**
  * Maps a percentile score to a ScoreLevel bucket.
@@ -32,10 +32,14 @@ function ordinalSuffix(n: number): string {
   // 11th, 12th, 13th are irregular
   if (lastTwo >= 11 && lastTwo <= 13) return 'th';
   switch (abs % 10) {
-    case 1: return 'st';
-    case 2: return 'nd';
-    case 3: return 'rd';
-    default: return 'th';
+    case 1:
+      return 'st';
+    case 2:
+      return 'nd';
+    case 3:
+      return 'rd';
+    default:
+      return 'th';
   }
 }
 

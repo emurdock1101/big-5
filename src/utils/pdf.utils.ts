@@ -1,5 +1,5 @@
 import jsPDF from 'jspdf';
-import { Aspect, Ocean } from '../constants/schema';
+import {Aspect, Ocean} from '../constants/schema';
 
 interface TraitConfig {
   ocean: Ocean;
@@ -8,11 +8,15 @@ interface TraitConfig {
 }
 
 const TRAIT_CONFIG: TraitConfig[] = [
-  { ocean: Ocean.Extraversion,     aspects: [Aspect.Enthusiasm,       Aspect.Assertiveness], separatorColor: [240, 109, 121] },
-  { ocean: Ocean.Neuroticism,      aspects: [Aspect.Withdrawal,       Aspect.Volatility],    separatorColor: [169,  81, 159] },
-  { ocean: Ocean.Agreeableness,    aspects: [Aspect.Compassion,       Aspect.Politeness],    separatorColor: [ 87, 148, 212] },
-  { ocean: Ocean.Conscientiousness,aspects: [Aspect.Industriousness,  Aspect.Orderliness],   separatorColor: [ 38, 209, 194] },
-  { ocean: Ocean.Openness,         aspects: [Aspect.AestheticOpenness,Aspect.Interest],      separatorColor: [ 52,  75,  71] },
+  {ocean: Ocean.Extraversion, aspects: [Aspect.Enthusiasm, Aspect.Assertiveness], separatorColor: [240, 109, 121]},
+  {ocean: Ocean.Neuroticism, aspects: [Aspect.Withdrawal, Aspect.Volatility], separatorColor: [169, 81, 159]},
+  {ocean: Ocean.Agreeableness, aspects: [Aspect.Compassion, Aspect.Politeness], separatorColor: [87, 148, 212]},
+  {
+    ocean: Ocean.Conscientiousness,
+    aspects: [Aspect.Industriousness, Aspect.Orderliness],
+    separatorColor: [38, 209, 194],
+  },
+  {ocean: Ocean.Openness, aspects: [Aspect.AestheticOpenness, Aspect.Interest], separatorColor: [52, 75, 71]},
 ];
 
 /**
@@ -36,7 +40,7 @@ export const generatePdfDoc = (email: string, percentiles: Record<string, number
   doc.text(email, xPosition, (yPosition += 10));
 
   // One block per OCEAN trait + its two aspects
-  for (const { ocean, aspects, separatorColor } of TRAIT_CONFIG) {
+  for (const {ocean, aspects, separatorColor} of TRAIT_CONFIG) {
     const oceanLabel = ocean.toString();
     const oceanScore = percentiles?.[oceanLabel] ?? 99;
 
