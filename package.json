@@ -50,5 +50,10 @@
   "devDependencies": {
     "@types/google.maps": "^3.49.2",
     "@types/react-router-dom": "^5.3.3"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "@aws-amplify/ui-react/styles\\.css": "<rootDir>/src/__mocks__/fileMock.js"
+    }
   }
 }
