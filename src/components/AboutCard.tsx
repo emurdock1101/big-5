@@ -90,7 +90,7 @@ const AboutCard = (props: AboutCardProps) => {
       />
       <CardContent>
         <Typography variant='subtitle1' className={styles.part1}>
-          {about[props.member]['part1']}
+          {about[props.member].paragraphs[0]}
         </Typography>
       </CardContent>
 
@@ -151,7 +151,7 @@ const AboutCard = (props: AboutCardProps) => {
       </CardActions>
       <Collapse in={expanded} timeout='auto' unmountOnExit>
         <CardContent>
-          <Typography variant={'subtitle2'}>{about[props.member]['part2']}</Typography>
+          <Typography variant={'subtitle2'}>{about[props.member].paragraphs[1]}</Typography>
         </CardContent>
       </Collapse>
     </Card>

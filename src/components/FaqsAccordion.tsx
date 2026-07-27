@@ -1,3 +1,4 @@
+import React from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -14,19 +15,12 @@ export default function FaqsAccordion() {
             <Typography sx={{width: '80%', fontSize: 18}}>{question.title}</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Typography>{question.part1}</Typography>
-            {question.part2 && (
-              <>
-                <br />
-                <Typography>{question.part2}</Typography>
-              </>
-            )}
-            {question.part3 && (
-              <>
-                <br />
-                <Typography>{question.part3}</Typography>
-              </>
-            )}
+            {question.paragraphs.map((p, idx) => (
+              <React.Fragment key={idx}>
+                {idx > 0 && <br />}
+                <Typography>{p}</Typography>
+              </React.Fragment>
+            ))}
           </AccordionDetails>
         </Accordion>
       ))}
