@@ -37,17 +37,16 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
       marginBottom: 30,
     },
     plus: {
-      color: theme.palette.primary.main,
+      color: '#00756B',
     },
     bigTitle: {
       fontWeight: 600,
-      font: 'Monaco',
-      color: '#111840', //navy blue
+      color: '#15172B', //navy blue
       fontSize: isMobile ? 55 : 90,
     },
     paper: {
       padding: 30,
-      borderRadius: 10,
+      borderRadius: 0,
       '& > *': {
         marginTop: 10,
       },
@@ -86,7 +85,7 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
   };
 
   useEffect(() => {
-    document?.querySelector('body')?.scrollTo({top: 0, left: 0});
+    window.scrollTo({top: 0, left: 0});
   }, []);
 
   useEffect(() => {
@@ -114,7 +113,7 @@ const PreTest: React.FC<PreTestProps> = (props: PreTestProps) => {
         <Grid item xs={12}>
           <Grid container justifyContent='center' alignItems='center'>
             <Grid item xs={12} md={10} lg={8}>
-              <Paper elevation={2} className={styles.paper}>
+              <Paper elevation={0} className={styles.paper}>
                 <Typography variant='h1' className={styles.bigTitle}>
                   Personality<span className={styles.plus}>+</span>
                 </Typography>

@@ -1,5 +1,5 @@
 // React
-import React, {useEffect, useState, useCallback, createContext} from 'react';
+import React, {useEffect, useState, useCallback, createContext, Suspense, lazy} from 'react';
 import {Route, Routes, Navigate} from 'react-router-dom';
 // Material UI
 import {makeStyles} from '@material-ui/core';
@@ -7,21 +7,12 @@ import {ThemeProvider} from '@material-ui/core/styles';
 import {theme} from './theme';
 // Views
 import About from './views/About';
-import AdminView from './views/AdminView';
-import AdminUserResults from './views/AdminUserResults';
 import Contact from './views/Contact';
 import FAQs from './views/Faqs';
 import ErrorPage from './views/Error';
 import Home from './views/Home';
-import Privacy from './views/Privacy';
-import Quiz from './views/Quiz';
-import Results from './views/Results';
 import BuyTest from './views/BuyTest';
-import Submit from './views/Submit';
 import CheckoutErrorPage from './views/CheckoutError';
-import Login from './views/Login';
-import Signup from './views/Signup';
-import Forgot from './views/Forgot';
 // Components
 import ProtectedRoute from './components/ProtectedRoute';
 import HeaderDrawer from './components/HeaderDrawer';
@@ -29,6 +20,8 @@ import Footer from './components/Footer';
 // Styling
 import './App.css';
 import '@aws-amplify/ui-react/styles.css';
+import './design/site.css';
+import ScrollManager from './design/ScrollManager';
 // AWS
 import {Amplify, Auth} from 'aws-amplify';
 import awsconfig from './aws-exports';
@@ -37,6 +30,17 @@ import {Storage} from '@aws-amplify/storage';
 import {questionData as qd} from './constants/questionData';
 import {User} from './constants/schema';
 import {shuffle} from './utils/array.utils';
+
+// Routes loaded on demand, kept out of the first download
+const AdminView = lazy(() => import('./views/AdminView'));
+const AdminUserResults = lazy(() => import('./views/AdminUserResults'));
+const Privacy = lazy(() => import('./views/Privacy'));
+const Quiz = lazy(() => import('./views/Quiz'));
+const Results = lazy(() => import('./views/Results'));
+const Submit = lazy(() => import('./views/Submit'));
+const Login = lazy(() => import('./views/Login'));
+const Signup = lazy(() => import('./views/Signup'));
+const Forgot = lazy(() => import('./views/Forgot'));
 
 Amplify.configure(awsconfig);
 
@@ -50,17 +54,14 @@ export const UserContext = createContext<UserContextType>({
   setUser: () => {},
 });
 
-const useStyles = makeStyles((theme) => ({
-  footer: {
-    bottom: 0,
-    position: 'absolute',
-    width: '100%',
-  },
+const useStyles = makeStyles(() => ({
   container: {
-    minHeight: '100vh' /* will cover the 100% of viewport */,
-    display: 'block',
-    position: 'relative',
-    paddingBottom: 120,
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  main: {
+    flex: 1,
   },
 }));
 
@@ -134,7 +135,9 @@ function App() {
     setUser((prev) => ({...prev, completed: true}));
   };
 
-  if (loading) {
+  // Public pages render straight away; only account pages wait for the sign-in check.
+  const publicPaths = ['/', '/about', '/faqs', '/contact', '/buy', '/privacy', '/error', '/checkouterror'];
+  if (loading && !publicPaths.includes(window.location.pathname)) {
     return <React.Fragment />;
   }
 
@@ -148,6 +151,9 @@ function App() {
             isAdmin={!!user.isAdmin}
             onLogOut={assessLoggedInState}
           />
+          <ScrollManager />
+          <main id='main' className={styles.main}>
+          <Suspense fallback={<div style={{minHeight: '60vh'}} />}>
           <Routes>
             <Route
               path='/test'
@@ -196,9 +202,9 @@ function App() {
             <Route path='/checkouterror' element={<CheckoutErrorPage />} />
             <Route path='*' element={<Navigate to='/error' replace />} />
           </Routes>
-          <div className={styles.footer}>
-            <Footer />
-          </div>
+          </Suspense>
+          </main>
+          <Footer />
         </div>
       </UserContext.Provider>
     </ThemeProvider>

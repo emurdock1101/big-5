@@ -1,35 +1,22 @@
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Typography from '@mui/material/Typography';
+import React from 'react';
 import {faqs, Faq} from '../constants/content';
 
+/** FAQs as native disclosure rows: keyboard and screen-reader friendly with no script. */
 export default function FaqsAccordion() {
   return (
-    <div>
-      {faqs.map((question: Faq) => (
-        <Accordion key={question.title} style={{borderLeft: `6px solid #111840`}}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography sx={{width: '80%', fontSize: 18}}>{question.title}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>{question.part1}</Typography>
-            {question.part2 && (
-              <>
-                <br />
-                <Typography>{question.part2}</Typography>
-              </>
-            )}
-            {question.part3 && (
-              <>
-                <br />
-                <Typography>{question.part3}</Typography>
-              </>
-            )}
-          </AccordionDetails>
-        </Accordion>
+    <ul className='pp pp-faq'>
+      {faqs.map((q: Faq, i: number) => (
+        <li key={q.title}>
+          <details open={i === 0}>
+            <summary>{q.title}</summary>
+            <div className='pp-body'>
+              {[q.part1, q.part2, q.part3].filter(Boolean).map((p) => (
+                <p key={p}>{p}</p>
+              ))}
+            </div>
+          </details>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }

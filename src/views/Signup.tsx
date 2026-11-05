@@ -23,7 +23,7 @@ const Signup = (props: SignupProps) => {
 
   const useStyles = makeStyles((theme) => ({
     plus: {
-      color: theme.palette.primary.main,
+      color: '#00756B',
       textDecoration: 'none',
       '&:hover': {
         color: theme.palette.primary.dark,
@@ -47,7 +47,6 @@ const Signup = (props: SignupProps) => {
     thirdTitle: {
       fontSize: 25,
       fontWeight: 300,
-      font: 'Monaco',
       marginLeft: 20,
       marginTop: 30,
       marginBottom: 30,
@@ -55,7 +54,7 @@ const Signup = (props: SignupProps) => {
     paper: {
       padding: 20,
       marginBottom: 60,
-      borderRadius: 10,
+      borderRadius: 0,
     },
     alert: {
       marginBottom: 15,
@@ -68,10 +67,9 @@ const Signup = (props: SignupProps) => {
     forgot: {
       fontSize: 16,
       fontWeight: 300,
-      font: 'Monaco',
       marginTop: 20,
       marginLeft: 20,
-      color: theme.palette.primary.main,
+      color: '#00756B',
       textDecoration: 'none',
       '&:hover': {
         color: theme.palette.primary.dark,
@@ -175,7 +173,7 @@ const Signup = (props: SignupProps) => {
             </React.Fragment>
           )}
           {!user && (
-            <Paper elevation={2} className={styles.paper}>
+            <Paper elevation={0} className={styles.paper}>
               <Typography variant='h5' className={styles.title}>
                 Check your email for your temporary password.
               </Typography>
@@ -209,7 +207,7 @@ const Signup = (props: SignupProps) => {
             </Paper>
           )}
           {user && (
-            <Paper elevation={2} className={styles.paper}>
+            <Paper elevation={0} className={styles.paper}>
               <Grid container justifyContent='center' alignItems='center'>
                 <Grid item xs={12} md={6} className={styles.password}>
                   <Typography variant='h5' className={styles.title}>

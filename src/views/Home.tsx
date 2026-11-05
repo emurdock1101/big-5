@@ -1,292 +1,335 @@
-import {Aspect, Ocean} from '../constants/schema';
-import {Box, Button, Grid, Typography, makeStyles} from '@material-ui/core';
-import {useEffect, useState} from 'react';
-import Divider from '@mui/material/Divider';
-import HomeCard from '../components/HomeCard';
-import OceanBanner from '../components/OceanBanner';
-import prism from '../images/prism.jpeg';
-import spiral from '../images/spiral.jpeg';
-import {theme} from '../theme';
-import {useNavigate} from 'react-router-dom';
-import Fade from '@mui/material/Fade';
-import BookNow from '../components/BookNow';
-import AboutTheTest from '../components/AboutTheTest';
+import React, {useEffect, useRef, useState} from 'react';
+import {Link} from 'react-router-dom';
+import ColorPlate from '../design/ColorPlate';
+import Strip from '../design/Strip';
+import {BOOKING_URL, PRICE, SOFT_NAME, TRAITS} from '../design/traits';
+import {interpretations} from '../constants/interpretations';
+import patrick from '../images/patrick.jpeg';
 
 interface HomeProps {
   loggedIn: boolean;
   completed: boolean;
 }
 
+// Illustrative mixes for the hero plate. Not anyone's real results.
+const MIXES: {name: string; scores: number[]}[] = [
+  {name: 'Mix A', scores: [72, 31, 64, 48, 85]},
+  {name: 'Mix B', scores: [28, 55, 81, 77, 40]},
+  {name: 'Mix C', scores: [90, 18, 35, 62, 58]},
+];
+
+const SAMPLE = {
+  scores: [72, 31, 64, 48, 85],
+  aspects: [
+    [68, 74],
+    [36, 27],
+    [70, 57],
+    [44, 52],
+    [88, 79],
+  ],
+};
+
+const sampleExcerpt =
+  interpretations.find((i) => i.trait === 'Openness' && i.scoreLevel === 'high')?.paragraphs[0] ??
+  interpretations[0].paragraphs[0];
+
 const Home: React.FC<HomeProps> = (props: HomeProps) => {
-  const [isMedium, setIsMedium] = useState(window.innerWidth < 960);
-  const [isSmall, setIsSmall] = useState(window.innerWidth < 600);
+  const [mix, setMix] = useState(0);
+  const [focus, setFocus] = useState<number | null>(null);
+  const [showDock, setShowDock] = useState(false);
+  const heroActions = useRef<HTMLDivElement>(null);
 
-  const useStyles = makeStyles((theme) => ({
-    plus: {
-      color: theme.palette.primary.main,
-    },
-    titleOverlay: {
-      position: 'absolute',
-      top: 400,
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      textAlign: 'center',
-    },
-    mainTitle: {
-      color: theme.palette.common.white,
-      marginTop: 30,
-      marginBottom: 30,
-      fontSize: isMedium ? 55 : 80,
-      fontWeight: 600,
-      font: 'Monaco',
-      minWidth: 380,
-      padding: 20,
-    },
-    secondTitle: {
-      color: theme.palette.common.white,
-      fontSize: isMedium ? 35 : 50,
-      fontWeight: 300,
-      font: 'Monaco',
-      padding: 20,
-    },
-    prismImage: {
-      marginTop: isSmall ? -8 : 0,
-      height: isMedium ? 800 : 910,
-      width: '100%',
-      objectFit: 'cover',
-    },
-    buyNowButton: {
-      marginTop: 200,
-      backgroundColor: theme.palette.primary.main,
-      '&:hover': {
-        backgroundColor: theme.palette.secondary.dark,
-      },
-      color: theme.palette.common.white,
-      width: '220px',
-      height: '60px',
-      borderRadius: '30px',
-    },
-    thirdTitle: {
-      fontSize: isMedium ? '40px' : '50px',
-      fontWeight: 300,
-      font: 'Monaco',
-      marginBottom: 20,
-    },
-    openingBlurb: {
-      textAlign: 'left',
-      marginTop: 50,
-      color: theme.palette.info.main,
-    },
-    thirdTitleDescription: {
-      marginTop: 20,
-    },
-    oceanRow: {
-      marginTop: 40,
-    },
-    spiralBox: {
-      minHeight: 800,
-      marginTop: 120,
-      backgroundImage: `url(${spiral})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundAttachment: 'fixed',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    big5: {
-      marginTop: 50,
-      marginBottom: 40,
-    },
-    oceanBanner: {
-      marginBottom: 40,
-    },
-    big5Title: {
-      fontSize: isMedium ? '40px' : '50px',
-      fontWeight: 400,
-      font: 'Monaco',
-    },
-    big5Desc: {
-      font: 'Monaco',
-      marginBottom: 40,
-    },
-    footer: {
-      marginTop: 100,
-      width: '100%',
-    },
-    aboutSubheading: {
-      fontWeight: 300,
-    },
-  }));
-
-  const styles = useStyles();
-  const navigate = useNavigate();
-
-  const handleNav = (path: string) => {
-    if (sessionStorage.length > 0) {
-      sessionStorage.clear();
-    }
-    navigate(path);
-  };
-
-  // choose the screen size
-  const handleResize = () => {
-    if (window.innerWidth < 600) {
-      setIsSmall(true);
-    } else if (window.innerWidth < 724) {
-      setIsSmall(false);
-    } else if (window.innerWidth < 960) {
-      setIsSmall(false);
-      setIsMedium(true);
-    } else {
-      setIsSmall(false);
-      setIsMedium(false);
-    }
-  };
-
+  // Show the phone's bottom action only once the hero button has scrolled away
+  // and no other inline primary action is on screen.
   useEffect(() => {
-    document?.querySelector('body')?.scrollTo({top: 0, left: 0});
-    window.addEventListener('resize', handleResize);
+    const hero = heroActions.current;
+    if (!hero || !('IntersectionObserver' in window)) return;
+    const ctas = Array.from(document.querySelectorAll('.pp-hero ~ section [data-cta]'));
+    const visible = new Set<Element>();
+    let pastHero = false;
+    const update = () => setShowDock(pastHero && visible.size === 0);
+    const heroIo = new IntersectionObserver(([e]) => {
+      pastHero = !e.isIntersecting && e.boundingClientRect.top < 0;
+      update();
+    });
+    const ctaIo = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)));
+      update();
+    });
+    heroIo.observe(hero);
+    ctas.forEach((c) => ctaIo.observe(c));
+    return () => {
+      heroIo.disconnect();
+      ctaIo.disconnect();
+    };
   }, []);
 
+  const clearSession = () => {
+    if (sessionStorage.length > 0) sessionStorage.clear();
+  };
+
+  const primary = !props.loggedIn
+    ? {to: '/buy', label: `Take the test — ${PRICE}`}
+    : props.completed
+    ? {to: '/results', label: 'View your results'}
+    : {to: '/test', label: 'Take the test'};
+
+  const current = MIXES[mix];
+
   return (
-    <Fade in={true} timeout={3500}>
-      <div>
-        <Grid container justifyContent='center' alignItems='center'>
-          <Grid item xs={12}>
-            <div className={styles.titleOverlay}>
-              <Typography variant='h1' className={styles.mainTitle}>
-                Personality <span className={styles.plus}>+</span>
-              </Typography>
-              <Typography className={styles.secondTitle}>Discover a New You.</Typography>
-              {!props.loggedIn && (
-                <Button variant='contained' onClick={() => handleNav('/buy')} className={styles.buyNowButton}>
-                  BUY NOW
-                </Button>
-              )}
-              {props.loggedIn && !props.completed && (
-                <Button variant='contained' onClick={() => handleNav('/test')} className={styles.buyNowButton}>
-                  TAKE TEST
-                </Button>
-              )}
-              {props.loggedIn && props.completed && (
-                <Button variant='contained' onClick={() => handleNav('/results')} className={styles.buyNowButton}>
-                  VIEW RESULTS
-                </Button>
-              )}
+    <div className='pp'>
+      {/* ---------- first viewport ---------- */}
+      <section className='pp-hero'>
+        <div className='pp-wrap pp-hero__grid'>
+          <div className='pp-hero__copy'>
+            <h1 className='pp-display pp-h1'>You are not one color. You are five, in proportion.</h1>
+            <p className='pp-lede'>
+              A 100-question Big Five personality test with a personal report on your five traits and ten aspects,
+              written from a licensed therapist’s practice.
+            </p>
+            <div className='pp-hero__actions' ref={heroActions}>
+              <Link to={primary.to} className='pp-btn' data-cta onClick={clearSession}>
+                {primary.label}
+              </Link>
+              <Link to='/#report' className='pp-textlink'>
+                See a sample report
+              </Link>
             </div>
-            <img src={prism} className={styles.prismImage} alt='personality-prism'></img>
-          </Grid>
-          <Grid item xs={10} lg={8}>
-            <div className={styles.openingBlurb}>
-              <Typography className={styles.thirdTitle}>
-                Personality <span className={styles.plus}>+</span>
-              </Typography>
-              <Divider />
-              <Typography variant='subtitle1' className={styles.thirdTitleDescription}>
-                Why do you think or act the way you do? What moves you to feel emotions or stirs your desires? Better
-                yet, can you change those things?
-              </Typography>
-              <Typography variant='subtitle1' className={styles.thirdTitleDescription}>
-                Who we are stems from our personality, and Personality+ is an test based on the Big Five 10 Aspect Model
-                of personality.
-              </Typography>
-              <Typography variant='subtitle1' className={styles.thirdTitleDescription}>
-                Also known as the Five Factor Model or OCEAN, it is an empirical model of personality within psychology
-                that reveals the core of your personality, your strengths, and areas you can grow.
-              </Typography>
-              <Typography variant='subtitle1' className={styles.thirdTitleDescription}>
-                Discover a new you and start a new journey!
-              </Typography>
-            </div>
-            <Grid container spacing={8} justifyContent='center' alignItems='center' className={styles.oceanRow}>
-              <Grid item xs={12} md={4}>
-                <HomeCard
-                  title='Why Take It?'
-                  description='Everyone has a unique personality that is a combination of 5 dimensions. Discovering how your personality has been shaped can help you understand who you are.'
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <HomeCard
-                  title='Strengths'
-                  description='Personality+ shows natural strengths within your personality. Are you a leader? A healer? An artist? Learn how to discover and unlock your hidden potential.'
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <HomeCard
-                  title='Grow'
-                  description='Personality+ shows natural areas of growth and improvement. Discover how to change and how your emotions, behavior, thinking, and desires work together.'
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Box className={styles.spiralBox}>
-              <Grid container justifyContent='center' alignItems='center'>
-                <Grid item xs={10} lg={6}>
-                  <AboutTheTest />
-                </Grid>
-              </Grid>
-            </Box>
-          </Grid>
-          <Grid item xs={10} lg={8}>
-            <div className={styles.big5}>
-              <Typography className={styles.big5Title}>Big Five Traits and Aspects</Typography>
-              <br></br>
-              <Typography variant={'subtitle1'} className={styles.big5Desc}>
-                Your results will explain your unique personality as it relates to the Big Five and its 10 aspects,
-                which are 2 subcategories for each of the 5 dimensions. These categories and subcategories are listed
-                below.
-              </Typography>
-            </div>
-          </Grid>
-          <Grid item xs={10} lg={8} className={styles.oceanBanner}>
-            <OceanBanner
-              ocean={Ocean.Extraversion}
-              aspect1={Aspect.Enthusiasm}
-              aspect2={Aspect.Assertiveness}
-              hex={theme.palette.error.main}
+            <ul className='pp-hero__facts'>
+              <li>100 questions</li>
+              <li>10–20 minutes</li>
+              <li>Results to keep and download</li>
+            </ul>
+          </div>
+
+          <div className='pp-hero__plate'>
+            <ColorPlate
+              scores={current.scores}
+              focus={focus}
+              label={`Five nested color squares, one per trait, each band sized by an example score. ${current.name}: ${TRAITS.map(
+                (t, i) => `${t.ocean} ${current.scores[i]}`,
+              ).join(', ')}.`}
             />
-          </Grid>
-          <Grid item xs={10} lg={8} className={styles.oceanBanner}>
-            <OceanBanner
-              ocean={Ocean.Neuroticism}
-              aspect1={Aspect.Withdrawal}
-              aspect2={Aspect.Volatility}
-              hex={theme.palette.warning.main}
-            />
-          </Grid>
-          <Grid item xs={10} lg={8} className={styles.oceanBanner}>
-            <OceanBanner
-              ocean={Ocean.Agreeableness}
-              aspect1={Aspect.Compassion}
-              aspect2={Aspect.Politeness}
-              hex={theme.palette.success.main}
-            />
-          </Grid>
-          <Grid item xs={10} lg={8} className={styles.oceanBanner}>
-            <OceanBanner
-              ocean={Ocean.Conscientiousness}
-              aspect1={Aspect.Industriousness}
-              aspect2={Aspect.Orderliness}
-              hex={theme.palette.primary.main}
-            />
-          </Grid>
-          <Grid item xs={10} lg={8} className={styles.oceanBanner}>
-            <OceanBanner
-              ocean={Ocean.Openness}
-              aspect1={Aspect.AestheticOpenness}
-              aspect2={Aspect.Interest}
-              hex={theme.palette.secondary.main}
-            />
-          </Grid>
-        </Grid>
-        <div className={styles.footer}>
-          <BookNow />
+            <ul className='pp-legend' aria-label='Traits in this example mix'>
+              {TRAITS.map((t, i) => (
+                <li key={t.ocean}>
+                  <button
+                    type='button'
+                    aria-pressed={focus === i}
+                    onMouseEnter={() => setFocus(i)}
+                    onMouseLeave={() => setFocus(null)}
+                    onFocus={() => setFocus(i)}
+                    onBlur={() => setFocus(null)}
+                    onClick={() => setFocus(focus === i ? null : i)}>
+                    <span className='pp-legend__chip' style={{background: t.color}} />
+                    <span className='pp-legend__name'>{SOFT_NAME[t.ocean] ?? t.ocean}</span>
+                    <span className='pp-legend__short' aria-hidden='true'>
+                      {t.ocean[0]}
+                    </span>
+                    <span className='pp-legend__score'>{current.scores[i]}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <p className='pp-small' style={{margin: 0, display: 'flex', gap: 16, flexWrap: 'wrap'}}>
+              <span>Example mix, not real results. Your report draws your own.</span>
+              <button type='button' className='pp-textlink' onClick={() => setMix((m) => (m + 1) % MIXES.length)}>
+                Try another mix
+              </button>
+            </p>
+          </div>
         </div>
+      </section>
+
+      {/* ---------- how it works ---------- */}
+      <section id='how' className='pp-section pp-field--deep'>
+        <div className='pp-wrap'>
+          <div className='pp-section-head'>
+            <h2 className='pp-display pp-h2'>How it works</h2>
+          </div>
+          <ol className='pp-steps'>
+            <li>
+              <span className='pp-steps__n'>1</span>
+              <h3 className='pp-display pp-h3'>Buy the test</h3>
+              <p style={{margin: 0}}>
+                {PRICE}, paid securely through Stripe. You create your account right after checkout. One purchase is one
+                test, so use a new email for each person.
+              </p>
+            </li>
+            <li>
+              <span className='pp-steps__n'>2</span>
+              <h3 className='pp-display pp-h3'>Answer 100 questions</h3>
+              <p style={{margin: 0}}>
+                Takes 10–20 minutes. Pick a quiet moment when you are rested; you take it once, so your answers stay
+                honest.
+              </p>
+            </li>
+            <li>
+              <span className='pp-steps__n'>3</span>
+              <h3 className='pp-display pp-h3'>Read your report</h3>
+              <p style={{margin: 0}}>
+                A percentile for each of the five traits and ten aspects, with paragraphs on how they shape your
+                emotions, behavior, thinking and motivation. View it anytime or download it.
+              </p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      {/* ---------- the five traits ---------- */}
+      <section id='traits' className='pp-section'>
+        <div className='pp-wrap'>
+          <div className='pp-section-head'>
+            <h2 className='pp-display pp-h2'>The five traits, and their ten aspects</h2>
+            <p className='pp-lede' style={{maxWidth: '52ch'}}>
+              The Big Five is the research-based model of personality used throughout psychology. Each trait splits into two aspects,
+              and none is good or bad on its own: what matters is your mix.
+            </p>
+          </div>
+          <ul className='pp-traits'>
+            {TRAITS.map((t) => (
+              <li key={t.ocean}>
+                <div className='pp-trait__field' style={{background: t.color}} aria-hidden='true' />
+                <div className='pp-trait__band'>
+                  <h3 className='pp-display pp-h3'>{SOFT_NAME[t.ocean] ?? t.ocean}</h3>
+                  <span className='pp-trait__aspects'>
+                    {t.aspects[0]} · {t.aspects[1]}
+                  </span>
+                  <p className='pp-trait__line'>{t.line}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ---------- sample report ---------- */}
+      <section id='report' className='pp-section pp-field pp-field--ink'>
+        <div className='pp-wrap pp-report'>
+          <div style={{display: 'grid', gap: 24}}>
+            <h2 className='pp-display pp-h2'>What your report shows</h2>
+            <p className='pp-lede'>
+              Where you sit on each trait and aspect compared with other people, and what that means in plain language.
+            </p>
+            <ul className='pp-hero__facts' style={{color: '#C9CADB', display: 'grid', gap: 10}}>
+              <li>Percentiles for 5 traits and 10 aspects</li>
+              <li>Written interpretation for every trait</li>
+              <li>Strengths and areas to grow</li>
+              <li>Saved to your account, downloadable</li>
+            </ul>
+            <div>
+              <Link to={primary.to} className='pp-btn pp-btn--light' data-cta onClick={clearSession}>
+                {primary.label}
+              </Link>
+            </div>
+          </div>
+
+          <article className='pp-sheet' aria-label='Sample report excerpt'>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16}}>
+              <h3 className='pp-display pp-h3'>Your five traits</h3>
+              <span className='pp-sample-tag'>Sample</span>
+            </div>
+            <div className='pp-sheet__grid'>
+              <ColorPlate scores={SAMPLE.scores} label='Sample color plate drawn from the sample scores.' />
+              <ul className='pp-scales'>
+                {TRAITS.map((t, i) => (
+                  <li key={t.ocean}>
+                    <div className='pp-scale__row'>
+                      <span>{t.ocean}</span>
+                      <span>{SAMPLE.scores[i]}th</span>
+                    </div>
+                    <div
+                      className='pp-scale__track'
+                      role='img'
+                      aria-label={`${t.ocean}: ${SAMPLE.scores[i]}th percentile`}>
+                      <span className='pp-scale__fill' style={{width: `${SAMPLE.scores[i]}%`, background: t.color}} />
+                    </div>
+                    <div className='pp-scale__aspects'>
+                      <span>
+                        {t.aspects[0]} {SAMPLE.aspects[i][0]}
+                      </span>
+                      <span>
+                        {t.aspects[1]} {SAMPLE.aspects[i][1]}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div style={{borderTop: '2px solid #15172B', marginTop: 32, paddingTop: 20}}>
+              <h4 style={{margin: '0 0 8px', fontSize: 16}}>From the Openness section</h4>
+              <p style={{margin: 0}}>{sampleExcerpt}</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      {/* ---------- who and what it's built on ---------- */}
+      <section className='pp-section'>
+        <div className='pp-wrap'>
+          <div className='pp-section-head'>
+            <h2 className='pp-display pp-h2'>Built on research, written by a therapist</h2>
+          </div>
+          <div className='pp-trust'>
+            <div className='pp-person'>
+              <img src={patrick} alt='Patrick Knicely' loading='lazy' />
+              <div className='pp-body' style={{display: 'grid', gap: 12}}>
+                <h3 className='pp-display pp-h3'>Patrick Knicely</h3>
+                <p style={{margin: 0}}>
+                  Licensed clinical mental health therapist and clinical consultant for inpatient and ambulatory
+                  healthcare settings. B.A., Roanoke College; M.S., Radford University.
+                </p>
+                <p style={{margin: 0}}>
+                  The report’s interpretations come from research, study and clinical practice.
+                </p>
+                <Link to='/about' className='pp-textlink'>
+                  About the team
+                </Link>
+              </div>
+            </div>
+            <div style={{display: 'grid', gap: 20, alignContent: 'start'}}>
+              <p style={{margin: 0}} className='pp-body'>
+                The questions use the Big Five Aspect Scales, a public-domain instrument from published research. Your
+                answers are scored against how many other people described themselves.
+              </p>
+              <blockquote className='pp-cite'>
+                DeYoung, C. G., Quilty, L. C., &amp; Peterson, J. B. (2007). Between facets and domains: 10 aspects of
+                the Big Five. <em>Journal of Personality and Social Psychology, 93</em>, 880–896.
+              </blockquote>
+              <Link to='/faqs' className='pp-textlink'>
+                Read the FAQs
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- close ---------- */}
+      <section className='pp-section pp-field--deep'>
+        <div className='pp-wrap pp-close'>
+          <div style={{display: 'grid', gap: 20}}>
+            <Strip />
+            <h2 className='pp-display pp-h2'>See your own five colors.</h2>
+            <p className='pp-lede' style={{maxWidth: '44ch'}}>
+              Prefer to talk first?{' '}
+              <a href={BOOKING_URL} target='_blank' rel='noopener noreferrer' className='pp-textlink'>
+                Book a free 15-minute call
+              </a>{' '}
+              about the test or coaching.
+            </p>
+          </div>
+          <Link to={primary.to} className='pp-btn' data-cta onClick={clearSession}>
+            {primary.label}
+          </Link>
+        </div>
+      </section>
+
+      <div className='pp-dock' data-show={showDock} aria-hidden={!showDock}>
+        <Link to={primary.to} className='pp-btn' tabIndex={showDock ? 0 : -1} onClick={clearSession}>
+          {primary.label}
+        </Link>
       </div>
-    </Fade>
+    </div>
   );
 };
 

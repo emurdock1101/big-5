@@ -3,6 +3,8 @@ import {Grid, Paper, Typography, makeStyles, Button} from '@material-ui/core';
 import {useEffect, useState} from 'react';
 import {Storage} from '@aws-amplify/storage';
 import Banner from '../components/Banner';
+import ColorPlate from '../design/ColorPlate';
+import {TRAITS} from '../design/traits';
 import BookNow from '../components/BookNow';
 import Interpretations from '../components/Interpretations';
 import OceanAccordion from '../components/OceanAccordion';
@@ -36,14 +38,14 @@ const Results: React.FC = () => {
     explanation: {
       padding: '20px',
       marginBottom: '10px', //this needs change if anything changes - should line up with table
-      borderRadius: 10,
+      borderRadius: 0,
     },
     interpretations: {
       marginBottom: '45px', //Not sure why this isn't the same pixel ratio as others
-      borderRadius: 10,
+      borderRadius: 0,
     },
     titlePaper: {
-      backgroundColor: '#111840', // navy blue
+      backgroundColor: '#15172B', // navy blue
       minHeight: 200,
     },
     interpretationTitle: {
@@ -52,14 +54,14 @@ const Results: React.FC = () => {
     bookNowButton: {
       marginTop: 28,
       marginBottom: 28, // lines up with table results on xl screen
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: theme.palette.info.main,
       '&:hover': {
-        backgroundColor: theme.palette.info.main,
+        backgroundColor: '#2A2D4A',
       },
       color: theme.palette.common.white,
       width: '200px',
       height: '40px',
-      borderRadius: '20px',
+      borderRadius: 0,
     },
     bookNowLink: {
       textDecoration: 'none',
@@ -72,11 +74,11 @@ const Results: React.FC = () => {
     downloadButton: {
       width: '100%',
       color: '111840', //navy,
-      border: '1px solid #111840',
-      borderRadius: 10,
+      border: '1px solid #15172B',
+      borderRadius: 0,
       '&:hover': {
-        color: '#F8F7F3', //off-white
-        backgroundColor: '#111840', //navy blue
+        color: '#FFFFFF', //off-white
+        backgroundColor: '#15172B', //navy blue
       },
     },
   }));
@@ -151,15 +153,44 @@ const Results: React.FC = () => {
 
   return (
     <div>
-      <Banner pageTitle='Results and Explanation' />
+      <Banner pageTitle='Your results' intro='Your five traits as one plate: each color band is sized by your own percentile.' />
+      {percentiles && (
+        <div className='pp pp-wrap pp-report' style={{paddingBottom: 56}}>
+          <div style={{maxWidth: 420}}>
+            <ColorPlate
+              scores={[Extraversion, Neuroticism, Agreeableness, Conscientiousness, Openness]}
+              label={`Your color plate. ${TRAITS.map(
+                (t, i) => `${t.ocean} ${[Extraversion, Neuroticism, Agreeableness, Conscientiousness, Openness][i]}th percentile`,
+              ).join(', ')}.`}
+            />
+          </div>
+          <ul className='pp-scales'>
+            {TRAITS.map((t, i) => {
+              const score = [Extraversion, Neuroticism, Agreeableness, Conscientiousness, Openness][i];
+              return (
+                <li key={t.ocean}>
+                  <div className='pp-scale__row'>
+                    <span>{t.ocean}</span>
+                    <span>{score}th percentile</span>
+                  </div>
+                  <div className='pp-scale__track' aria-hidden='true'>
+                    <span className='pp-scale__fill' style={{width: `${score}%`, background: t.color}} />
+                  </div>
+                  <div className='pp-small' style={{marginTop: 6}}>{t.line}</div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
       <Grid container spacing={6} justifyContent='center' alignItems='flex-start'>
         <Grid item xs={12} sm={11} lg={10}>
           <Button variant='outlined' className={styles.downloadButton} onClick={downloadResults}>
-            DOWNLOAD RESULTS
+            Download your results
           </Button>
         </Grid>
         <Grid item xs={12} sm={11} lg={5}>
-          <Paper elevation={2} className={styles.explanation}>
+          <Paper elevation={0} className={styles.explanation}>
             <Typography variant='subtitle1' className={styles.info}>
               Your results are shown in the table and in the bar charts below.{' '}
             </Typography>
@@ -188,7 +219,7 @@ const Results: React.FC = () => {
               rel='noreferrer'
               className={styles.bookNowLink}>
               <Button variant='contained' className={styles.bookNowButton}>
-                BOOK A CALL NOW
+                Book a free call
               </Button>
             </a>
           </Paper>
@@ -200,20 +231,20 @@ const Results: React.FC = () => {
           <OceanAccordion />
         </Grid>
         <Grid item xs={12} sm={11} lg={5}>
-          <Paper elevation={2} style={{borderRadius: '10px'}}>
+          <Paper elevation={0} style={{borderRadius: 0}}>
             <ReactApexChart options={oceanOptions as ApexOptions} series={oceanSeries} type='bar' height={550} />
           </Paper>
         </Grid>
         <Grid item xs={12} sm={11} lg={5}>
-          <Paper elevation={2} style={{borderRadius: '10px'}}>
+          <Paper elevation={0} style={{borderRadius: 0}}>
             <ReactApexChart options={aspectOptions as ApexOptions} series={aspectSeries} type='bar' height={550} />
           </Paper>
         </Grid>
         <Grid item xs={12} className={styles.interpretationTitle}>
-          <Banner pageTitle='Interpretation of Results' />
+          <Banner pageTitle='What your results mean' level={2} />
         </Grid>
         <Grid item xs={12} sm={11} lg={10}>
-          <Paper elevation={2} className={styles.interpretations}>
+          <Paper elevation={0} className={styles.interpretations}>
             <Interpretations
               oceanName={Ocean.Extraversion}
               oceanScore={Extraversion}
@@ -225,7 +256,7 @@ const Results: React.FC = () => {
               index={2}
             />
           </Paper>
-          <Paper elevation={2} className={styles.interpretations}>
+          <Paper elevation={0} className={styles.interpretations}>
             <Interpretations
               oceanName={Ocean.Neuroticism}
               oceanScore={Neuroticism}
@@ -237,7 +268,7 @@ const Results: React.FC = () => {
               index={4}
             />
           </Paper>
-          <Paper elevation={2} className={styles.interpretations}>
+          <Paper elevation={0} className={styles.interpretations}>
             <Interpretations
               oceanName={Ocean.Agreeableness}
               oceanScore={Agreeableness}
@@ -249,7 +280,7 @@ const Results: React.FC = () => {
               index={3}
             />
           </Paper>
-          <Paper elevation={2} className={styles.interpretations}>
+          <Paper elevation={0} className={styles.interpretations}>
             <Interpretations
               oceanName={Ocean.Conscientiousness}
               oceanScore={Conscientiousness}
@@ -261,7 +292,7 @@ const Results: React.FC = () => {
               index={1}
             />
           </Paper>
-          <Paper elevation={2} className={styles.interpretations}>
+          <Paper elevation={0} className={styles.interpretations}>
             <Interpretations
               oceanName={Ocean.Openness}
               oceanScore={Openness}

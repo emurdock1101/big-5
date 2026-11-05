@@ -9,7 +9,7 @@ export const traitOverviews: TraitOverview[] = [
     paragraphs: [
       `Extraversion is the dimension of personality that reflects individual differences and sensitivities to positive emotion, such as joy and enthusiasm, sociability, motivation to engage with others, eagerness of approach for rewarding situations, and lastly assertiveness around social motivations and relationship goals.`,
       `Extraverted people are quite enthusiastic, talkative, assertive in social situations, and outgoing. They are energized by social situations and will plan parties, tell jokes, make people laugh and participate in community activities. Their outlook on life will be more positive and optimistic, and they will have higher levels of self-esteem (particularly if they are low in neuroticism). Note: Self-esteem can be viewed as a person\u2019s Extraversion Score minus Neuroticism Score.`,
-      `Example descriptors of extraversion: energetic, fun-seeking, impulsive, dominate, spontaneous, sociable, friendly, reward focused, is a leader, talkative. Note: the more extraverted you are the more value you place on the present over the future, which may mean that impulse control may be more difficult. In other words, extraverts seek out more risky behavior, having a proclivity to do activities labeled as dangerous, reckless, or manic.`,
+      `Example descriptors of extraversion: energetic, fun-seeking, impulsive, dominant, spontaneous, sociable, friendly, reward focused, is a leader, talkative. Note: the more extraverted you are the more value you place on the present over the future, which may mean that impulse control may be more difficult. In other words, extraverts seek out more risky behavior, having a proclivity to do activities labeled as dangerous, reckless, or manic.`,
       `Example descriptors of introversion: cautious, protective, lethargic, inhibited, reflective, and quiet. Note: the less extraverted you are the more value you place on the future over the present, which may mean you are less motivated by choices that impact the \u201cnow\u201d. For example, couples choosing restaurants, disciplining kids, being excited about activities.`,
       `Women are slightly more extraverted than men.`,
       `Extraversion has 2 aspects: assertiveness and enthusiasm.`,
@@ -23,7 +23,7 @@ export const traitOverviews: TraitOverview[] = [
       `Neuroticism is the dimension of personality that reflects individual differences and sensitivity toward negative emotion such as pain, sadness, irritable or defensive anger, fear and anxiety and an individual\u2019s responses to threat, frustration, stress, or loss.`,
       `Neuroticism can impact how an individual engages with problems in the present, past, or future. For example, the higher the levels of neuroticism, the more likely a person is to think that things are going wrong past, present, and future, and will become very unhappy, anxious, and irritable if they think about a problem. Note: The higher the neuroticism and the lower the extraversion, the lower the self-esteem. Neuroticism is a risk factor for anxiety disorders and depression.`,
       `The lower the levels of neuroticism the better the endurance, coping, and recovery an individual will have when stressed, going through a problem, or dealing with frustration. Note: they can still be unhappy, anxious, and irritable, but it won\u2019t be as an intense or felt as long.`,
-      `Neuroticisms has 2 aspects: withdraw and volatility. It is also linked to the two specific nervous system operations:`,
+      `Neuroticism has 2 aspects: withdrawal and volatility. It is also linked to the two specific nervous system operations:`,
       `1) Behavioral inhibition system, which tries to measure any conflict that may interrupt goals and will trigger vigilance, rumination, and passive avoidance. This component encompasses anxiety, depression, and self-consciousness.`,
       `2) Fight-Flight-Freeze system, which tries to measure the need to avoid imminent or future punishment and will trigger panic, flight, anger, or reactive aggression (fighting). The component encompasses irritability, anger, and the likelihood to get upset or panicky.`,
     ],
@@ -82,7 +82,7 @@ export const faqs: Faq[] = [
   {
     title: 'How was this test created?',
     part1:
-      'This test was formatted by using the work of Dr. Colling DeYoung and Dr. Jordan B Peterson (see DeYoung, C.G., Quilty, L.C. & Peterson, J.B. Between facets and domains: 10 aspects of the Big Five. Journal of Personality and Social Psychology, 93, 880-896.).',
+      'This test was formatted by using the work of Dr. Colin DeYoung and Dr. Jordan B Peterson (see DeYoung, C.G., Quilty, L.C. & Peterson, J.B. Between facets and domains: 10 aspects of the Big Five. Journal of Personality and Social Psychology, 93, 880-896.).',
     part2:
       'The goal of Personality+ is to offer a more streamlined personality test with results that can be clearly understood and implemented. The interpretations of the test have come from diligent research, study, and clinical practice. If you are curious about conducting your own research, we would point you the Oxford Handbook of the Five Factor Model, Dr. C.G. DeYoung and Dr. J.B. Peterson\u2019s published research, or a trusted mental health therapist/researcher.',
   },
@@ -116,7 +116,7 @@ export const faqs: Faq[] = [
     part2:
       'Second, remember that the traits and aspects have to be considered in combination, rather than singly. So, for example, you might be very or extremely high in Agreeableness. You therefore received feedback on the report stating that you have a hard time standing up for yourself, and are generally more concerned with the feelings and desires of other people. However, if you are also high in assertiveness (an aspect of Extraversion) and/or low in Neuroticism then you are more likely to say what you want and put your needs forward than an agreeable person low in the former and high in the latter.',
     part3:
-      'Remember, your personality is part of your story and adventure. Learn who you are and discover the strenghts that lie within!',
+      'Remember, your personality is part of your story and adventure. Learn who you are and discover the strengths that lie within!',
   },
 ];
 
@@ -136,7 +136,7 @@ export const about: Record<string, BioEntry> = {
   },
   patrick: {
     part1:
-      'Patrick Knicely has a B.A from Roaonke College and a M.S. from Radford University. He is a clinical mental health threapist and clinical consultant for inpatient and ambulatory healthcare settings.',
+      'Patrick Knicely has a B.A. from Roanoke College and a M.S. from Radford University. He is a licensed clinical mental health therapist and clinical consultant for inpatient and ambulatory healthcare settings.',
     part2:
       'Patrick helps clients discover who they are by showing them their unique personality and how that personality affects their emotions, behavior, cognition, and motivations. This allows individuals to discover their natural strengths as well as areas of growth. By understanding a client\u2019s personality, Patrick helps clients organize their past, present, and future with self-authoring, behavioral learning, and goal setting to help mitigate depression, anxiety, and trauma.',
   },
@@ -154,9 +154,9 @@ export const aboutTheTest: AboutTheTestContent = {
   length:
     'The test takes 10 - 20 minutes and consists of 100 questions. It\u2019s recommended you take some time to prepare by getting a good sleep, eating well, and finding a relaxing environment to take the test.',
   results:
-    'You will receive information about your unique personality as it relates to the dimensions of the Big Five: Extraversion (positive emotion), Neurotocism (negative emotion), Agreeableness (care for others), Conscientiousness (order and responsibility) and Openness (interest in ideas and aesthetics). You will also receive a percentage and detailed paragraphs about how that might affect your emotions, behavior, thinking, and desires.',
+    'You will receive information about your unique personality as it relates to the dimensions of the Big Five: Extraversion (positive emotion), Neuroticism (negative emotion), Agreeableness (care for others), Conscientiousness (order and responsibility) and Openness (interest in ideas and aesthetics). You will also receive a percentage and detailed paragraphs about how that might affect your emotions, behavior, thinking, and desires.',
   background:
-    'These questions are based on open-sourced research. This includes such notable personality researchers as Dr. Collin DeYoung, Dr. Paul Costa, Jr., Dr. Jordan Peterson, Dr. Joshua Wilt, and Dr. Joshua Revelle.',
+    'These questions are based on open-sourced research. This includes such notable personality researchers as Dr. Colin DeYoung, Dr. Paul Costa, Jr., Dr. Jordan Peterson, Dr. Joshua Wilt, and Dr. William Revelle.',
 };
 
 // ─── Legacy default export (keeps old consumers working) ─────────────────────

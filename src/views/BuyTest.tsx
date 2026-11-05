@@ -1,60 +1,19 @@
-import React from 'react';
-import {Button, Grid, Typography, makeStyles, Paper} from '@material-ui/core';
-import {loadStripe} from '@stripe/stripe-js';
-import {useNavigate} from 'react-router-dom';
-import {useEffect} from 'react';
-import Divider from '@mui/material/Divider';
-
-export const useStyles = makeStyles((theme) => ({
-  info: {
-    padding: '15px',
-    marginTop: 60,
-  },
-  buttons: {
-    marginTop: 60,
-  },
-  button: {
-    marginRight: 25,
-    marginBottom: 50,
-    padding: 15,
-  },
-  included: {
-    fontWeight: 300,
-    font: 'Monaco',
-    marginBottom: 20,
-  },
-  paper: {
-    padding: 30,
-    borderRadius: 10,
-  },
-  listFirst: {
-    marginTop: 20,
-  },
-  price: {
-    color: theme.palette.primary.main,
-  },
-}));
+import React, {useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+// The "pure" entry loads Stripe's script only when checkout starts, not on every page.
+import {loadStripe} from '@stripe/stripe-js/pure';
+import Banner from '../components/Banner';
+import {PRICE} from '../design/traits';
 
 const BuyTest: React.FC = () => {
-  const styles = useStyles();
   const navigate = useNavigate();
-  const handleNav = (path: string) => {
-    if (sessionStorage.length > 0) {
-      sessionStorage.clear();
-    }
-    navigate(path);
-  };
+  const [busy, setBusy] = useState(false);
 
-  useEffect(() => {
+  const checkout = async () => {
+    setBusy(true);
     sessionStorage.clear();
-    document?.querySelector('body')?.scrollTo({top: 0, left: 0, behavior: 'smooth'});
-  });
-
-  const signUp = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
     try {
       const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY ?? '');
-
       if (stripe) {
         await stripe.redirectToCheckout({
           lineItems: [
@@ -70,48 +29,53 @@ const BuyTest: React.FC = () => {
       }
     } catch (error) {
       console.error(JSON.stringify(error));
-      handleNav('/checkouterror');
+      navigate('/checkouterror');
+    } finally {
+      setBusy(false);
     }
   };
 
   return (
-    <Grid container justifyContent='center' alignItems='center' spacing={2} className={styles.info}>
-      <Grid item xs={12}>
-        <Grid container justifyContent='center' alignItems='center'>
-          <Grid item xs={12} md={10} lg={7}>
-            <Paper elevation={2} className={styles.paper}>
-              <Typography variant='h3' className={styles.included}>
-                What's included for <span className={styles.price}>$9.99?</span>
-              </Typography>
-              <Divider />
-              <Typography variant='subtitle1' className={styles.listFirst}>
-                1. One copy of a 100-question, scientifically-backed, peer-reviewed assessment of personality.
-              </Typography>
-              <br></br>
-              <Typography variant='subtitle1'>2. In-depth analysis of results, specific to your scores.</Typography>
-              <br></br>
-              <Typography variant='subtitle1'>3. Access to view your scores anytime.</Typography>
-              <br></br>
-              <Typography variant='subtitle1'>
-                4. Discount offerings towards coaching services with Personality+ staff, where you can further learn
-                about your behaviors and discover more about yourself.
-              </Typography>
-              <br></br>
-              <br></br>
-              <Typography variant='subtitle1'>
-                Note: if you have purchased a Personality+ account before, you will have to provide a a different email
-                to checkout.
-              </Typography>
-              <div className={styles.buttons}>
-                <Button color='primary' variant='contained' onClick={signUp} className={styles.button}>
-                  PURCHASE PERSONALITY+
-                </Button>
-              </div>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
+    <div className='pp'>
+      <Banner pageTitle='Get your report' intro='One test, one report, yours to keep.' />
+      <div className='pp-wrap pp-buy'>
+        <section aria-labelledby='included'>
+          <h2 id='included' className='pp-display pp-h3' style={{marginBottom: 20}}>
+            What’s included
+          </h2>
+          <ul className='pp-included'>
+            <li>One 100-question, research-based assessment of your personality.</li>
+            <li>An in-depth analysis of your results, specific to your scores.</li>
+            <li>Access to view your scores anytime, and download them.</li>
+            <li>
+              Discounted coaching with Personality+, where you can learn more about your behaviors and discover more
+              about yourself.
+            </li>
+          </ul>
+          <p className='pp-small' style={{marginTop: 24}}>
+            Want to see it first? <Link to='/#report'>Look at a sample report</Link>.
+          </p>
+        </section>
+
+        <aside className='pp-price pp-sheet' aria-label='Price and checkout'>
+          <span className='pp-price__amount'>{PRICE}</span>
+          <span style={{fontWeight: 700}}>One-time payment. No subscription.</span>
+          <button type='button' className='pp-btn' onClick={checkout} disabled={busy}>
+            {busy ? 'Opening checkout…' : 'Secure checkout'}
+          </button>
+          <ul className='pp-notes'>
+            <li>Payment is handled by Stripe. You create your account right after.</li>
+            <li>Each purchase covers one test. If you have bought before, check out with a different email.</li>
+            <li>
+              You take the test once. See <Link to='/faqs'>why</Link>.
+            </li>
+            <li>
+              <Link to='/privacy'>How we handle your data</Link>
+            </li>
+          </ul>
+        </aside>
+      </div>
+    </div>
   );
 };
 

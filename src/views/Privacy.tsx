@@ -17,8 +17,8 @@ const Privacy: React.FC = () => {
     paper: {
       padding: isMobile ? 20 : 30,
       color: theme.palette.info.main,
-      borderLeft: `6px solid #111840`,
-      borderRadius: 10,
+      borderTop: `4px solid #15172B`,
+      borderRadius: 0,
     },
     footer: {
       bottom: 0,
@@ -42,7 +42,7 @@ const Privacy: React.FC = () => {
 
   useEffect(() => {
     window.addEventListener('resize', handleResize);
-    document?.querySelector('body')?.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
   }, []);
 
   return (
@@ -50,7 +50,7 @@ const Privacy: React.FC = () => {
       <Banner pageTitle='Privacy' />
       <Grid container justifyContent='center' alignItems='center' className={styles.container}>
         <Grid item xs={10}>
-          <Paper elevation={2} className={styles.paper}>
+          <Paper elevation={0} className={styles.paper}>
             <Typography variant='subtitle1' className={styles.top}>
               Part of the information you share on our website is stored and used. We collect your email and test
               results. Your credit card info is collected by Stripe. Your browser info, IP address, and fingerprint are

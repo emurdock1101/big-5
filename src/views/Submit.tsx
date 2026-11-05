@@ -23,7 +23,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   paper: {
     padding: 30,
-    borderRadius: 10,
+    borderRadius: 0,
   },
 }));
 
@@ -90,7 +90,7 @@ const Submit: React.FC<SubmitProps> = (props: SubmitProps) => {
         <Grid item xs={12}>
           <Grid container justifyContent='center' alignItems='center'>
             <Grid item xs={12} md={10} lg={8}>
-              <Paper elevation={2} className={styles.paper}>
+              <Paper elevation={0} className={styles.paper}>
                 <Typography variant='h5'>You have completed the test.</Typography>
                 <br></br>
                 <Typography variant='subtitle1'>

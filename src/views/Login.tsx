@@ -19,7 +19,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
 
   const useStyles = makeStyles((theme) => ({
     plus: {
-      color: theme.palette.primary.main,
+      color: '#00756B',
       textDecoration: 'none',
       '&:hover': {
         color: theme.palette.primary.dark,
@@ -38,7 +38,6 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
     noAccount: {
       fontSize: 25,
       fontWeight: 300,
-      font: 'Monaco',
       marginLeft: 20,
       marginTop: 30,
       marginBottom: 30,
@@ -46,7 +45,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
     paper: {
       padding: 20,
       marginBottom: 60,
-      borderRadius: 10,
+      borderRadius: 0,
     },
     alert: {
       marginBottom: 15,
@@ -59,9 +58,8 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
     forgot: {
       fontSize: 15,
       fontWeight: 300,
-      font: 'Monaco',
       marginLeft: 20,
-      color: theme.palette.primary.main,
+      color: '#00756B',
       textDecoration: 'none',
       '&:hover': {
         color: theme.palette.primary.dark,
@@ -127,7 +125,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
               <Box className={styles.box} />
             </React.Fragment>
           )}
-          <Paper elevation={2} className={styles.paper}>
+          <Paper elevation={0} className={styles.paper}>
             <form onSubmit={logIn} noValidate>
               <TextField
                 id='login-email'
