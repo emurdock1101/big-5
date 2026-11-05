@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Link} from 'react-router-dom';
 import ColorPlate from '../design/ColorPlate';
 import Strip from '../design/Strip';
-import {BOOKING_URL, PRICE, SOFT_NAME, TRAITS} from '../design/traits';
+import {BOOKING_LABEL, BOOKING_URL, PRICE, TRAITS} from '../design/traits';
 import {interpretations} from '../constants/interpretations';
 import patrick from '../images/patrick.jpeg';
 
@@ -11,13 +11,7 @@ interface HomeProps {
   completed: boolean;
 }
 
-// Illustrative mixes for the hero plate. Not anyone's real results.
-const MIXES: {name: string; scores: number[]}[] = [
-  {name: 'Mix A', scores: [72, 31, 64, 48, 85]},
-  {name: 'Mix B', scores: [28, 55, 81, 77, 40]},
-  {name: 'Mix C', scores: [90, 18, 35, 62, 58]},
-];
-
+// Illustrative scores for the sample report. Not anyone's real results.
 const SAMPLE = {
   scores: [72, 31, 64, 48, 85],
   aspects: [
@@ -34,8 +28,14 @@ const sampleExcerpt =
   interpretations[0].paragraphs[0];
 
 const Home: React.FC<HomeProps> = (props: HomeProps) => {
-  const [mix, setMix] = useState(0);
-  const [focus, setFocus] = useState<number | null>(null);
+  // Sampler: the visitor's own guesses, 0–100.
+  const [guess, setGuess] = useState<number[]>([50, 50, 50, 50, 50]);
+  const [active, setActive] = useState<number | null>(null);
+  const [touched, setTouched] = useState<number | null>(null);
+  // Explorer: which trait is open.
+  const [open, setOpen] = useState(0);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
   const [showDock, setShowDock] = useState(false);
   const heroActions = useRef<HTMLDivElement>(null);
 
@@ -74,18 +74,37 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
     ? {to: '/results', label: 'View your results'}
     : {to: '/test', label: 'Take the test'};
 
-  const current = MIXES[mix];
+  const setOne = (i: number, v: number) => {
+    setGuess((g) => g.map((x, j) => (j === i ? v : x)));
+    setActive(i);
+    setTouched(i);
+  };
+
+  const hint =
+    touched === null
+      ? 'Each band grows with its trait. The test replaces your guess with a measurement.'
+      : `${TRAITS[touched].ocean}: ${guess[touched] < 50 ? TRAITS[touched].low : TRAITS[touched].high}.`;
+
+  const onTabKey = (e: React.KeyboardEvent, i: number) => {
+    const next = e.key === 'ArrowRight' ? (i + 1) % 5 : e.key === 'ArrowLeft' ? (i + 4) % 5 : null;
+    if (next === null) return;
+    e.preventDefault();
+    setOpen(next);
+    tabRefs.current[next]?.focus();
+  };
+
+  const t = TRAITS[open];
 
   return (
     <div className='pp'>
-      {/* ---------- first viewport ---------- */}
+      {/* ---------- first viewport: the sampler ---------- */}
       <section className='pp-hero'>
-        <div className='pp-wrap pp-hero__grid'>
+        <div className='pp-wrap pp-hero__grid pp-hero__grid--sampler'>
           <div className='pp-hero__copy'>
-            <h1 className='pp-display pp-h1'>You are not one color. You are five, in proportion.</h1>
+            <h1 className='pp-display pp-h1'>Find out how you’re built. Then find out what for.</h1>
             <p className='pp-lede'>
-              A 100-question Big Five personality test with a personal report on your five traits and ten aspects,
-              written from a licensed therapist’s practice.
+              A 100-question Big Five personality test from Patrick Knicely, LPC: personality researcher and
+              biblical scholar.
             </p>
             <div className='pp-hero__actions' ref={heroActions}>
               <Link to={primary.to} className='pp-btn' data-cta onClick={clearSession}>
@@ -102,41 +121,123 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
             </ul>
           </div>
 
-          <div className='pp-hero__plate'>
+          <div className='pp-sampler'>
             <ColorPlate
-              scores={current.scores}
-              focus={focus}
-              label={`Five nested color squares, one per trait, each band sized by an example score. ${current.name}: ${TRAITS.map(
-                (t, i) => `${t.ocean} ${current.scores[i]}`,
-              ).join(', ')}.`}
+              scores={guess}
+              focus={active}
+              label={`Your guessed color plate: ${TRAITS.map((tr, i) => `${tr.ocean} ${guess[i]}`).join(', ')}.`}
             />
-            <ul className='pp-legend' aria-label='Traits in this example mix'>
-              {TRAITS.map((t, i) => (
-                <li key={t.ocean}>
-                  <button
-                    type='button'
-                    aria-pressed={focus === i}
-                    onMouseEnter={() => setFocus(i)}
-                    onMouseLeave={() => setFocus(null)}
-                    onFocus={() => setFocus(i)}
-                    onBlur={() => setFocus(null)}
-                    onClick={() => setFocus(focus === i ? null : i)}>
-                    <span className='pp-legend__chip' style={{background: t.color}} />
-                    <span className='pp-legend__name'>{SOFT_NAME[t.ocean] ?? t.ocean}</span>
-                    <span className='pp-legend__short' aria-hidden='true'>
-                      {t.ocean[0]}
-                    </span>
-                    <span className='pp-legend__score'>{current.scores[i]}</span>
-                  </button>
+            <div className='pp-sampler__head'>
+              <h2 className='pp-sampler__title'>Move the sliders. Guess your mix.</h2>
+              <span className='pp-sample-tag'>Preview, not a result</span>
+            </div>
+            <ul className='pp-sliders'>
+              {TRAITS.map((tr, i) => (
+                <li key={tr.ocean}>
+                  <label htmlFor={`guess-${i}`}>
+                    <span className='pp-chip' style={{background: tr.color}} aria-hidden='true' />
+                    {tr.ocean}
+                  </label>
+                  <input
+                    id={`guess-${i}`}
+                    type='range'
+                    min={0}
+                    max={100}
+                    value={guess[i]}
+                    style={{'--pp-track': tr.color} as React.CSSProperties}
+                    aria-valuetext={`${guess[i]}: ${guess[i] < 50 ? tr.low : tr.high}`}
+                    onChange={(e) => setOne(i, +e.target.value)}
+                    onPointerUp={() => setActive(null)}
+                    onKeyUp={() => setActive(null)}
+                    onBlur={() => setActive(null)}
+                  />
+                  <output htmlFor={`guess-${i}`}>{guess[i]}</output>
                 </li>
               ))}
             </ul>
-            <p className='pp-small' style={{margin: 0, display: 'flex', gap: 16, flexWrap: 'wrap'}}>
-              <span>Example mix, not real results. Your report draws your own.</span>
-              <button type='button' className='pp-textlink' onClick={() => setMix((m) => (m + 1) % MIXES.length)}>
-                Try another mix
-              </button>
+            <p className='pp-small pp-sampler__hint' aria-live='polite'>
+              {hint}
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- why: the faith side ---------- */}
+      <section id='why' className='pp-section pp-field pp-field--ink'>
+        <div className='pp-wrap pp-why'>
+          <div>
+            <ul className='pp-why__qs'>
+              <li>Why do you think the way you do?</li>
+              <li>Why does the work you’re good at so often feel like the work you’re allowed to do?</li>
+              <li>And what if who you are and what God made you for were never at odds?</li>
+            </ul>
+            <p className='pp-display pp-why__land'>Understand the top. Master the bottom.</p>
+          </div>
+          <div className='pp-why__side'>
+            <p>
+              Personality science tells you how you’re built. The Bible’s bigger story tells you why it matters: you were
+              made as one of God’s imagers, to represent Him with the temperament you actually have, not the one someone
+              told you to want.
+            </p>
+            <p>People are built differently. One size never fits all.</p>
+            <Link to='/#about' className='pp-textlink'>
+              About Patrick
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- trait explorer ---------- */}
+      <section id='traits' className='pp-section'>
+        <div className='pp-wrap'>
+          <div className='pp-section-head'>
+            <h2 className='pp-display pp-h2'>Five traits. Ten aspects. Open each one.</h2>
+            <p className='pp-lede' style={{maxWidth: '54ch'}}>
+              None is good or bad on its own. What matters is your mix, and what you do with it.
+            </p>
+          </div>
+          <div className='pp-explorer'>
+            <div className='pp-explorer__tabs' role='tablist' aria-label='The five traits'>
+              {TRAITS.map((tr, i) => (
+                <button
+                  key={tr.ocean}
+                  ref={(el) => (tabRefs.current[i] = el)}
+                  type='button'
+                  role='tab'
+                  id={`trait-tab-${i}`}
+                  aria-selected={open === i}
+                  aria-controls='trait-panel'
+                  tabIndex={open === i ? 0 : -1}
+                  className='pp-explorer__tab'
+                  style={{background: tr.color}}
+                  onClick={() => setOpen(i)}
+                  onKeyDown={(e) => onTabKey(e, i)}>
+                  <span className='pp-explorer__tabname'>{tr.ocean}</span>
+                  <span className='pp-explorer__tabshort' aria-hidden='true'>
+                    {tr.ocean[0]}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <div className='pp-explorer__panel' role='tabpanel' id='trait-panel' aria-labelledby={`trait-tab-${open}`}>
+              <h3 className='pp-display pp-h2'>{t.ocean}</h3>
+              <p className='pp-trait__aspects' style={{margin: 0}}>
+                {t.aspects[0]} · {t.aspects[1]}
+              </p>
+              <p className='pp-lede' style={{maxWidth: '46ch'}}>
+                {t.line}
+              </p>
+              <dl className='pp-explorer__ends'>
+                <div>
+                  <dt>Lower scores</dt>
+                  <dd>{t.low}.</dd>
+                </div>
+                <div>
+                  <dt>Higher scores</dt>
+                  <dd>{t.high}.</dd>
+                </div>
+              </dl>
+            </div>
           </div>
         </div>
       </section>
@@ -176,33 +277,6 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
         </div>
       </section>
 
-      {/* ---------- the five traits ---------- */}
-      <section id='traits' className='pp-section'>
-        <div className='pp-wrap'>
-          <div className='pp-section-head'>
-            <h2 className='pp-display pp-h2'>The five traits, and their ten aspects</h2>
-            <p className='pp-lede' style={{maxWidth: '52ch'}}>
-              The Big Five is the research-based model of personality used throughout psychology. Each trait splits into two aspects,
-              and none is good or bad on its own: what matters is your mix.
-            </p>
-          </div>
-          <ul className='pp-traits'>
-            {TRAITS.map((t) => (
-              <li key={t.ocean}>
-                <div className='pp-trait__field' style={{background: t.color}} aria-hidden='true' />
-                <div className='pp-trait__band'>
-                  <h3 className='pp-display pp-h3'>{SOFT_NAME[t.ocean] ?? t.ocean}</h3>
-                  <span className='pp-trait__aspects'>
-                    {t.aspects[0]} · {t.aspects[1]}
-                  </span>
-                  <p className='pp-trait__line'>{t.line}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
       {/* ---------- sample report ---------- */}
       <section id='report' className='pp-section pp-field pp-field--ink'>
         <div className='pp-wrap pp-report'>
@@ -211,7 +285,7 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
             <p className='pp-lede'>
               Where you sit on each trait and aspect compared with other people, and what that means in plain language.
             </p>
-            <ul className='pp-hero__facts' style={{color: '#C9CADB', display: 'grid', gap: 10}}>
+            <ul className='pp-hero__facts' style={{color: '#B9BACB', display: 'grid', gap: 10}}>
               <li>Percentiles for 5 traits and 10 aspects</li>
               <li>Written interpretation for every trait</li>
               <li>Strengths and areas to grow</li>
@@ -232,24 +306,24 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
             <div className='pp-sheet__grid'>
               <ColorPlate scores={SAMPLE.scores} label='Sample color plate drawn from the sample scores.' />
               <ul className='pp-scales'>
-                {TRAITS.map((t, i) => (
-                  <li key={t.ocean}>
+                {TRAITS.map((tr, i) => (
+                  <li key={tr.ocean}>
                     <div className='pp-scale__row'>
-                      <span>{t.ocean}</span>
+                      <span>{tr.ocean}</span>
                       <span>{SAMPLE.scores[i]}th</span>
                     </div>
                     <div
                       className='pp-scale__track'
                       role='img'
-                      aria-label={`${t.ocean}: ${SAMPLE.scores[i]}th percentile`}>
-                      <span className='pp-scale__fill' style={{width: `${SAMPLE.scores[i]}%`, background: t.color}} />
+                      aria-label={`${tr.ocean}: ${SAMPLE.scores[i]}th percentile`}>
+                      <span className='pp-scale__fill' style={{width: `${SAMPLE.scores[i]}%`, background: tr.color}} />
                     </div>
                     <div className='pp-scale__aspects'>
                       <span>
-                        {t.aspects[0]} {SAMPLE.aspects[i][0]}
+                        {tr.aspects[0]} {SAMPLE.aspects[i][0]}
                       </span>
                       <span>
-                        {t.aspects[1]} {SAMPLE.aspects[i][1]}
+                        {tr.aspects[1]} {SAMPLE.aspects[i][1]}
                       </span>
                     </div>
                   </li>
@@ -264,11 +338,11 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
         </div>
       </section>
 
-      {/* ---------- who and what it's built on ---------- */}
-      <section className='pp-section'>
+      {/* ---------- Patrick ---------- */}
+      <section id='about' className='pp-section'>
         <div className='pp-wrap'>
           <div className='pp-section-head'>
-            <h2 className='pp-display pp-h2'>Built on research, written by a therapist</h2>
+            <h2 className='pp-display pp-h2'>Who’s behind it</h2>
           </div>
           <div className='pp-trust'>
             <div className='pp-person'>
@@ -276,26 +350,27 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
               <div className='pp-body' style={{display: 'grid', gap: 12}}>
                 <h3 className='pp-display pp-h3'>Patrick Knicely</h3>
                 <p style={{margin: 0}}>
-                  Licensed clinical mental health therapist and clinical consultant for inpatient and ambulatory
-                  healthcare settings. B.A., Roanoke College; M.S., Radford University.
+                  Licensed Professional Counselor (LPC) in Virginia and licensed teacher. Personality researcher working
+                  with the Big Five Aspects model, trained in biblical scholarship under Michael S. Heiser.
                 </p>
                 <p style={{margin: 0}}>
-                  The report’s interpretations come from research, study and clinical practice.
+                  A former middle and high school teacher, wrestling and swimming coach, and conference teacher for other
+                  counselors. He brings high-level scholarship to everyday people.
                 </p>
-                <Link to='/about' className='pp-textlink'>
-                  About the team
-                </Link>
               </div>
             </div>
             <div style={{display: 'grid', gap: 20, alignContent: 'start'}}>
               <p style={{margin: 0}} className='pp-body'>
                 The questions use the Big Five Aspect Scales, a public-domain instrument from published research. Your
-                answers are scored against how many other people described themselves.
+                answers are scored against how other people described themselves.
               </p>
               <blockquote className='pp-cite'>
                 DeYoung, C. G., Quilty, L. C., &amp; Peterson, J. B. (2007). Between facets and domains: 10 aspects of
                 the Big Five. <em>Journal of Personality and Social Psychology, 93</em>, 880–896.
               </blockquote>
+              <p className='pp-small' style={{margin: 0}}>
+                The test is a tool for understanding yourself. It is not a diagnosis, and it is not counseling.
+              </p>
               <Link to='/faqs' className='pp-textlink'>
                 Read the FAQs
               </Link>
@@ -309,13 +384,13 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
         <div className='pp-wrap pp-close'>
           <div style={{display: 'grid', gap: 20}}>
             <Strip />
-            <h2 className='pp-display pp-h2'>See your own five colors.</h2>
-            <p className='pp-lede' style={{maxWidth: '44ch'}}>
-              Prefer to talk first?{' '}
+            <h2 className='pp-display pp-h2'>Trade the guess for the real thing.</h2>
+            <p className='pp-lede' style={{maxWidth: '46ch'}}>
+              Already have your results?{' '}
               <a href={BOOKING_URL} target='_blank' rel='noopener noreferrer' className='pp-textlink'>
-                Book a free 15-minute call
+                {BOOKING_LABEL}
               </a>{' '}
-              about the test or coaching.
+              and talk them through with Patrick.
             </p>
           </div>
           <Link to={primary.to} className='pp-btn' data-cta onClick={clearSession}>

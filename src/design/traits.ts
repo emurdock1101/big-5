@@ -7,6 +7,9 @@ export interface TraitInfo {
   /** Plain-language gloss, non-judgmental. */
   plain: string;
   line: string;
+  /** What lower and higher scores tend to look like, in plain words. */
+  low: string;
+  high: string;
 }
 
 /** Always in this order: E, N, A, C, O (outermost square to innermost). */
@@ -17,6 +20,8 @@ export const TRAITS: TraitInfo[] = [
     aspects: [Aspect.Enthusiasm, Aspect.Assertiveness],
     plain: 'positive emotion',
     line: 'How strongly you feel joy and enthusiasm, and how much you seek out people and reward.',
+    low: 'Quiet and reflective; saves energy for what matters',
+    high: 'Energized by people, drawn to reward, quick to lead',
   },
   {
     ocean: Ocean.Neuroticism,
@@ -24,6 +29,8 @@ export const TRAITS: TraitInfo[] = [
     aspects: [Aspect.Withdrawal, Aspect.Volatility],
     plain: 'sensitivity to stress',
     line: 'How strongly you feel worry, frustration and sadness, and how quickly they pass.',
+    low: 'Steady under pressure and slow to worry',
+    high: 'Feels threat and loss sharply, like an early-warning system',
   },
   {
     ocean: Ocean.Agreeableness,
@@ -31,6 +38,8 @@ export const TRAITS: TraitInfo[] = [
     aspects: [Aspect.Compassion, Aspect.Politeness],
     plain: 'care for others',
     line: 'How much you weigh other people’s needs against your own, and how you handle conflict.',
+    low: 'Blunt and competitive; will say the hard thing',
+    high: 'Cares for others, keeps the peace, avoids conflict',
   },
   {
     ocean: Ocean.Conscientiousness,
@@ -38,6 +47,8 @@ export const TRAITS: TraitInfo[] = [
     aspects: [Aspect.Industriousness, Aspect.Orderliness],
     plain: 'order and responsibility',
     line: 'How much you plan, persist and keep things in order, and what drives you to work hard.',
+    low: 'Flexible and relaxed; resists rigid plans',
+    high: 'Plans, persists, keeps order, works hard',
   },
   {
     ocean: Ocean.Openness,
@@ -45,6 +56,8 @@ export const TRAITS: TraitInfo[] = [
     aspects: [Aspect.Interest, Aspect.AestheticOpenness],
     plain: 'interest in ideas and beauty',
     line: 'How drawn you are to new ideas, art and creativity, and to the unfamiliar.',
+    low: 'Practical and concrete; sticks with what works',
+    high: 'Curious and creative, hungry for ideas and beauty',
   },
 ];
 
@@ -60,6 +73,7 @@ export const SOFT_NAME: Record<string, string> = {
 export const PRICE = '$9.99';
 // Replace with the own-domain address once it is set up.
 export const CONTACT_EMAIL = 'discoverpersonalityplus@gmail.com';
+export const BOOKING_LABEL = 'Book a results conversation';
 export const BOOKING_URL = 'https://calendly.com/discoverpersonalityplus';
 export const SOCIAL = {
   facebook: 'https://www.facebook.com/DiscoverPersonalityPlus/',

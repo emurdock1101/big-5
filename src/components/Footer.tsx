@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import {BOOKING_URL, CONTACT_EMAIL, SOCIAL} from '../design/traits';
+import {BOOKING_LABEL, BOOKING_URL, CONTACT_EMAIL, SOCIAL} from '../design/traits';
 import {Wordmark} from './HeaderDrawer';
 
 const XIcon: React.FC = () => (
@@ -18,7 +18,7 @@ const Footer: React.FC = () => (
         <div style={{display: 'grid', gap: 20, alignContent: 'start'}}>
           <Wordmark />
           <p style={{margin: 0, maxWidth: '36ch'}}>
-            A Big Five personality test and report, built on published research and a therapist’s practice.
+            A Big Five personality test by Patrick Knicely, built on published research and the Bible’s bigger story.
           </p>
           <div className='pp-social'>
             <a href={SOCIAL.facebook} target='_blank' rel='noopener noreferrer' aria-label='Personality+ on Facebook'>
@@ -60,7 +60,7 @@ const Footer: React.FC = () => (
             </li>
             <li>
               <a href={BOOKING_URL} target='_blank' rel='noopener noreferrer'>
-                Book a free 15-minute call
+                {BOOKING_LABEL}
               </a>
             </li>
             <li>

@@ -16,8 +16,8 @@ const NAV = [
   {to: '/#how', label: 'How it works'},
   {to: '/#traits', label: 'The five traits'},
   {to: '/#report', label: 'Sample report'},
+  {to: '/#about', label: 'About Patrick'},
   {to: '/faqs', label: 'FAQs'},
-  {to: '/about', label: 'About'},
 ];
 
 export const Wordmark: React.FC = () => (
@@ -28,6 +28,7 @@ export const Wordmark: React.FC = () => (
       ))}
     </span>
     Personality+
+    <span className='pp-wordmark__by'>by Patrick Knicely</span>
   </Link>
 );
 

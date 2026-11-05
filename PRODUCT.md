@@ -8,54 +8,59 @@ web
 
 ## Users
 
-Adults curious about their own personality who want a credible, readable explanation of who they are and how it shapes their emotions, behavior, relationships and work. They arrive mostly from social links and word of mouth, often on a phone, and decide in one visit whether a $9.99 test is worth it. A smaller group wants help acting on their results and may book a review session with the clinician.
+Mostly men. Bright, curious, hardworking, a bit of a rule breaker; often high in openness and conscientiousness. He has a hard time fitting in, which may include a physical church. Not in deep crisis, but a little lost: he struggles to pull his identity and skills together, and because he is unsure of himself he sometimes settles. He may feel tied up in "predetermined ministry," or he may not know God at all. Often arrives on a phone from Patrick's social media (Mr.MindMorph).
+
+What he wants: to understand his skills and how to use them in his area of competence, and to understand God's plan in a way that sets him free to show up at work and take responsibility.
 
 ## Product Purpose
 
-Personality+ sells a one-time, 100-question Big Five Aspects personality test (10–20 minutes) with a personal report: a percentile for each of the five traits and their ten aspects, plus detailed paragraphs on what that means day to day. Success is a visitor understanding the offer, paying $9.99, finishing the test, and finding the report clear and usable.
+Personality+ is Patrick Knicely's Big Five Aspects personality test: 100 questions, 10–20 minutes, $9.99, one take per purchase, with a report giving percentiles for 5 traits and 10 aspects plus written interpretation. The site is "Personality+ by Patrick": the test is the main thing to buy, and the site makes clear whose it is, what he believes, and why he built it. Success: the right man recognizes himself, understands the offer, takes the test, and uses what he learns.
 
 ## Positioning
 
-Built on the published Big Five Aspects model (DeYoung, Quilty & Peterson, 2007, *Journal of Personality and Social Psychology* 93, 880–896) rather than pop typologies, and interpreted by a practicing licensed clinical mental health therapist, Patrick Knicely. Free versions of the scale exist; Personality+ competes on a clearer, more practical, more usable report.
+Patrick helps people understand how God made them and discover their role in His Kingdom, using personality science and the Bible's bigger story. He combines the neuropsychology of personality (Peterson's Maps of Meaning, Jeffrey Gray, the Big Five Aspects of DeYoung, Quilty & Peterson) with Michael S. Heiser's Deuteronomy 32 / Divine Council worldview. High-level scholarship for everyday people, with compassion and real usefulness. Tying idea: Peterson has a missing map of meaning, and the Divine Council worldview is that map.
 
 ## Operating Context
 
-- Purchase: email + Stripe checkout at $9.99 on `/buy`; one purchase = one test, each purchase needs a different email.
-- Test is taken once; retaking is discouraged for at least six months because prior knowledge biases answers.
-- Results are viewed in-app after login and can be downloaded.
-- Optional follow-up: a one-time results review or weekly/monthly sessions, booked through Calendly ("Book a call").
+- Purchase: Stripe checkout at $9.99 on `/buy`; each purchase needs a different email; create account after checkout.
+- Test taken once; retake no sooner than about six months.
+- Results viewed in-app and downloadable.
+- Follow-up offer: a results conversation with Patrick (talking through your results), booked via Calendly. It is not counseling, therapy or coaching.
+- Social: Mr.MindMorph (name drawn from Romans 12:2, being transformed by the renewing of your mind).
 
 ## Capabilities and Constraints
 
-- React 17 single-page app (Create React App, TypeScript, Material UI v4/v5 mixed), AWS Amplify auth/storage/API, Stripe payments, hosted on S3/Amplify.
-- Scoring, payment, auth and result storage logic must keep working exactly as today; redesign touches presentation and copy only.
-- An admin view for browsing all users' results exists on GitHub master (not yet deployed); keep it working. Unit tests (`CI=true npx react-scripts test --watchAll=false`) must stay green. Install needs `npm ci --legacy-peer-deps`.
-- Five traits and their aspects: Extraversion (assertiveness, enthusiasm), Neuroticism (withdrawal, volatility), Agreeableness (compassion, politeness), Conscientiousness (industriousness, orderliness), Openness (intellect/ideas, aesthetic openness).
-- Open: exact license title for Patrick Knicely (confirmed licensed; title not yet given).
-- Open: the own-domain contact email address (confirmed available; address not yet given). Replace the Gmail address once known.
-- No refund policy exists; do not state one.
+- React 17 SPA (CRA, TypeScript, Material UI v4/v5), AWS Amplify auth/storage, Stripe, hosted on Amplify/S3. Scoring, payment, auth, storage and admin logic unchanged by design work. Elliot's tests stay green (`npm ci --legacy-peer-deps`).
+- Five traits / ten aspects: Extraversion (enthusiasm, assertiveness), Neuroticism (withdrawal, volatility), Agreeableness (compassion, politeness), Conscientiousness (industriousness, orderliness), Openness (interest in ideas, aesthetic openness).
+- Open: the own-domain contact email (exists; address not yet given). Gmail stays until then (one constant).
+- Scope now: homepage first; other pages follow.
 
 ## Brand Commitments
 
-- Name: "Personality+" (one word, plus sign, no space).
-- Each trait owns a color, already used in the results: Extraversion #ED5362, Neuroticism #9A338E, Agreeableness #3A81CD, Conscientiousness #00C9B7, Openness #344B47. The owner chose to make the five traits the brand's visual identity.
-- Voice: warm, encouraging, plain-spoken clinical expertise; "your personality is part of your story and adventure."
+- Name: "Personality+" (no space), presented as Personality+ by Patrick Knicely.
+- The five trait colors and the Albers-style nested color squares stay; the owner likes them. Order always E, N, A, C, O. Colors: E #ED5362, N #9A338E, A #3A81CD, C #00C9B7, O #344B47.
+- Faith is woven in early on the homepage, alongside the science, not hidden and not a sermon.
+- Voice: direct, compassionate, deep, clear; closer to Peterson than Heiser. Bird's-eye view first, then details. Stories and hooks; stacked questions; long passages landing on a short punchy line; cites sources, admits limits. No emojis, no shouting caps. Fewer names per paragraph and an earlier payoff for this reader.
+- Phrases he uses (credit Heiser/Peterson where fitting): understand the top and master the bottom; if it's weird, it's important; the Bible was written for us, but not to us; believing loyalty; being God's imagers; sort yourself out; compare yourself to who you were yesterday; be a monster, then learn to control it.
+- Never use: church clichés (a season of waiting, God laid it on my heart, let's do life together, guard your heart, being refined, let go and let God, more than you can handle, blessed, on fire for God, walking in his favor); self-help/manifesting words (manifest/manifesting, speak it into existence, boundaries, protect your peace, let them, healing journey, mind shift, growth mindset, self-care); therapy-speak (gaslighting, triggered, toxic, narcissist, trauma, codependent, inner child, nervous system regulation, dysregulated, shadow work, neurodivergence); internet slang. No AI filler lines.
 
 ## Evidence on Hand
 
-- Real citations: DeYoung, Quilty & Peterson (2007); Costa; Wilt; Revelle (William); Oxford Handbook of the Five Factor Model.
-- Real team: Patrick Knicely (B.A. Roanoke College, M.S. Radford University, licensed clinical mental health therapist and clinical consultant), Elliot Murdock (software engineer, built the site). Photos in `src/images`.
-- Real report content in `src/constants/content.ts` (trait interpretations) — usable for a sample-report preview.
-- None exist: testimonials, user counts, press, refund policy. Do not fabricate them.
+- Credentials: Licensed teacher; Licensed Professional Counselor (LPC) in Virginia; personality researcher working with the Big Five Aspects model; biblical scholarship trained under Michael S. Heiser; former middle and high school teacher, wrestling and swimming coach, conference teacher for other counselors. Not currently seeing clients.
+- Real citations: DeYoung, Quilty & Peterson (2007), JPSP 93, 880–896; Costa; Wilt; Revelle (William).
+- Real report content in `src/constants/` (interpretations).
+- Patrick's own Big Five scores exist (brand homebase) but he chose not to feature them on the homepage.
+- None exist: testimonials, user counts, press, refund policy. Do not fabricate.
+- Source of brand truth: /Users/patrickknicely/my-business/brand-homebase.md
 
 ## Product Principles
 
-1. Show the offer before asking for money: price, what's inside, and what the report looks like.
-2. Earn clinical trust through care: accurate names, clean copy, real credentials, real citations.
-3. Explain, never label: every trait term is described in plain, non-judgmental language.
-4. The five traits are the identity; everything visual should come from them.
-5. Phone first: most visitors decide on a small screen.
+1. People are built differently: never one size fits all.
+2. Bird's-eye view first: show what this is and why before the details.
+3. Show the offer before asking for money.
+4. Scholarship made usable: depth with clarity, sources named, limits admitted.
+5. Never diagnose, never promise a life without difficulty, never speak as the reader's counselor.
 
 ## Accessibility & Inclusion
 
-WCAG 2.1 AA: 4.5:1 text contrast (trait colors must be paired with text colors that pass), semantic headings, keyboard-reachable nav and test controls, labeled icons. Neuroticism content must stay non-stigmatizing.
+WCAG 2.1 AA: 4.5:1 text contrast, semantic headings, keyboard-reachable controls (sampler sliders and explorer must work by keyboard and screen reader), reduced-motion respected. Neuroticism described without stigma.
