@@ -15,6 +15,7 @@ interface QuestionPackProps {
 const QuestionPack: React.FC<QuestionPackProps> = (props: QuestionPackProps) => {
   const numberOfPages = props.totalQuestions / props.questions.length;
   const [answeredQuestions, setAnsweredQuestions] = useState<string[]>([]);
+  const [showMissing, setShowMissing] = useState(false);
 
   const countAnswer = (uid: string) => {
     if (!answeredQuestions.includes(uid)) {
@@ -37,7 +38,21 @@ const QuestionPack: React.FC<QuestionPackProps> = (props: QuestionPackProps) => 
       <span className='pp-small' aria-live='polite'>
         {done ? 'Page complete' : `${remaining} left on this page`}
       </span>
-      <button type='button' className='pp-btn pp-btn--sm' disabled={!done} onClick={props.nextStep}>
+      <button
+        type='button'
+        className='pp-btn pp-btn--sm'
+        onClick={() => {
+          if (done) {
+            props.nextStep();
+            return;
+          }
+          setShowMissing(true);
+          window.setTimeout(() => {
+            const first = document.querySelector('[data-missing="true"]');
+            first?.scrollIntoView({block: 'center'});
+            (first?.querySelector('[role="radio"]') as HTMLElement | null)?.focus();
+          }, 30);
+        }}>
         {props.page === numberOfPages ? 'Finish' : 'Next page'}
       </button>
     </div>
@@ -60,7 +75,7 @@ const QuestionPack: React.FC<QuestionPackProps> = (props: QuestionPackProps) => 
           How well does each statement describe you? Go with your first instinct.
         </p>
         {props.questions.map((question) => (
-          <QuestionComp key={question.uid} question={question} countAnswer={countAnswer} />
+          <QuestionComp key={question.uid} question={question} countAnswer={countAnswer} showMissing={showMissing} />
         ))}
         <div style={{marginTop: 32}}>{nav}</div>
       </div>

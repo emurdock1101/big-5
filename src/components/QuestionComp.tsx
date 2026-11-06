@@ -4,6 +4,8 @@ import {useEffect, useState} from 'react';
 interface QuestionProps {
   question: Question;
   countAnswer: (uid: string) => void;
+  /** Flag the question if it is still unanswered (after the person tries to move on). */
+  showMissing?: boolean;
 }
 
 const LABELS = ['Strongly disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly agree'];
@@ -39,10 +41,10 @@ const QuestionComp: React.FC<QuestionProps> = (props: QuestionProps) => {
   const chosenIndex = values.indexOf(selected);
 
   return (
-    <div className='pp-question'>
+    <div className='pp-question' data-missing={selected === 99 && props.showMissing ? 'true' : undefined}>
       <p id={labelId} style={{margin: 0, fontSize: 'clamp(19px, 1.7vw, 22px)', fontWeight: 650, lineHeight: 1.35}}>
         {props.question.text}
-        {selected === 99 && <span className='pp-question__todo'>Not answered yet</span>}
+        {selected === 99 && props.showMissing && <span className='pp-question__todo'>Not answered yet</span>}
       </p>
       <div className='pp-answers' role='radiogroup' aria-labelledby={labelId}>
         {LABELS.map((label, i) => (

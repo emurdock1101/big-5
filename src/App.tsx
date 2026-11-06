@@ -42,6 +42,7 @@ const Login = lazy(() => import('./views/Login'));
 const Signup = lazy(() => import('./views/Signup'));
 const Forgot = lazy(() => import('./views/Forgot'));
 const ResultsPreview = lazy(() => import('./views/ResultsPreview'));
+const TestPreview = lazy(() => import('./views/TestPreview'));
 
 Amplify.configure(awsconfig);
 
@@ -137,7 +138,7 @@ function App() {
   };
 
   // Public pages render straight away; only account pages wait for the sign-in check.
-  const publicPaths = ['/', '/results-preview', '/about', '/faqs', '/contact', '/buy', '/privacy', '/error', '/checkouterror'];
+  const publicPaths = ['/', '/results-preview', '/test-preview', '/about', '/faqs', '/contact', '/buy', '/privacy', '/error', '/checkouterror'];
   if (loading && !publicPaths.includes(window.location.pathname)) {
     return <React.Fragment />;
   }
@@ -195,6 +196,7 @@ function App() {
               element={<ProtectedRoute type={'admin'} component={<AdminUserResults />} />}
             />
             {process.env.NODE_ENV === 'development' && <Route path='/results-preview' element={<ResultsPreview />} />}
+            {process.env.NODE_ENV === 'development' && <Route path='/test-preview' element={<TestPreview />} />}
             <Route path='/' element={<Home loggedIn={!!user.loggedIn} completed={!!user.completed} />} />
             <Route path='/about' element={<About />} />
             <Route path='/faqs' element={<FAQs />} />

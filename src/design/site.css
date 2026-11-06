@@ -1690,3 +1690,148 @@ p {
     font-size: 16px;
   }
 }
+
+/* ---------- test: instructions, form, submit ---------- */
+
+.pp-pretest {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+  padding-bottom: clamp(72px, 10vw, 140px);
+}
+
+.pp-pretest__read {
+  display: grid;
+  gap: 32px;
+  max-width: 64ch;
+}
+
+.pp-pretest__read section {
+  border-top: 2px solid var(--pp-ink);
+  padding-top: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.pp-pretest__read p {
+  margin: 0;
+}
+
+.pp-checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.pp-checklist li {
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  gap: 14px;
+  align-items: baseline;
+}
+
+.pp-checklist li::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background: var(--pp-ink);
+  transform: translateY(1px);
+}
+
+.pp-pretest__form {
+  position: sticky;
+  top: calc(var(--pp-header-h) + 24px);
+  display: grid;
+  gap: 20px;
+}
+
+.pp-field-row {
+  display: grid;
+  gap: 8px;
+}
+
+.pp-field-row > label,
+.pp-fieldset legend {
+  font-weight: 750;
+  padding: 0;
+}
+
+.pp-fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.pp-input {
+  font: inherit;
+  min-height: 52px;
+  padding: 0 14px;
+  border: 2px solid var(--pp-ink);
+  border-radius: 0;
+  background: #fff;
+  color: var(--pp-ink);
+}
+
+.pp-input:focus-visible {
+  outline: 3px solid var(--pp-a);
+  outline-offset: 2px;
+}
+
+.pp-choice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.pp-choice__opt {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  border: 2px solid var(--pp-rule);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pp-choice__opt input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.pp-choice__opt:has(input:checked) {
+  background: var(--pp-ink);
+  border-color: var(--pp-ink);
+  color: #fff;
+}
+
+.pp-choice__opt:has(input:focus-visible) {
+  outline: 3px solid var(--pp-a);
+  outline-offset: 2px;
+}
+
+.pp-alert {
+  margin: 8px 0 0;
+  padding: 14px 16px;
+  border: 2px solid var(--pp-e-ink);
+  color: var(--pp-e-ink);
+  font-weight: 650;
+  max-width: 60ch;
+}
+
+@media (max-width: 860px) {
+  .pp-pretest {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pp-pretest__form {
+    position: static;
+    order: -1;
+  }
+}
