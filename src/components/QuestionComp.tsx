@@ -1,78 +1,67 @@
 import {Question} from '../constants/schema';
-import {FormControl, FormControlLabel, FormLabel, Radio, RadioGroup} from '@material-ui/core';
 import {useEffect, useState} from 'react';
 
 interface QuestionProps {
   question: Question;
   countAnswer: (uid: string) => void;
+  /** Flag the question if it is still unanswered (after the person tries to move on). */
+  showMissing?: boolean;
 }
 
+const LABELS = ['Strongly disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly agree'];
+
+/** One statement with all five answers always visible; the chosen one is struck forward. */
 const QuestionComp: React.FC<QuestionProps> = (props: QuestionProps) => {
   const [selected, setSelected] = useState(() => {
-    const selected = sessionStorage.getItem(JSON.stringify(props.question));
-    return selected !== null ? parseInt(selected) : 99;
+    const stored = sessionStorage.getItem(JSON.stringify(props.question));
+    return stored !== null ? parseInt(stored) : 99;
   });
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 700);
-
-  //choose the screen size
-  const handleResize = () => {
-    if (window.innerWidth < 700) {
-      setIsMobile(true);
-    } else {
-      setIsMobile(false);
-    }
-  };
-
-  const radio1: number = props.question.reverse ? 5 : 1;
-  const radio2: number = props.question.reverse ? 4 : 2;
-  const radio3: number = 3;
-  const radio4: number = props.question.reverse ? 2 : 4;
-  const radio5: number = props.question.reverse ? 1 : 5;
+  // Scored value for each position, left to right (reversed questions score the other way).
+  const values = props.question.reverse ? [5, 4, 3, 2, 1] : [1, 2, 3, 4, 5];
 
   useEffect(() => {
-    window.addEventListener('resize', handleResize);
     sessionStorage.setItem(JSON.stringify(props.question), '' + selected);
     if (selected !== 99) {
       props.countAnswer(props.question.uid);
     }
   });
 
+  const labelId = `q-${props.question.uid}`;
+
+  const onKey = (e: React.KeyboardEvent, i: number) => {
+    const next = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? i + 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? i - 1 : null;
+    if (next === null || next < 0 || next > 4) return;
+    e.preventDefault();
+    setSelected(values[next]);
+    const group = (e.currentTarget as HTMLElement).parentElement;
+    (group?.children[next] as HTMLElement | undefined)?.focus();
+  };
+
+  const chosenIndex = values.indexOf(selected);
+
   return (
-    <FormControl>
-      <FormLabel>
-        <p>
-          {props.question.text} <span style={{color: '#ED5362'}}>{selected === 99 ? '*' : ''}</span>
-        </p>
-      </FormLabel>
-      <RadioGroup row={!isMobile} value={selected}>
-        <FormControlLabel
-          value={radio1}
-          control={<Radio color='primary' checked={selected === radio1} onClick={() => setSelected(radio1)} />}
-          label='Strongly Disagree'
-        />
-        <FormControlLabel
-          value={radio2}
-          control={<Radio color='primary' checked={selected === radio2} onClick={() => setSelected(radio2)} />}
-          label='Disagree'
-        />
-        <FormControlLabel
-          value={radio3}
-          control={<Radio color='primary' checked={selected === radio3} onClick={() => setSelected(radio3)} />}
-          label='Neutral'
-        />
-        <FormControlLabel
-          value={radio4}
-          control={<Radio color='primary' checked={selected === radio4} onClick={() => setSelected(radio4)} />}
-          label='Agree'
-        />
-        <FormControlLabel
-          value={radio5}
-          control={<Radio color='primary' checked={selected === radio5} onClick={() => setSelected(radio5)} />}
-          label='Strongly Agree'
-        />
-      </RadioGroup>
-    </FormControl>
+    <div className='pp-question' data-missing={selected === 99 && props.showMissing ? 'true' : undefined}>
+      <p id={labelId} style={{margin: 0, fontSize: 'clamp(19px, 1.7vw, 22px)', fontWeight: 650, lineHeight: 1.35}}>
+        {props.question.text}
+        {selected === 99 && props.showMissing && <span className='pp-question__todo'>Not answered yet</span>}
+      </p>
+      <div className='pp-answers' role='radiogroup' aria-labelledby={labelId}>
+        {LABELS.map((label, i) => (
+          <button
+            key={label}
+            type='button'
+            role='radio'
+            className='pp-answer'
+            aria-checked={selected === values[i]}
+            tabIndex={chosenIndex === -1 ? (i === 0 ? 0 : -1) : chosenIndex === i ? 0 : -1}
+            onClick={() => setSelected(values[i])}
+            onKeyDown={(e) => onKey(e, i)}>
+            {label}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 };
 export default QuestionComp;

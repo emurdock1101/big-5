@@ -1,60 +1,30 @@
 import React from 'react';
-import {Grid, Typography, makeStyles, Button} from '@material-ui/core';
-import {useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
-import Banner from '../components/Banner';
+import {Link} from 'react-router-dom';
+import Strip from '../design/Strip';
+import {CONTACT_EMAIL} from '../design/traits';
 
-const CheckoutErrorPage: React.FC = () => {
-  const useStyles = makeStyles((theme) => ({
-    buttonContainer: {
-      marginTop: 60,
-      marginBottom: 60,
-    },
-    buttonItem: {
-      textAlign: 'center',
-    },
-    info: {
-      textAlign: 'center',
-    },
-  }));
-  const styles = useStyles();
-
-  const navigate = useNavigate();
-  const handleNav = (path: string) => {
-    navigate(path, {replace: true});
-  };
-
-  useEffect(() => {
-    document?.querySelector('body')?.scrollTo({top: 0, left: 0, behavior: 'smooth'});
-  }, []);
-
-  return (
-    <React.Fragment>
-      <Banner pageTitle='Checkout Error' />
-      <Grid container justifyContent='center' alignItems='center'>
-        <Grid item xs={10} className={styles.info}>
-          <Typography variant='h5'>
-            Something went wrong with processing your payment. If you have created an account with us before using the
-            same email, that could be the issue.
-          </Typography>
-          <br></br>
-          <br></br>
-          <Typography variant='h5'>
-            Click below to return home or select the Contact us page from the sidebar.
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid container justifyContent='center' alignItems='center' className={styles.buttonContainer}>
-            <Grid item xs={4} sm={2} className={styles.buttonItem}>
-              <Button color='default' variant='contained' onClick={() => handleNav('/')}>
-                Go to home
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </React.Fragment>
-  );
-};
+const CheckoutErrorPage: React.FC = () => (
+  <div className='pp'>
+    <div className='pp-wrap pp-pagehead' style={{paddingBottom: 'clamp(72px, 10vw, 140px)'}}>
+      <Strip />
+      <h1 className='pp-display pp-h1'>Checkout didn’t start.</h1>
+      <p className='pp-lede' style={{maxWidth: '54ch'}}>
+        Something went wrong while starting your payment. If an account already exists for that email, that may be
+        the cause: each purchase needs its own email address.
+      </p>
+      <div className='pp-hero__actions' style={{marginTop: 8}}>
+        <Link to='/buy' className='pp-btn'>
+          Try again
+        </Link>
+        <Link to='/login' className='pp-textlink'>
+          Already have an account? Log in
+        </Link>
+      </div>
+      <p className='pp-small'>
+        Still stuck? Email <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> and we’ll sort it out.
+      </p>
+    </div>
+  </div>
+);
 
 export default CheckoutErrorPage;

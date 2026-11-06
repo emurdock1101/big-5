@@ -15,25 +15,25 @@ import {theme as thm} from '../theme';
 
 const StyledTableHead = styled(TableHead)(({theme}) => ({
   [`&.${tableHeadClasses.root}`]: {
-    borderLeft: `6px solid #111840`,
+    borderTop: `4px solid #15172B`,
   },
 }));
 
 const StyledTableRow = styled(TableRow)(({theme}) => ({
   '&:nth-of-type(n + 1)': {
-    borderLeft: `6px solid ${thm.palette.error.main}`,
+    borderTop: `4px solid ${thm.palette.error.main}`,
   },
   ':nth-of-type(n + 4)': {
-    borderLeft: `6px solid ${thm.palette.warning.main}`,
+    borderTop: `4px solid ${thm.palette.warning.main}`,
   },
   ':nth-of-type(n + 7)': {
-    borderLeft: `6px solid ${thm.palette.success.main}`,
+    borderTop: `4px solid ${thm.palette.success.main}`,
   },
   ':nth-of-type(n + 10)': {
-    borderLeft: `6px solid ${thm.palette.primary.main}`,
+    borderTop: `4px solid ${thm.palette.primary.main}`,
   },
   ':nth-of-type(n + 13)': {
-    borderLeft: `6px solid ${thm.palette.secondary.main}`,
+    borderTop: `4px solid ${thm.palette.secondary.main}`,
   },
 }));
 
@@ -89,7 +89,7 @@ const ResultTable: React.FC<ResultTableProps> = (props: ResultTableProps) => {
 
   const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: '#111840',
+      backgroundColor: '#15172B',
       color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {

@@ -1,0 +1,524 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-05T20:19:03+00:00",
+  "title": "Design System: Personality+",
+  "extensions": {
+    "colorMeta": {
+      "sheet": {
+        "role": "neutral",
+        "displayName": "Albers Mount Grey",
+        "canonical": "oklch(94.3% 0.002 247.8)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#242424",
+          "#3f4040",
+          "#5d5e5e",
+          "#7c7d7e",
+          "#9e9e9f",
+          "#c3c4c4",
+          "#eeeeef"
+        ]
+      },
+      "sheet-deep": {
+        "role": "neutral",
+        "displayName": "Deep Mount Grey",
+        "canonical": "oklch(90.0% 0.005 258.3)",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#232425",
+          "#3f4041",
+          "#5c5e60",
+          "#7c7d80",
+          "#9d9ea0",
+          "#c3c4c6",
+          "#eeeeef"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#242424",
+          "#404040",
+          "#5d5d5d",
+          "#7d7d7d",
+          "#9e9e9e",
+          "#c4c4c4",
+          "#eeeeee"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Navy Ink",
+        "canonical": "oklch(21.4% 0.039 278.2)",
+        "tonalRamp": [
+          "#0a0b10",
+          "#22232d",
+          "#3c3f4e",
+          "#595c71",
+          "#787c93",
+          "#9a9db1",
+          "#c1c3d1",
+          "#eceef6"
+        ]
+      },
+      "ink-hover": {
+        "role": "neutral",
+        "displayName": "Lifted Ink",
+        "canonical": "oklch(30.9% 0.052 278.4)",
+        "tonalRamp": [
+          "#0a0b11",
+          "#212330",
+          "#3b3e52",
+          "#575b77",
+          "#767b9a",
+          "#999db6",
+          "#c0c3d6",
+          "#eceef8"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Soft Ink",
+        "canonical": "oklch(42.3% 0.033 280.4)",
+        "tonalRamp": [
+          "#0a0b0f",
+          "#22232c",
+          "#3d3f4c",
+          "#5a5c6e",
+          "#797c90",
+          "#9b9dae",
+          "#c2c3cf",
+          "#edeef5"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline Grey",
+        "canonical": "oklch(82.6% 0.009 264.5)",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#232426",
+          "#3e4043",
+          "#5b5e62",
+          "#7b7d82",
+          "#9c9ea3",
+          "#c2c4c7",
+          "#edeef0"
+        ]
+      },
+      "footer-muted": {
+        "role": "neutral",
+        "displayName": "Footer Muted",
+        "canonical": "oklch(79.3% 0.024 283.2)",
+        "tonalRamp": [
+          "#0b0b0e",
+          "#232329",
+          "#3e3f48",
+          "#5c5c69",
+          "#7b7c8a",
+          "#9d9da9",
+          "#c3c3cc",
+          "#eeeef3"
+        ]
+      },
+      "footer-rule": {
+        "role": "neutral",
+        "displayName": "Footer Rule",
+        "canonical": "oklch(35.1% 0.061 279.0)",
+        "tonalRamp": [
+          "#0a0a12",
+          "#212332",
+          "#3b3e55",
+          "#575b7c",
+          "#767a9f",
+          "#989cba",
+          "#bfc3d9",
+          "#eceefa"
+        ]
+      },
+      "footer-outline": {
+        "role": "neutral",
+        "displayName": "Footer Outline",
+        "canonical": "oklch(43.3% 0.058 279.9)",
+        "tonalRamp": [
+          "#0a0a12",
+          "#212331",
+          "#3b3e54",
+          "#585b7a",
+          "#767a9d",
+          "#999cb9",
+          "#c0c2d7",
+          "#eceef9"
+        ]
+      },
+      "extraversion": {
+        "role": "primary",
+        "displayName": "Extraversion Red",
+        "canonical": "oklch(65.4% 0.189 18.5)",
+        "tonalRamp": [
+          "#1c0204",
+          "#460912",
+          "#741624",
+          "#a62437",
+          "#d14553",
+          "#e7787d",
+          "#fcabac",
+          "#ffe1e1"
+        ]
+      },
+      "neuroticism": {
+        "role": "primary",
+        "displayName": "Neuroticism Purple",
+        "canonical": "oklch(50.4% 0.173 332.8)",
+        "tonalRamp": [
+          "#160414",
+          "#3a1135",
+          "#61235a",
+          "#8c3582",
+          "#b353a6",
+          "#cc80c0",
+          "#e7afdd",
+          "#ffe3fc"
+        ]
+      },
+      "agreeableness": {
+        "role": "primary",
+        "displayName": "Agreeableness Blue",
+        "canonical": "oklch(59.5% 0.137 252.5)",
+        "tonalRamp": [
+          "#020b1a",
+          "#092542",
+          "#15416e",
+          "#225f9e",
+          "#3f80c6",
+          "#70a2db",
+          "#a4c8f1",
+          "#ddf1ff"
+        ]
+      },
+      "conscientiousness": {
+        "role": "primary",
+        "displayName": "Conscientiousness Teal",
+        "canonical": "oklch(75.1% 0.133 183.6)",
+        "tonalRamp": [
+          "#00100d",
+          "#002d27",
+          "#004e45",
+          "#007264",
+          "#009485",
+          "#4cb2a5",
+          "#92d3c9",
+          "#d5f7f1"
+        ]
+      },
+      "openness": {
+        "role": "primary",
+        "displayName": "Openness Green",
+        "canonical": "oklch(39.2% 0.029 182.8)",
+        "tonalRamp": [
+          "#080c0b",
+          "#1d2625",
+          "#344341",
+          "#4e635f",
+          "#6c837f",
+          "#91a39f",
+          "#bac7c5",
+          "#e9f0ef"
+        ]
+      },
+      "extraversion-text": {
+        "role": "secondary",
+        "displayName": "Extraversion Text Red",
+        "canonical": "oklch(50.8% 0.178 20.5)",
+        "tonalRamp": [
+          "#1b0204",
+          "#440d12",
+          "#721b23",
+          "#a32b36",
+          "#cd4b52",
+          "#e37b7c",
+          "#f9adab",
+          "#ffe2e1"
+        ]
+      },
+      "agreeableness-text": {
+        "role": "secondary",
+        "displayName": "Agreeableness Text Blue",
+        "canonical": "oklch(48.0% 0.118 253.1)",
+        "tonalRamp": [
+          "#030c18",
+          "#0e253e",
+          "#1e4168",
+          "#2f5f96",
+          "#4b80bd",
+          "#78a2d3",
+          "#a9c7eb",
+          "#e0f0ff"
+        ]
+      },
+      "conscientiousness-text": {
+        "role": "secondary",
+        "displayName": "Conscientiousness Text Teal",
+        "canonical": "oklch(50.6% 0.089 184.5)",
+        "tonalRamp": [
+          "#010e0c",
+          "#042b26",
+          "#0d4a44",
+          "#176c63",
+          "#398d83",
+          "#6faca3",
+          "#a4cec8",
+          "#ddf4f0"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page and hero headlines; Archivo expanded black."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section heads."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Sub-heads, step titles, sheet titles; trait names drop to 15-18px normal width in the five-column row."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Step numbers (56px); price uses 72px."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "One-sentence offer under a headline, max 34ch."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Reading text, max 60ch, tabular numerals."
+      },
+      "small": {
+        "displayName": "Small",
+        "purpose": "Facts, notes and captions in soft ink."
+      },
+      "label": {
+        "displayName": "Legend Label",
+        "purpose": "Condensed trait names in the five-column plate legend only."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-plate",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The one easing for every transition (--pp-ease)."
+      },
+      {
+        "name": "button",
+        "value": "0.2s",
+        "purpose": "Button background, colour and press."
+      },
+      {
+        "name": "answer",
+        "value": "0.15s",
+        "purpose": "Answer tile border, fill and colour."
+      },
+      {
+        "name": "faq-toggle",
+        "value": "0.3s",
+        "purpose": "FAQ plus rotating to a cross."
+      },
+      {
+        "name": "chip-and-dock",
+        "value": "0.4s",
+        "purpose": "Legend chip growth; phone dock slide."
+      },
+      {
+        "name": "plate-reproportion",
+        "value": "0.9s",
+        "purpose": "Nested squares re-proportioning on trait focus."
+      },
+      {
+        "name": "score-fill",
+        "value": "1s",
+        "purpose": "Score-bar fill width."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.01ms",
+        "purpose": "All transitions and smooth scroll collapse under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "nav-fold",
+        "value": "1140px"
+      },
+      {
+        "name": "traits-stack",
+        "value": "1080px"
+      },
+      {
+        "name": "columns-stack",
+        "value": "860px"
+      },
+      {
+        "name": "phone-dock",
+        "value": "760px"
+      },
+      {
+        "name": "answers-stack",
+        "value": "600px"
+      },
+      {
+        "name": "header-compact",
+        "value": "560px"
+      },
+      {
+        "name": "legend-initials",
+        "value": "520px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Square navy block with a priced, plain label; the one main action on any screen.",
+      "html": "<a class=\"ds-btn\" href=\"#\">Take the test — $9.99</a>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 28px;border:2px solid #15172b;border-radius:0;background:#15172b;color:#fff;font:inherit;font-family:Archivo,system-ui,sans-serif;font-weight:700;font-size:18px;text-decoration:none;cursor:pointer;transition:background .2s cubic-bezier(0.16,1,0.3,1),color .2s cubic-bezier(0.16,1,0.3,1),transform .2s cubic-bezier(0.16,1,0.3,1);} .ds-btn:hover{background:#2a2d4a;} .ds-btn:active{transform:translateY(1px);} .ds-btn:focus-visible{outline:3px solid #3a81cd;outline-offset:3px;}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Outlined ink button for the secondary step (test pager Back); fills with ink on hover.",
+      "html": "<button class=\"ds-btn-ghost\" type=\"button\">Back</button>",
+      "css": ".ds-btn-ghost{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border:2px solid #15172b;border-radius:0;background:transparent;color:#15172b;font-family:Archivo,system-ui,sans-serif;font-weight:700;font-size:16px;cursor:pointer;transition:background .2s cubic-bezier(0.16,1,0.3,1),color .2s cubic-bezier(0.16,1,0.3,1);} .ds-btn-ghost:hover{background:#15172b;color:#fff;} .ds-btn-ghost:focus-visible{outline:3px solid #3a81cd;outline-offset:3px;}"
+    },
+    {
+      "name": "Light Button",
+      "kind": "button",
+      "refersTo": "button-light",
+      "description": "Sheet-grey button used on the navy course; goes white on hover.",
+      "html": "<div class=\"ds-ink\"><a class=\"ds-btn-light\" href=\"#\">Take the test — $9.99</a></div>",
+      "css": ".ds-ink{background:#15172b;padding:32px;} .ds-btn-light{display:inline-flex;align-items:center;min-height:56px;padding:0 28px;border:2px solid #ebeced;border-radius:0;background:#ebeced;color:#15172b;font-family:Archivo,system-ui,sans-serif;font-weight:700;font-size:18px;text-decoration:none;transition:background .2s cubic-bezier(0.16,1,0.3,1);} .ds-btn-light:hover{background:#fff;} .ds-btn-light:focus-visible{outline:3px solid #3a81cd;outline-offset:3px;}"
+    },
+    {
+      "name": "Header",
+      "kind": "nav",
+      "refersTo": "header",
+      "description": "Sticky grey bar: wide wordmark with five-bar mark, nav links with ink underline on current page, small priced button.",
+      "html": "<header class=\"ds-header\"><a class=\"ds-wordmark\" href=\"#\"><span class=\"ds-wordmark__mark\"><span style=\"background:#ed5362\"></span><span style=\"background:#9a338e\"></span><span style=\"background:#3a81cd\"></span><span style=\"background:#00c9b7\"></span><span style=\"background:#344b47\"></span></span>Personality+</a><nav class=\"ds-nav\"><a href=\"#\">How it works</a><a href=\"#\" aria-current=\"page\">The five traits</a><a href=\"#\">FAQs</a></nav><a class=\"ds-btn-sm\" href=\"#\">Take the test — $9.99</a></header>",
+      "css": ".ds-header{display:flex;align-items:center;gap:24px;height:72px;padding:0 24px;background:#ebeced;border-bottom:1px solid #c3c6cc;font-family:Archivo,system-ui,sans-serif;color:#15172b;} .ds-wordmark{display:inline-flex;align-items:center;gap:10px;margin-right:auto;font-stretch:125%;font-weight:900;font-size:22px;letter-spacing:-0.02em;color:#15172b;text-decoration:none;} .ds-wordmark__mark{display:grid;grid-template-columns:repeat(5,5px);height:22px;} .ds-nav{display:flex;gap:28px;font-weight:600;font-size:16px;} .ds-nav a{color:inherit;text-decoration:none;padding:6px 0;border-bottom:2px solid transparent;} .ds-nav a:hover,.ds-nav a[aria-current='page']{border-bottom-color:#15172b;} .ds-nav a:focus-visible,.ds-btn-sm:focus-visible{outline:3px solid #3a81cd;outline-offset:3px;} .ds-btn-sm{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border:2px solid #15172b;background:#15172b;color:#fff;font-weight:700;font-size:16px;text-decoration:none;white-space:nowrap;} .ds-btn-sm:hover{background:#2a2d4a;}"
+    },
+    {
+      "name": "Colour Plate with Legend",
+      "kind": "custom",
+      "refersTo": "plate",
+      "description": "Signature Albers plate: five nested trait squares sized by score, offset downward, with the pressable legend beneath.",
+      "html": "<div class=\"ds-hero-plate\"><div class=\"ds-plate\" role=\"img\" aria-label=\"Example mix\"><span class=\"ds-plate__sq\" style=\"background:#ed5362;inset:0.00% 0.00% 0.00% 0.00%\"></span><span class=\"ds-plate__sq\" style=\"background:#9a338e;inset:12.95% 10.36% 7.77% 10.36%\"></span><span class=\"ds-plate__sq\" style=\"background:#3a81cd;inset:20.94% 16.75% 12.57% 16.75%\"></span><span class=\"ds-plate__sq\" style=\"background:#00c9b7;inset:32.93% 26.34% 19.76% 26.34%\"></span><span class=\"ds-plate__sq\" style=\"background:#344b47;inset:42.97% 34.38% 25.78% 34.38%\"></span></div><ul class=\"ds-legend\"><li><button type=\"button\" aria-pressed=\"false\"><span class=\"ds-legend__chip\" style=\"background:#ed5362\"></span><span class=\"ds-legend__name\">Extraversion</span><span class=\"ds-legend__score\">72</span></button></li><li><button type=\"button\" aria-pressed=\"false\"><span class=\"ds-legend__chip\" style=\"background:#9a338e\"></span><span class=\"ds-legend__name\">Neuroticism</span><span class=\"ds-legend__score\">31</span></button></li><li><button type=\"button\" aria-pressed=\"false\"><span class=\"ds-legend__chip\" style=\"background:#3a81cd\"></span><span class=\"ds-legend__name\">Agreeableness</span><span class=\"ds-legend__score\">64</span></button></li><li><button type=\"button\" aria-pressed=\"false\"><span class=\"ds-legend__chip\" style=\"background:#00c9b7\"></span><span class=\"ds-legend__name\">Conscientiousness</span><span class=\"ds-legend__score\">48</span></button></li><li><button type=\"button\" aria-pressed=\"true\"><span class=\"ds-legend__chip\" style=\"background:#344b47\"></span><span class=\"ds-legend__name\">Openness</span><span class=\"ds-legend__score\">85</span></button></li></ul></div>",
+      "css": ".ds-hero-plate{display:grid;gap:16px;max-width:420px;padding:24px;background:#ebeced;font-family:Archivo,system-ui,sans-serif;} .ds-plate{position:relative;aspect-ratio:1;width:100%;} .ds-plate__sq{position:absolute;transition:inset .9s cubic-bezier(0.16,1,0.3,1);} .ds-legend{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:0;padding:0;list-style:none;} .ds-legend button{display:grid;grid-template-rows:auto 2.6em auto;align-content:start;width:100%;border:0;background:none;padding:0;font:inherit;text-align:left;cursor:pointer;color:#15172b;} .ds-legend button:focus-visible{outline:3px solid #3a81cd;outline-offset:3px;} .ds-legend__chip{display:block;height:14px;transition:height .4s cubic-bezier(0.16,1,0.3,1);} .ds-legend button:hover .ds-legend__chip,.ds-legend button[aria-pressed='true'] .ds-legend__chip{height:28px;} .ds-legend__name{display:block;margin-top:8px;font-stretch:80%;font-size:13px;font-weight:700;line-height:1.2;overflow-wrap:anywhere;} .ds-legend__score{display:block;font-size:13px;color:#4a4c60;}"
+    },
+    {
+      "name": "Trait Plate",
+      "kind": "card",
+      "refersTo": "trait-plate",
+      "description": "A 1:1 flat trait field with its strict label band on the grey ground: 2px rule, name, two aspects, one plain line.",
+      "html": "<div class=\"ds-trait\"><div class=\"ds-trait__field\"></div><div class=\"ds-trait__band\"><h3>Openness</h3><span class=\"ds-trait__aspects\">Intellect · Aesthetic openness</span><p>How drawn you are to new ideas, art and creativity, and to the unfamiliar.</p></div></div>",
+      "css": ".ds-trait{max-width:220px;padding:16px;background:#ebeced;font-family:Archivo,system-ui,sans-serif;color:#15172b;} .ds-trait__field{aspect-ratio:1;background:#344b47;} .ds-trait__band{border-top:2px solid #15172b;margin-top:16px;padding-top:14px;display:grid;gap:8px;} .ds-trait__band h3{margin:0;font-stretch:100%;font-weight:850;font-size:18px;line-height:1.1;letter-spacing:-0.02em;} .ds-trait__aspects{font-size:14px;font-weight:700;color:#4a4c60;letter-spacing:0.01em;} .ds-trait__band p{margin:0;font-size:16px;line-height:1.5;}"
+    },
+    {
+      "name": "Score Scale",
+      "kind": "custom",
+      "refersTo": "scale-track",
+      "description": "Percentile bar: full 0-100 range drawn as ten faint ticks behind the trait-colour fill, aspect scores beneath.",
+      "html": "<div class=\"ds-scale\"><div class=\"ds-scale__row\"><span>Extraversion</span><span>72nd</span></div><div class=\"ds-scale__track\" role=\"img\" aria-label=\"Extraversion: 72nd percentile\"><span class=\"ds-scale__fill\" style=\"width:72%;background:#ed5362\"></span></div><div class=\"ds-scale__aspects\"><span>Enthusiasm 68</span><span>Assertiveness 74</span></div></div>",
+      "css": ".ds-scale{max-width:420px;padding:24px;background:#fff;border:1px solid #15172b;font-family:Archivo,system-ui,sans-serif;color:#15172b;} .ds-scale__row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-weight:700;margin-bottom:8px;font-variant-numeric:tabular-nums;} .ds-scale__track{position:relative;height:14px;background:repeating-linear-gradient(90deg,#dcdee1 0 calc(10% - 2px),transparent calc(10% - 2px) 10%);} .ds-scale__fill{position:absolute;inset:0 auto 0 0;transition:width 1s cubic-bezier(0.16,1,0.3,1);} .ds-scale__aspects{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:#4a4c60;margin-top:6px;}"
+    },
+    {
+      "name": "Answer Radio Group",
+      "kind": "input",
+      "refersTo": "answer",
+      "description": "All five answers always visible as square tiles; the chosen one struck forward in solid ink.",
+      "html": "<div class=\"ds-answers\" role=\"radiogroup\" aria-label=\"I am the life of the party.\"><button type=\"button\" role=\"radio\" class=\"ds-answer\" aria-checked=\"false\">Strongly disagree</button><button type=\"button\" role=\"radio\" class=\"ds-answer\" aria-checked=\"false\">Disagree</button><button type=\"button\" role=\"radio\" class=\"ds-answer\" aria-checked=\"false\">Neutral</button><button type=\"button\" role=\"radio\" class=\"ds-answer\" aria-checked=\"true\">Agree</button><button type=\"button\" role=\"radio\" class=\"ds-answer\" aria-checked=\"false\">Strongly agree</button></div>",
+      "css": ".ds-answers{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:16px;background:#ebeced;font-family:Archivo,system-ui,sans-serif;} .ds-answer{min-height:64px;padding:10px 8px;border:2px solid #c3c6cc;border-radius:0;background:transparent;color:#4a4c60;font:inherit;font-size:14px;font-weight:650;line-height:1.2;cursor:pointer;transition:border-color .15s,background .15s,color .15s;} .ds-answer:hover{border-color:#15172b;color:#15172b;} .ds-answer:focus-visible{outline:3px solid #3a81cd;outline-offset:3px;} .ds-answer[aria-checked='true']{background:#15172b;border-color:#15172b;color:#fff;}"
+    },
+    {
+      "name": "Report Sheet",
+      "kind": "card",
+      "refersTo": "report-sheet",
+      "description": "Flat white sheet with a 1px navy hairline and an outlined Sample tag; also the sticky price panel.",
+      "html": "<div class=\"ds-course\"><article class=\"ds-sheet\"><div class=\"ds-sheet__head\"><h3>Your five traits</h3><span class=\"ds-tag\">Sample</span></div><div class=\"ds-strip\"><span style=\"background:#ed5362\"></span><span style=\"background:#9a338e\"></span><span style=\"background:#3a81cd\"></span><span style=\"background:#00c9b7\"></span><span style=\"background:#344b47\"></span></div></article></div>",
+      "css": ".ds-course{background:#15172b;padding:32px;font-family:Archivo,system-ui,sans-serif;} .ds-sheet{background:#fff;color:#15172b;padding:32px;border:1px solid #15172b;display:grid;gap:24px;} .ds-sheet__head{display:flex;justify-content:space-between;align-items:center;gap:16px;} .ds-sheet h3{margin:0;font-stretch:125%;font-weight:850;font-size:26px;line-height:1.1;letter-spacing:-0.02em;} .ds-tag{display:inline-block;font-size:13px;font-weight:700;padding:4px 10px;border:1.5px solid currentColor;} .ds-strip{display:grid;grid-template-columns:repeat(5,1fr);height:14px;}"
+    },
+    {
+      "name": "Phone Dock",
+      "kind": "custom",
+      "refersTo": "dock",
+      "description": "Phone-only fixed bottom bar on the grey sheet holding one full-width primary button.",
+      "html": "<div class=\"ds-dock\"><a class=\"ds-dock__btn\" href=\"#\">Take the test — $9.99</a></div>",
+      "css": ".ds-dock{max-width:390px;padding:12px 16px;background:#ebeced;border-top:1px solid #c3c6cc;font-family:Archivo,system-ui,sans-serif;} .ds-dock__btn{display:flex;width:100%;box-sizing:border-box;align-items:center;justify-content:center;min-height:56px;border:2px solid #15172b;background:#15172b;color:#fff;font-weight:700;font-size:18px;text-decoration:none;transition:background .2s cubic-bezier(0.16,1,0.3,1);} .ds-dock__btn:hover{background:#2a2d4a;} .ds-dock__btn:focus-visible{outline:3px solid #3a81cd;outline-offset:3px;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Interaction of Color",
+    "overview": "The site is an Albers plate. A person is five colours in their own proportion, so the whole visual world is built from five flat trait fields set on a neutral grey mount (`sheet`), with navy ink for every word. The signature object is the nested-square plate: Extraversion as the outer field, Openness as the centre square, each ring sized by a score and the nesting dropped slightly toward the bottom edge as in *Homage to the Square*. Everywhere else the same five colours repeat as a strip, a legend, a row of five square fields, and the fills of score bars, always in the same order.\n\nThe material is paper and ink, not screen. Surfaces are flat; depth comes only from three tones of ground (grey sheet, deeper grey course, full navy course) and from white report sheets edged with a 1px navy hairline. Corners are square everywhere. Structure is drawn with rules: a 2px ink rule opens each list or label band, 1px grey hairlines divide rows. Type is one family, Archivo, used at expanded width and very heavy weight for display, at normal width for reading.\n\nInformation is shown whole. A score bar always carries the full 0-100 range as faint ticks behind the fill; a test question always shows all five answers, with the chosen one struck forward in solid ink; every trait field carries the same strict label band below it. Rejected outright by the direction: the wellness stock-photo hero and the cartoon-character test site.",
+    "keyCharacteristics": [
+      "Five trait colours, fixed order E-N-A-C-O, and nothing else chromatic.",
+      "Flat fields, square corners, no shadow, no glow, no blended gradient.",
+      "Archivo expanded black for display, normal width for text.",
+      "Labels live in bands on the grey ground, never printed on a colour field.",
+      "Full range always visible: 0-100 ticks behind scores, five answers behind a choice."
+    ],
+    "rules": [
+      {
+        "name": "The Five Colours Rule",
+        "body": "The trait colours are the only colours. Every other value is ink, grey or white. A new surface that wants an accent uses ink or a trait colour that means that trait.",
+        "section": "colors"
+      },
+      {
+        "name": "The Fixed Order Rule",
+        "body": "Whenever more than one trait appears, they run Extraversion, Neuroticism, Agreeableness, Conscientiousness, Openness: left to right in strips, legends and rows; outer to inner in plates; top to bottom in scale lists. Source of truth is the `TRAITS` array in `src/design/traits.ts`.",
+        "section": "colors"
+      },
+      {
+        "name": "The Flat Field Rule",
+        "body": "A trait colour is a whole, flat field. Never a gradient, tint wash, shadow, glow or translucent overlay.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Widths Rule",
+        "body": "Expanded (125%) and very heavy (850-900) is for display, numerals and the wordmark. Reading text is normal width. Condensed (80%) appears only where five names must share one narrow row (the plate legend).",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Lift Rule",
+        "body": "Never a box-shadow, drop-shadow or glow. If something needs to stand apart, change its ground or give it a hairline. Hard-stop `linear-gradient` is allowed only as a drawing tool for crisp marks (the score-track ticks, the FAQ plus sign), never as a colour blend.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** take trait order and colours from `TRAITS` in `src/design/traits.ts` and keep E-N-A-C-O in every strip, legend, row, plate and list.",
+      "**Do** put trait names, scores and captions in a label band on the grey ground beside or below the colour, in ink or soft ink.",
+      "**Do** use the text-safe trait inks for any small trait-coloured type on the sheet.",
+      "**Do** show the whole range: ten-segment 0-100 ticks behind every score fill, all five answers behind every choice.",
+      "**Do** open lists and bands with a 2px ink rule and divide rows with 1px hairlines.",
+      "**Do** set display type in Archivo at wdth 125, weight 850, and reading text at normal width.",
+      "**Do** keep every corner square (0px), including Material UI overrides.",
+      "**Do** honour reduced motion: plate, chip, fill and dock transitions collapse to instant."
+    ],
+    "donts": [
+      "**Don't** introduce any chromatic colour outside the five trait colours.",
+      "**Don't** use a trait colour for anything but its own trait.",
+      "**Don't** print labels or text on top of a trait-colour field.",
+      "**Don't** blend colours in gradients, or add box-shadows, drop-shadows or glows.",
+      "**Don't** round corners.",
+      "**Don't** let a ring, chip or bar vanish at a low score; every trait stays visibly present."
+    ]
+  }
+}

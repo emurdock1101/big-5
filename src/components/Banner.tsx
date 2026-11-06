@@ -1,61 +1,23 @@
-import {Grid, Paper, Typography, makeStyles} from '@material-ui/core';
-import {useEffect, useState} from 'react';
+import React from 'react';
+import Strip from '../design/Strip';
 
 interface BannerProps {
   pageTitle: string;
+  /** Optional one-line introduction under the title. */
+  intro?: string;
+  /** Render as a section heading (h2) instead of the page title (h1). */
+  level?: 1 | 2;
 }
 
-const Banner: React.FC<BannerProps> = (props: BannerProps) => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 750);
-  const useStyles = makeStyles((theme) => ({
-    subheading: {
-      paddingTop: 40,
-      paddingBottom: 40,
-      paddingLeft: 20,
-      paddingRight: 20,
-      color: 'white',
-      fontSize: isMobile ? 50 : 60,
-      textAlign: isMobile ? 'center' : 'left',
-      fontWeight: 300,
-    },
-    paper: {
-      backgroundColor: '#111840', // navy blue
-      borderRadius: 0,
-    },
-    container: {
-      marginBottom: 90,
-    },
-  }));
-
-  const styles = useStyles();
-
-  // choose the screen size
-  const handleResize = () => {
-    if (window.innerWidth < 750) {
-      setIsMobile(true);
-    } else {
-      setIsMobile(false);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-  });
-
+/** Page heading: the title in wide display type over the five-color strip. */
+const Banner: React.FC<BannerProps> = ({pageTitle, intro, level = 1}) => {
+  const Tag = level === 1 ? 'h1' : 'h2';
   return (
-    <Grid container justifyContent='center' alignItems='flex-start' className={styles.container}>
-      <Grid item xs={12}>
-        <Paper elevation={2} className={styles.paper}>
-          <Grid container spacing={6} justifyContent='center' alignItems='flex-start'>
-            <Grid item xs={12} sm={11} lg={10}>
-              <Typography variant='h3' className={styles.subheading}>
-                {props.pageTitle}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Paper>
-      </Grid>
-    </Grid>
+    <div className='pp pp-wrap pp-pagehead'>
+      <Strip />
+      <Tag className={`pp-display ${level === 1 ? 'pp-h1' : 'pp-h2'}`}>{pageTitle}</Tag>
+      {intro && <p className='pp-lede' style={{maxWidth: '52ch'}}>{intro}</p>}
+    </div>
   );
 };
 

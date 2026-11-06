@@ -10,7 +10,7 @@ export default function OceanAccordion() {
   return (
     <div>
       {traitOverviews.map((trait: TraitOverview) => (
-        <Accordion key={trait.trait} style={{borderLeft: `6px solid ${trait.color}`}}>
+        <Accordion key={trait.trait} style={{borderTop: `4px solid ${trait.color}`}}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography sx={{width: '80%', fontSize: 18}}>{trait.trait}</Typography>
           </AccordionSummary>

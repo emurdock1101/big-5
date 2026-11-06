@@ -9,12 +9,14 @@
 
 html,
 body {
-  overflow-x: hidden;
-  height: 100%;
   font-family: 'Archivo', sans-serif;
-  position: relative;
+}
+
+body {
+  overflow-x: clip;
 }
 
 .amplify-button[data-variation='primary'] {
-  background: linear-gradient(to right, var(--amplify-colors-green-80), var(--amplify-colors-orange-40));
+  background: #15172b;
+  border-radius: 0;
 }

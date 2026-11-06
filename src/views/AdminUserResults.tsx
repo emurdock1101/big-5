@@ -36,7 +36,7 @@ const useStyles = makeStyles(() => ({
   },
   interpretations: {
     marginBottom: '45px',
-    borderRadius: 10,
+    borderRadius: 0,
   },
   interpretationTitle: {
     marginTop: 80,
@@ -157,12 +157,12 @@ const AdminUserResults: React.FC = () => {
               <ResultTable percentiles={percentiles} />
             </Grid>
             <Grid item xs={12} sm={11} lg={5}>
-              <Paper elevation={2} style={{borderRadius: '10px'}}>
+              <Paper elevation={0} style={{borderRadius: 0}}>
                 <ReactApexChart options={oceanOptions as ApexOptions} series={oceanSeries} type='bar' height={550} />
               </Paper>
             </Grid>
             <Grid item xs={12} sm={11} lg={5}>
-              <Paper elevation={2} style={{borderRadius: '10px'}}>
+              <Paper elevation={0} style={{borderRadius: 0}}>
                 <ReactApexChart options={aspectOptions as ApexOptions} series={aspectSeries} type='bar' height={550} />
               </Paper>
             </Grid>
@@ -170,7 +170,7 @@ const AdminUserResults: React.FC = () => {
               <Banner pageTitle='Interpretation of Results' />
             </Grid>
             <Grid item xs={12} sm={11} lg={10}>
-              <Paper elevation={2} className={styles.interpretations}>
+              <Paper elevation={0} className={styles.interpretations}>
                 <Interpretations
                   oceanName={Ocean.Extraversion}
                   oceanScore={Extraversion}
@@ -182,7 +182,7 @@ const AdminUserResults: React.FC = () => {
                   index={2}
                 />
               </Paper>
-              <Paper elevation={2} className={styles.interpretations}>
+              <Paper elevation={0} className={styles.interpretations}>
                 <Interpretations
                   oceanName={Ocean.Neuroticism}
                   oceanScore={Neuroticism}
@@ -194,7 +194,7 @@ const AdminUserResults: React.FC = () => {
                   index={4}
                 />
               </Paper>
-              <Paper elevation={2} className={styles.interpretations}>
+              <Paper elevation={0} className={styles.interpretations}>
                 <Interpretations
                   oceanName={Ocean.Agreeableness}
                   oceanScore={Agreeableness}
@@ -206,7 +206,7 @@ const AdminUserResults: React.FC = () => {
                   index={3}
                 />
               </Paper>
-              <Paper elevation={2} className={styles.interpretations}>
+              <Paper elevation={0} className={styles.interpretations}>
                 <Interpretations
                   oceanName={Ocean.Conscientiousness}
                   oceanScore={Conscientiousness}
@@ -218,7 +218,7 @@ const AdminUserResults: React.FC = () => {
                   index={1}
                 />
               </Paper>
-              <Paper elevation={2} className={styles.interpretations}>
+              <Paper elevation={0} className={styles.interpretations}>
                 <Interpretations
                   oceanName={Ocean.Openness}
                   oceanScore={Openness}

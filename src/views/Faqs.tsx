@@ -1,25 +1,20 @@
 import React from 'react';
-import {Grid} from '@material-ui/core';
-
+import {Link} from 'react-router-dom';
 import FaqsAccordion from '../components/FaqsAccordion';
 import Banner from '../components/Banner';
-import {useEffect} from 'react';
+import {CONTACT_EMAIL} from '../design/traits';
 
-const FAQs: React.FC = () => {
-  useEffect(() => {
-    document?.querySelector('body')?.scrollTo({top: 0, left: 0, behavior: 'smooth'});
-  }, []);
-
-  return (
-    <React.Fragment>
-      <Banner pageTitle='Frequently Asked Questions' />
-      <Grid container justifyContent='center' alignItems='center'>
-        <Grid item xs={10}>
-          <FaqsAccordion />
-        </Grid>
-      </Grid>
-    </React.Fragment>
-  );
-};
+const FAQs: React.FC = () => (
+  <div className='pp'>
+    <Banner pageTitle='Questions, answered' intro='How the test was made, why you take it once, and what to do with your results.' />
+    <div className='pp-wrap' style={{paddingBottom: 'clamp(72px, 10vw, 140px)'}}>
+      <FaqsAccordion />
+      <p className='pp-body' style={{marginTop: 40}}>
+        Still wondering about something? Email <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> or see{' '}
+        <Link to='/contact'>other ways to reach us</Link>.
+      </p>
+    </div>
+  </div>
+);
 
 export default FAQs;
