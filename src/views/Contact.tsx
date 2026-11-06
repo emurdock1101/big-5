@@ -8,10 +8,10 @@ const Contact: React.FC = () => (
     <div className='pp-wrap pp-trust' style={{paddingBottom: 'clamp(72px, 10vw, 140px)'}}>
       <section aria-labelledby='call' style={{display: 'grid', gap: 20, alignContent: 'start'}}>
         <h2 id='call' className='pp-display pp-h3'>
-          Book a free 15-minute call
+          Book a results conversation
         </h2>
         <p className='pp-body' style={{margin: 0}}>
-          Learn how our behavioral coaching packages could help you, or get your Personality+ results reviewed.
+          Already taken the test? Talk your results through with Patrick.
         </p>
         <div>
           <a href={BOOKING_URL} target='_blank' rel='noopener noreferrer' className='pp-btn'>
@@ -24,7 +24,7 @@ const Contact: React.FC = () => (
           Write to us
         </h2>
         <p className='pp-body' style={{margin: 0}}>
-          Questions about the test or our data-driven coaching:{' '}
+          Questions about the test or your results:{' '}
           <a href={`mailto:${CONTACT_EMAIL}`} style={{fontWeight: 700}}>
             {CONTACT_EMAIL}
           </a>

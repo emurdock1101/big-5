@@ -210,7 +210,7 @@ const Results: React.FC = () => {
             </Typography>
             <Typography variant='subtitle1' className={styles.info}>
               <strong>
-                To learn more about our behavioral coaching services, click to schedule a FREE 15 minute discovery call.
+                Want to talk your results through? Book a results conversation with Patrick.
               </strong>
             </Typography>
             <a
@@ -219,7 +219,7 @@ const Results: React.FC = () => {
               rel='noreferrer'
               className={styles.bookNowLink}>
               <Button variant='contained' className={styles.bookNowButton}>
-                Book a free call
+                Book a results conversation
               </Button>
             </a>
           </Paper>

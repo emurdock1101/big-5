@@ -47,10 +47,7 @@ const BuyTest: React.FC = () => {
             <li>One 100-question, research-based assessment of your personality.</li>
             <li>An in-depth analysis of your results, specific to your scores.</li>
             <li>Access to view your scores anytime, and download them.</li>
-            <li>
-              Discounted coaching with Personality+, where you can learn more about your behaviors and discover more
-              about yourself.
-            </li>
+            <li>The option to book a results conversation with Patrick and talk your scores through.</li>
           </ul>
           <p className='pp-small' style={{marginTop: 24}}>
             Want to see it first? <Link to='/#report'>Look at a sample report</Link>.

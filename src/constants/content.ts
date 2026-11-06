@@ -84,14 +84,14 @@ export const faqs: Faq[] = [
     part1:
       'This test was formatted by using the work of Dr. Colin DeYoung and Dr. Jordan B Peterson (see DeYoung, C.G., Quilty, L.C. & Peterson, J.B. Between facets and domains: 10 aspects of the Big Five. Journal of Personality and Social Psychology, 93, 880-896.).',
     part2:
-      'The goal of Personality+ is to offer a more streamlined personality test with results that can be clearly understood and implemented. The interpretations of the test have come from diligent research, study, and clinical practice. If you are curious about conducting your own research, we would point you the Oxford Handbook of the Five Factor Model, Dr. C.G. DeYoung and Dr. J.B. Peterson\u2019s published research, or a trusted mental health therapist/researcher.',
+      'The goal of Personality+ is to offer a more streamlined personality test with results that can be clearly understood and implemented. The interpretations of the test have come from diligent research, study, and clinical practice. If you are curious about conducting your own research, we would point you to the Oxford Handbook of the Five Factor Model, Dr. C.G. DeYoung and Dr. J.B. Peterson\u2019s published research, or a trusted mental health therapist/researcher.',
   },
   {
     title: "Aren't there other free personality tests?",
     part1:
-      'The Big Five Aspect Scale in its original paper/pencil format is in the public domain, and there are other free versions with reports available elsewhere. However, this test was created so that the results and reports generate after the test could be cost effective, clearer, more precise, more user friendly, and most importantly, useable. By useable, we mean providing the results in a way that can help you implement practical changes in your life, allow for self-reflections, or better connect with a mental health therapist.',
+      'The Big Five Aspect Scale in its original paper/pencil format is in the public domain, and there are other free versions with reports available elsewhere. However, this test was created so that the results and reports generated after the test could be cost effective, clearer, more precise, more user friendly, and most importantly, useable. By useable, we mean providing the results in a way that can help you implement practical changes in your life, allow for self-reflections, or better connect with a mental health therapist.',
     part2:
-      'Our research team has created reports that lay out both individual strengths and weaknesses succinctly and practically. Our team has worked hard to compile the results from some of the world\u2019s best personality psychologist to help you discover a new you and chance to undertake a new adventure.',
+      'Our research team has created reports that lay out both individual strengths and weaknesses succinctly and practically. Our team has worked hard to compile the results from some of the world\u2019s best personality psychologists to help you discover a new you and chance to undertake a new adventure.',
   },
   {
     title: 'Why can I only take the test a single time?',
@@ -101,7 +101,8 @@ export const faqs: Faq[] = [
   {
     title: 'What can I do to improve my personality?',
     part1:
-      'Personality+ is unique in that it offers multiple options to improve your personality. You can schedule a one time review of the test results or schedule weekly or monthly sessions with someone from Personality+.',
+      'Start by understanding it. Your report shows where you sit on each trait and aspect and what that tends to look like day to day. Real change is slow and deliberate, measured in months, not days. Compare yourself to who you were yesterday, not to who someone else is today.',
+    part2: 'If you want to go further, you can book a results conversation with Patrick and talk your scores through together.',
   },
   {
     title: 'What if I want to see if my personality has changed?',
@@ -136,9 +137,9 @@ export const about: Record<string, BioEntry> = {
   },
   patrick: {
     part1:
-      'Patrick Knicely has a B.A. from Roanoke College and a M.S. from Radford University. He is a licensed clinical mental health therapist and clinical consultant for inpatient and ambulatory healthcare settings.',
+      'Patrick Knicely is a Licensed Professional Counselor (LPC) in Virginia and a licensed teacher, with a B.A. from Roanoke College and an M.S. from Radford University. He researches personality through the Big Five Aspects model and trained in biblical scholarship under Michael S. Heiser.',
     part2:
-      'Patrick helps clients discover who they are by showing them their unique personality and how that personality affects their emotions, behavior, cognition, and motivations. This allows individuals to discover their natural strengths as well as areas of growth. By understanding a client\u2019s personality, Patrick helps clients organize their past, present, and future with self-authoring, behavioral learning, and goal setting to help mitigate depression, anxiety, and trauma.',
+      'He has taught middle and high school, coached wrestling and swimming, and taught other counselors at conferences. His work brings two things together: how a person is built, from personality science, and what a person is for, from the Bible\u2019s bigger story. He writes as someone trained in mental health, not as your counselor.',
   },
 };
 

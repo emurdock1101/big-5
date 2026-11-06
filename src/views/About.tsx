@@ -6,7 +6,7 @@ import elliot from '../images/elliot.jpeg';
 
 const About: React.FC = () => (
   <div className='pp'>
-    <Banner pageTitle='Our team' intro='A therapist who reads personality for a living, and the engineer who built the test.' />
+    <Banner pageTitle='Our team' intro='The man behind the test, and the engineer who built it.' />
     <div className='pp-wrap pp-team'>
       <section className='pp-member' aria-labelledby='patrick'>
         <img src={patrick} alt='Patrick Knicely' />
@@ -15,7 +15,7 @@ const About: React.FC = () => (
             Patrick Knicely
           </h2>
           <p className='pp-small' style={{margin: 0, fontWeight: 700}}>
-            Licensed clinical mental health therapist
+            LPC · licensed teacher · biblical scholar
           </p>
           <p style={{margin: 0}}>{about.patrick.part1}</p>
           <p style={{margin: 0}}>{about.patrick.part2}</p>
