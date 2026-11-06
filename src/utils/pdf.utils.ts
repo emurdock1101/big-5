@@ -47,12 +47,13 @@ export const generatePdfDoc = (email: string, percentiles: Record<string, number
     doc.setFontSize(20);
     doc.text(`${oceanLabel}: ${oceanScore}`, 20, (yPosition += 15));
 
-    aspects.forEach((aspect, i) => {
-      const aspectLabel = aspect.toString();
+    for (let i = 0; i < aspects.length; i++) {
+      const aspectLabel = aspects[i].toString();
       const aspectScore = percentiles?.[aspectLabel] ?? 99;
       doc.setFontSize(18);
-      doc.text(`${aspectLabel}: ${aspectScore}`, 100, i === 0 ? yPosition : (yPosition += 10));
-    });
+      if (i > 0) yPosition += 10;
+      doc.text(`${aspectLabel}: ${aspectScore}`, 100, yPosition);
+    }
 
     const [r, g, b] = separatorColor;
     doc.setDrawColor(r, g, b);
