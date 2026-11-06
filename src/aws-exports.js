@@ -7,6 +7,8 @@ const awsmobile = {
   aws_cognito_region: process.env.REACT_APP_AWS_REGION || 'us-east-1',
   aws_user_pools_id: process.env.REACT_APP_USER_POOLS_ID || '',
   aws_user_pools_web_client_id: process.env.REACT_APP_USER_POOLS_WEB_CLIENT_ID || '',
+  // Identity pool: gives each signed-in person AWS credentials to read their own saved results in S3.
+  aws_cognito_identity_pool_id: process.env.REACT_APP_IDENTITY_POOL_ID || '',
   aws_mandatory_sign_in: 'enable',
   aws_user_files_s3_bucket: process.env.REACT_APP_BUCKET_NAME || '',
   aws_user_files_s3_bucket_region: process.env.REACT_APP_AWS_REGION || 'us-east-1',
