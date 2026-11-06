@@ -2218,3 +2218,54 @@ p {
     width: 100%;
   }
 }
+
+/* short write-up card */
+
+.pp-walk__head {
+  font-weight: 600;
+}
+
+.pp-short {
+  margin: 0 0 4px;
+  display: grid;
+  border-top: 1px solid var(--pp-rule);
+}
+
+.pp-short > div {
+  display: grid;
+  grid-template-columns: minmax(0, 8.5em) minmax(0, 1fr);
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--pp-rule);
+}
+
+.pp-short dt {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pp-ink-soft);
+  padding-top: 3px;
+}
+
+.pp-short dd {
+  margin: 0;
+}
+
+.pp-short__gift dd {
+  font-weight: 650;
+}
+
+.pp-short ul {
+  margin: 0;
+  padding-left: 1.1em;
+  display: grid;
+  gap: 4px;
+}
+
+@media (max-width: 520px) {
+  .pp-short > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+}

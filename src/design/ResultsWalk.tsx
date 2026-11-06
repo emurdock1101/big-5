@@ -1,7 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import ColorPlate from './ColorPlate';
 import {BOOKING_LABEL, BOOKING_URL, SOFT_NAME, TRAITS} from './traits';
-import {getInterpretation} from '../utils/interpretations.utils';
+import {getInterpretation, getScoreLevel} from '../utils/interpretations.utils';
+import {getShortWriteup} from '../constants/shortWriteups';
 import {traitOverviews} from '../constants/content';
 import {combinationNote} from '../constants/combinations';
 import {aspectSplit} from '../constants/aspectSplits';
@@ -56,6 +57,44 @@ const Scale: React.FC<{label: string; value: number; color: string; big?: boolea
 const Paragraphs: React.FC<{trait: string; score: number; first?: boolean}> = ({trait, score, first = true}) => {
   const interp = getInterpretation(trait, score);
   if (!interp) return null;
+  const short = getShortWriteup(trait, getScoreLevel(score));
+  if (short) {
+    return (
+      <>
+        <p className={first ? 'pp-walk__first' : 'pp-walk__head'}>{short.headline}</p>
+        <dl className='pp-short'>
+          <div className='pp-short__gift'>
+            <dt>Your gift</dt>
+            <dd>{short.gift}</dd>
+          </div>
+          <div>
+            <dt>Shows up as</dt>
+            <dd>
+              <ul>
+                {short.showsUp.map((x) => (
+                  <li key={x}>{x}</li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+          <div>
+            <dt>Watch for</dt>
+            <dd>{short.watchFor}</dd>
+          </div>
+          <div>
+            <dt>Try this</dt>
+            <dd>{short.tryThis}</dd>
+          </div>
+        </dl>
+        <details className='pp-walk__more'>
+          <summary>Read the full write-up</summary>
+          {interp.paragraphs.filter(Boolean).map((para, i) => (
+            <p key={i}>{para}</p>
+          ))}
+        </details>
+      </>
+    );
+  }
   const [lead, ...rest] = interp.paragraphs.filter(Boolean);
   return (
     <>
