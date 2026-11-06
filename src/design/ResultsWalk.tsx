@@ -188,7 +188,7 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, onDownloa
             tabIndex={-1}
             className='pp-display pp-h1'
             style={{color: t.ocean === 'Conscientiousness' ? undefined : t.color}}>
-            {t.ocean}
+            {SOFT_NAME[t.ocean] ?? t.ocean}
           </h2>
           <Scale label='Your score' value={scores[i]} color={t.color} big />
           <div className='pp-walk__text'>

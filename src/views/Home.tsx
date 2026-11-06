@@ -183,7 +183,7 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
               told you to want.
             </p>
             <p>People are built differently. One size never fits all.</p>
-            <Link to='/#about' className='pp-textlink'>
+            <Link to='/about' className='pp-textlink'>
               About Patrick
             </Link>
           </div>
@@ -361,6 +361,9 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
                   counselors. He takes the best of academic psychology and biblical scholarship and helps everyday
                   people put it to work in their lives.
                 </p>
+                <Link to='/about' className='pp-textlink' style={{justifySelf: 'start'}}>
+                  More about Patrick
+                </Link>
               </div>
             </div>
             <div style={{display: 'grid', gap: 20, alignContent: 'start'}}>

@@ -13,6 +13,13 @@ export default function FaqsAccordion() {
               {[q.part1, q.part2, q.part3].filter(Boolean).map((p) => (
                 <p key={p}>{p}</p>
               ))}
+              {q.sources && (
+                <ul className='pp-cites pp-small'>
+                  {q.sources.map((src) => (
+                    <li key={src}>{src}</li>
+                  ))}
+                </ul>
+              )}
             </div>
           </details>
         </li>
