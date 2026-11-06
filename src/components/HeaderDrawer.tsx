@@ -16,7 +16,7 @@ const NAV = [
   {to: '/#how', label: 'How it works'},
   {to: '/#traits', label: 'The five traits'},
   {to: '/#report', label: 'Sample report'},
-  {to: '/#about', label: 'About Patrick'},
+  {to: '/about', label: 'About Patrick'},
   {to: '/faqs', label: 'FAQs'},
 ];
 
@@ -114,7 +114,9 @@ const HeaderDrawer = (props: HeaderDrawerProps) => {
       </div>
       {open && (
         <nav id='pp-mobile-menu' className='pp-mobile-menu' aria-label='Main'>
-          <Link to={primary.to}>{primary.label}</Link>
+          <Link to={primary.to} className='pp-btn pp-mobile-menu__cta'>
+            {primary.label}
+          </Link>
           {NAV.map((n) => (
             <Link key={n.to} to={n.to}>
               {n.label}

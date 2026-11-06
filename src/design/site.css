@@ -1966,3 +1966,21 @@ p {
 .pp-cites li:first-child {
   padding-top: 20px;
 }
+
+.pp-mobile-menu a.pp-mobile-menu__cta {
+  margin: 8px 0 12px;
+  border-bottom: 0;
+  justify-content: center;
+  font-stretch: 100%;
+  font-size: 18px;
+  padding: 0 28px;
+}
+
+.pp-faq .pp-cites {
+  margin-top: 4px;
+  padding-top: 0;
+}
+
+.pp-faq .pp-cites li:first-child {
+  padding-top: 16px;
+}

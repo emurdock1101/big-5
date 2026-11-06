@@ -76,13 +76,20 @@ export interface Faq {
   part1: string;
   part2?: string;
   part3?: string;
+  /** Citations, shown as a list under the answer. */
+  sources?: string[];
 }
 
 export const faqs: Faq[] = [
   {
     title: 'How was this test created?',
     part1:
-      'This test was formatted by using the work of Dr. Colin DeYoung and Dr. Jordan B Peterson (see DeYoung, C.G., Quilty, L.C. & Peterson, J.B. Between facets and domains: 10 aspects of the Big Five. Journal of Personality and Social Psychology, 93, 880-896.). Patrick introduced the model to counselors as an assessment tool in Knicely, P. & Forrest, A. (2021), Counseling and personality: Introduction to the taxonomy of the Big Five as an assessment tool, The Virginia Counselors Journal, 38, 32-39. Scores are compared with norms for men and women from Weisberg, Y.J., DeYoung, C.G. & Hirsh, J.B. (2011), Gender differences in personality across the ten aspects of the Big Five, Frontiers in Psychology, 2, 178.',
+      'The test uses the Big Five Aspects model developed by Dr. Colin DeYoung and Dr. Jordan B. Peterson. Patrick introduced the model to counselors as an assessment tool, and your scores are compared with published norms for men and women.',
+    sources: [
+      'DeYoung, C. G., Quilty, L. C., & Peterson, J. B. (2007). Between facets and domains: 10 aspects of the Big Five. Journal of Personality and Social Psychology, 93, 880–896.',
+      'Weisberg, Y. J., DeYoung, C. G., & Hirsh, J. B. (2011). Gender differences in personality across the ten aspects of the Big Five. Frontiers in Psychology, 2, 178.',
+      'Knicely, P., & Forrest, A. (2021). Counseling and personality: Introduction to the taxonomy of the Big Five as an assessment tool. The Virginia Counselors Journal, 38, 32–39.',
+    ],
     part2:
       'The goal of Personality+ is to offer a more streamlined personality test with results that can be clearly understood and implemented. The interpretations of the test have come from diligent research, study, and clinical practice. If you are curious about conducting your own research, we would point you to the Oxford Handbook of the Five Factor Model, Dr. C.G. DeYoung and Dr. J.B. Peterson\u2019s published research, or a trusted mental health therapist/researcher.',
   },

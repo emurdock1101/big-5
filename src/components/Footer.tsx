@@ -53,7 +53,7 @@ const Footer: React.FC = () => (
           <p className='pp-footer__h'>Personality+</p>
           <ul>
             <li>
-              <Link to='/about'>About us</Link>
+              <Link to='/about'>About Patrick</Link>
             </li>
             <li>
               <Link to='/contact'>Contact</Link>
