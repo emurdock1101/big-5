@@ -1,3 +1,7 @@
+// Norms: mean and SD for each trait and aspect, by gender, from
+// Weisberg, DeYoung & Hirsh (2011), Gender differences in personality across the ten aspects of the Big Five,
+// Frontiers in Psychology 2, 178, Table 2. Scoring (utils/scoring.utils.ts) picks the column matching the
+// group chosen before the test.
 import {Aspect, EscsData, Ocean} from './schema';
 
 export const escsMap: Map<string, EscsData> = new Map([

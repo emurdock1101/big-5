@@ -366,8 +366,8 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
             <div style={{display: 'grid', gap: 20, alignContent: 'start'}}>
               <p style={{margin: 0}} className='pp-body'>
                 The questions use the Big Five Aspect Scales, a public-domain instrument from published research. Your
-                answers are scored against published norms for men and women from the Eugene-Springfield Community
-                Sample, the sample behind the original research.
+                answers are compared with published norms for men and women, using the averages and spreads for your
+                own group.
               </p>
               <ul className='pp-cites'>
                 <li>
@@ -375,8 +375,12 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
                   the Big Five. <em>Journal of Personality and Social Psychology, 93</em>, 880–896.
                 </li>
                 <li>
-                  Knicely, P., &amp; Forrest, A. (2021). Counseling and personality: Introducing the taxonomy of the Big
-                  Five as an assessment tool. <em>The Virginia Counselors Journal, 38</em>, 32–39.
+                  Weisberg, Y. J., DeYoung, C. G., &amp; Hirsh, J. B. (2011). Gender differences in personality across
+                  the ten aspects of the Big Five. <em>Frontiers in Psychology, 2</em>, 178.
+                </li>
+                <li>
+                  Knicely, P., &amp; Forrest, A. (2021). Counseling and personality: Introduction to the taxonomy of the
+                  Big Five as an assessment tool. <em>The Virginia Counselors Journal, 38</em>, 32–39.
                 </li>
               </ul>
               <p className='pp-small' style={{margin: 0}}>

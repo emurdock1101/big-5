@@ -49,8 +49,8 @@ Patrick helps people understand how God made them and discover their role in His
 ## Evidence on Hand
 
 - Credentials: Licensed teacher; Licensed Professional Counselor (LPC) in Virginia; personality researcher working with the Big Five Aspects model; biblical scholarship trained under Michael S. Heiser; former middle and high school teacher, wrestling and swimming coach, conference teacher for other counselors. Not currently seeing clients.
-- Real citations: DeYoung, Quilty & Peterson (2007), JPSP 93, 880–896; Knicely & Forrest (2021), Counseling and personality: Introducing the taxonomy of the Big Five as an assessment tool, The Virginia Counselors Journal 38, 32–39 (title wording to confirm with Patrick); Costa; Wilt; Revelle (William).
-- Norms: scoring uses gender-stratified Eugene-Springfield Community Sample means and SDs (src/constants/escsData.tsx). Patrick recalls a Peterson paper for the male/female SDs; exact citation not yet given.
+- Real citations: DeYoung, Quilty & Peterson (2007), JPSP 93, 880–896; Knicely & Forrest (2021), Counseling and personality: Introduction to the taxonomy of the Big Five as an assessment tool, The Virginia Counselors Journal 38, 32–39; Weisberg, DeYoung & Hirsh (2011), Gender differences in personality across the ten aspects of the Big Five, Frontiers in Psychology 2, 178; Costa; Wilt; Revelle (William).
+- Norms: scoring picks the male or female mean and SD per trait and aspect (src/constants/escsData.tsx, maleDataMap/femaleDataMap), sourced per Patrick from Weisberg, DeYoung & Hirsh (2011), Table 2. Values in code not yet checked line by line against the paper.
 - Real report content in `src/constants/` (interpretations).
 - Patrick's own Big Five scores exist (brand homebase) but he chose not to feature them on the homepage.
 - None exist: testimonials, user counts, press, refund policy. Do not fabricate.
