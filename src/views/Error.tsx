@@ -1,55 +1,28 @@
 import React from 'react';
-import {Grid, Typography, makeStyles, Button} from '@material-ui/core';
-import {useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
-import Banner from '../components/Banner';
+import {Link} from 'react-router-dom';
+import ColorPlate from '../design/ColorPlate';
 
-const ErrorPage: React.FC = () => {
-  const useStyles = makeStyles((theme) => ({
-    buttonContainer: {
-      marginTop: 60,
-      marginBottom: 60,
-    },
-    buttonItem: {
-      textAlign: 'center',
-    },
-    info: {
-      textAlign: 'center',
-    },
-  }));
-  const styles = useStyles();
-
-  const navigate = useNavigate();
-  const handleNav = (path: string) => {
-    navigate(path, {replace: true});
-  };
-
-  useEffect(() => {
-    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
-  }, []);
-
-  return (
-    <React.Fragment>
-      <Banner pageTitle='404 - Page Not Found' />
-      <Grid container justifyContent='center' alignItems='center'>
-        <Grid item xs={10} className={styles.info}>
-          <Typography variant='h5'>We're guessing this isn't the page you wanted. Sorry about that.</Typography>
-          <br></br>
-          <br></br>
-          <Typography variant='h5'>Click below to return home or select a page from the sidebar.</Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid container justifyContent='center' alignItems='center' className={styles.buttonContainer}>
-            <Grid item xs={4} sm={2} className={styles.buttonItem}>
-              <Button color='default' variant='contained' onClick={() => handleNav('/')}>
-                Go to home
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </React.Fragment>
-  );
-};
+/** 404: the page the visitor asked for doesn't exist. */
+const ErrorPage: React.FC = () => (
+  <div className='pp'>
+    <div className='pp-wrap pp-lost'>
+      <div className='pp-lost__plate' aria-hidden='true'>
+        <ColorPlate scores={[50, 50, 50, 50, 50]} label='' />
+      </div>
+      <div className='pp-lost__copy'>
+        <h1 className='pp-display pp-h1'>This page isn’t here.</h1>
+        <p className='pp-lede'>The link may be old, or the address mistyped. Sorry about that.</p>
+        <div className='pp-hero__actions'>
+          <Link to='/' className='pp-btn'>
+            Go to the homepage
+          </Link>
+          <Link to='/login' className='pp-textlink'>
+            Log in to your results
+          </Link>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 export default ErrorPage;

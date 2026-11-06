@@ -1,72 +1,37 @@
 import React from 'react';
-import {Grid, Paper, Typography, makeStyles} from '@material-ui/core';
-
+import {Link} from 'react-router-dom';
 import Banner from '../components/Banner';
-import {useEffect, useState} from 'react';
 
-const Privacy: React.FC = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 750);
-  const useStyles = makeStyles((theme) => ({
-    info: {
-      marginTop: 30,
-      fontSize: 20,
-    },
-    top: {
-      fontSize: 20,
-    },
-    paper: {
-      padding: isMobile ? 20 : 30,
-      color: theme.palette.info.main,
-      borderTop: `4px solid #15172B`,
-      borderRadius: 0,
-    },
-    footer: {
-      bottom: 0,
-      position: 'absolute',
-      width: '100%',
-    },
-    container: {
-      padding: 0,
-    },
-  }));
-  const styles = useStyles();
-
-  // choose the screen size
-  const handleResize = () => {
-    if (window.innerWidth < 750) {
-      setIsMobile(true);
-    } else {
-      setIsMobile(false);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
-  }, []);
-
-  return (
-    <React.Fragment>
-      <Banner pageTitle='Privacy' />
-      <Grid container justifyContent='center' alignItems='center' className={styles.container}>
-        <Grid item xs={10}>
-          <Paper elevation={0} className={styles.paper}>
-            <Typography variant='subtitle1' className={styles.top}>
-              Part of the information you share on our website is stored and used. We collect your email and test
-              results. Your credit card info is collected by Stripe. Your browser info, IP address, and fingerprint are
-              not stored.
-            </Typography>
-            <Typography variant='subtitle1' className={styles.info}>
-              No personal data is sold or shared with anyone. Never have, never will.
-            </Typography>
-            <Typography variant='subtitle1' className={styles.info}>
-              If you have any questions about this privacy policy, please reach out on our contact page.
-            </Typography>
-          </Paper>
-        </Grid>
-      </Grid>
-    </React.Fragment>
-  );
-};
+const Privacy: React.FC = () => (
+  <div className='pp'>
+    <Banner pageTitle='Privacy' intro='What we keep, and what we don’t.' />
+    <div className='pp-wrap' style={{paddingBottom: 'clamp(72px, 10vw, 140px)'}}>
+      <div className='pp-body pp-privacy'>
+        <section>
+          <h2 className='pp-display pp-h3'>What we store</h2>
+          <p>
+            Your email, the name and comparison group (men or women) you enter before the test, and your test results.
+            These are saved to your account so you can see your results whenever you log in.
+          </p>
+        </section>
+        <section>
+          <h2 className='pp-display pp-h3'>Payment</h2>
+          <p>Your card details are collected by Stripe, our payment processor. They never reach us.</p>
+        </section>
+        <section>
+          <h2 className='pp-display pp-h3'>What we don’t store</h2>
+          <p>Your browser information, IP address and device fingerprint are not stored.</p>
+        </section>
+        <section>
+          <h2 className='pp-display pp-h3'>Sharing</h2>
+          <p>No personal data is sold or shared with anyone. Never has been, never will be.</p>
+        </section>
+        <p className='pp-small'>
+          Questions about this policy? <Link to='/contact'>Get in touch</Link>.
+        </p>
+      </div>
+    </div>
+  </div>
+);
 
 export default Privacy;

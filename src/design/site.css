@@ -1835,3 +1835,105 @@ p {
     order: -1;
   }
 }
+
+/* ---------- account pages ---------- */
+
+.pp-auth {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 480px);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: start;
+  padding-top: clamp(48px, 7vw, 96px);
+  padding-bottom: clamp(72px, 10vw, 140px);
+}
+
+.pp-auth__head {
+  display: grid;
+  gap: 20px;
+  align-content: start;
+}
+
+.pp-auth__intro {
+  max-width: 40ch;
+}
+
+.pp-auth__form {
+  display: grid;
+  gap: 16px;
+}
+
+.pp-auth__fields {
+  display: grid;
+  gap: 18px;
+}
+
+.pp-auth__step {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 750;
+  color: var(--pp-ink-soft);
+}
+
+.pp-auth__alt {
+  margin: 4px 0 0;
+  border-top: 1px solid var(--pp-rule);
+  padding-top: 16px;
+  line-height: 1.7;
+}
+
+.pp-auth .pp-alert {
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .pp-auth {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- privacy ---------- */
+
+.pp-privacy {
+  display: grid;
+  gap: 28px;
+}
+
+.pp-privacy section {
+  border-top: 2px solid var(--pp-ink);
+  padding-top: 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.pp-privacy p {
+  margin: 0;
+}
+
+/* ---------- 404 ---------- */
+
+.pp-lost {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: center;
+  padding-top: clamp(48px, 8vw, 120px);
+  padding-bottom: clamp(72px, 10vw, 140px);
+}
+
+.pp-lost__plate {
+  max-width: 360px;
+}
+
+.pp-lost__copy {
+  display: grid;
+  gap: 24px;
+}
+
+@media (max-width: 760px) {
+  .pp-lost {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pp-lost__plate {
+    max-width: 200px;
+  }
+}
