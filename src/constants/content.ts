@@ -82,7 +82,7 @@ export const faqs: Faq[] = [
   {
     title: 'How was this test created?',
     part1:
-      'This test was formatted by using the work of Dr. Colin DeYoung and Dr. Jordan B Peterson (see DeYoung, C.G., Quilty, L.C. & Peterson, J.B. Between facets and domains: 10 aspects of the Big Five. Journal of Personality and Social Psychology, 93, 880-896.).',
+      'This test was formatted by using the work of Dr. Colin DeYoung and Dr. Jordan B Peterson (see DeYoung, C.G., Quilty, L.C. & Peterson, J.B. Between facets and domains: 10 aspects of the Big Five. Journal of Personality and Social Psychology, 93, 880-896.). Patrick introduced the model to counselors as an assessment tool in Knicely, P. & Forrest, A. (2021), Counseling and personality: Introducing the taxonomy of the Big Five as an assessment tool, The Virginia Counselors Journal, 38, 32-39.',
     part2:
       'The goal of Personality+ is to offer a more streamlined personality test with results that can be clearly understood and implemented. The interpretations of the test have come from diligent research, study, and clinical practice. If you are curious about conducting your own research, we would point you to the Oxford Handbook of the Five Factor Model, Dr. C.G. DeYoung and Dr. J.B. Peterson\u2019s published research, or a trusted mental health therapist/researcher.',
   },
@@ -137,7 +137,7 @@ export const about: Record<string, BioEntry> = {
   },
   patrick: {
     part1:
-      'Patrick Knicely is a Licensed Professional Counselor (LPC) in Virginia and a licensed teacher, with a B.A. from Roanoke College and an M.S. from Radford University. He researches personality through the Big Five Aspects model and trained in biblical scholarship under Michael S. Heiser.',
+      'Patrick Knicely is a Licensed Professional Counselor (LPC) in Virginia and a licensed teacher, with a B.A. from Roanoke College and an M.S. from Radford University. He researches personality through the Big Five Aspects model, published an introduction to it as an assessment tool in The Virginia Counselors Journal (2021), and trained in biblical scholarship under Michael S. Heiser.',
     part2:
       'He has taught middle and high school, coached wrestling and swimming, and taught other counselors at conferences. His work brings two things together: how a person is built, from personality science, and what a person is for, from the Bible\u2019s bigger story. He writes as someone trained in mental health, not as your counselor.',
   },

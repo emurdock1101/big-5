@@ -18,7 +18,7 @@ const Footer: React.FC = () => (
         <div style={{display: 'grid', gap: 20, alignContent: 'start'}}>
           <Wordmark />
           <p style={{margin: 0, maxWidth: '36ch'}}>
-            A Big Five personality test by Patrick Knicely, built on published research and the Bible’s bigger story.
+            You are His workmanship. A Big Five personality test by Patrick Knicely, built on published research and the Bible’s bigger story.
           </p>
           <div className='pp-social'>
             <a href={SOCIAL.facebook} target='_blank' rel='noopener noreferrer' aria-label='Personality+ on Facebook'>

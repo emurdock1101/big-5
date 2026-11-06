@@ -101,7 +101,10 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
       <section className='pp-hero'>
         <div className='pp-wrap pp-hero__grid pp-hero__grid--sampler'>
           <div className='pp-hero__copy'>
-            <h1 className='pp-display pp-h1'>Find out how you’re built. Then find out what for.</h1>
+            <p className='pp-verse'>
+              You are His workmanship. Made for good works. <cite>Ephesians 2:10</cite>
+            </p>
+            <h1 className='pp-display pp-h1'>Find out how God made you. Then find out what for.</h1>
             <p className='pp-lede'>
               A 100-question Big Five personality test from Patrick Knicely, LPC: personality researcher and
               biblical scholar.
@@ -168,10 +171,10 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
           <div>
             <ul className='pp-why__qs'>
               <li>Why do you think the way you do?</li>
-              <li>Why does the work you’re good at so often feel like the work you’re allowed to do?</li>
+              <li>Why does the work you were made for feel so far from the work you settled for?</li>
               <li>And what if who you are and what God made you for were never at odds?</li>
             </ul>
-            <p className='pp-display pp-why__land'>Understand the top. Master the bottom.</p>
+            <p className='pp-display pp-why__land'>Know how you’re made. Live what you’re made for.</p>
           </div>
           <div className='pp-why__side'>
             <p>
@@ -355,19 +358,27 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
                 </p>
                 <p style={{margin: 0}}>
                   A former middle and high school teacher, wrestling and swimming coach, and conference teacher for other
-                  counselors. He brings high-level scholarship to everyday people.
+                  counselors. He takes the best of academic psychology and biblical scholarship and helps everyday
+                  people put it to work in their lives.
                 </p>
               </div>
             </div>
             <div style={{display: 'grid', gap: 20, alignContent: 'start'}}>
               <p style={{margin: 0}} className='pp-body'>
                 The questions use the Big Five Aspect Scales, a public-domain instrument from published research. Your
-                answers are scored against how other people described themselves.
+                answers are scored against published norms for men and women from the Eugene-Springfield Community
+                Sample, the sample behind the original research.
               </p>
-              <blockquote className='pp-cite'>
-                DeYoung, C. G., Quilty, L. C., &amp; Peterson, J. B. (2007). Between facets and domains: 10 aspects of
-                the Big Five. <em>Journal of Personality and Social Psychology, 93</em>, 880–896.
-              </blockquote>
+              <ul className='pp-cites'>
+                <li>
+                  DeYoung, C. G., Quilty, L. C., &amp; Peterson, J. B. (2007). Between facets and domains: 10 aspects of
+                  the Big Five. <em>Journal of Personality and Social Psychology, 93</em>, 880–896.
+                </li>
+                <li>
+                  Knicely, P., &amp; Forrest, A. (2021). Counseling and personality: Introducing the taxonomy of the Big
+                  Five as an assessment tool. <em>The Virginia Counselors Journal, 38</em>, 32–39.
+                </li>
+              </ul>
               <p className='pp-small' style={{margin: 0}}>
                 The test is a tool for understanding yourself. It is not a diagnosis, and it is not counseling.
               </p>

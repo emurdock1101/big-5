@@ -1937,3 +1937,32 @@ p {
     max-width: 200px;
   }
 }
+
+/* ---------- verse line and citations ---------- */
+
+.pp-verse {
+  margin: 0;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--pp-ink-soft);
+}
+
+.pp-verse cite {
+  font-style: normal;
+  font-weight: 500;
+  margin-left: 6px;
+}
+
+.pp-cites {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 2px solid var(--pp-ink);
+  display: grid;
+  gap: 14px;
+  font-size: 16px;
+}
+
+.pp-cites li:first-child {
+  padding-top: 20px;
+}

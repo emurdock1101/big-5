@@ -22,7 +22,8 @@ Patrick helps people understand how God made them and discover their role in His
 
 ## Operating Context
 
-- Purchase: Stripe checkout at $9.99 on `/buy`; each purchase needs a different email; create account after checkout.
+- Purchase and accounts (AWS): Stripe checkout at $9.99 on `/buy`; a Stripe webhook Lambda creates the buyer's account (AWS Cognito) and emails a temporary login; on `/signup` they sign in with it and set their own password. One purchase = one account = one test (new email per purchase).
+- Results are saved to their account (S3) after the test; they can log in anytime for permanent access.
 - Test taken once; retake no sooner than about six months.
 - Results viewed in-app and downloadable.
 - Follow-up offer: a results conversation with Patrick (talking through your results), booked via Calendly. It is not counseling, therapy or coaching.
@@ -33,11 +34,12 @@ Patrick helps people understand how God made them and discover their role in His
 - React 17 SPA (CRA, TypeScript, Material UI v4/v5), AWS Amplify auth/storage, Stripe, hosted on Amplify/S3. Scoring, payment, auth, storage and admin logic unchanged by design work. Elliot's tests stay green (`npm ci --legacy-peer-deps`).
 - Five traits / ten aspects: Extraversion (enthusiasm, assertiveness), Neuroticism (withdrawal, volatility), Agreeableness (compassion, politeness), Conscientiousness (industriousness, orderliness), Openness (interest in ideas, aesthetic openness).
 - Open: the own-domain contact email (exists; address not yet given). Gmail stays until then (one constant).
-- Scope now: homepage first; other pages follow.
+- Planned (later): an interactive Future Authoring exercise through a Christian lens, inside the logged-in account, that uses the person's saved scores. Patrick already has the booklet; it is not built yet. It will likely need somewhere to save each person's writing (an AWS change for Elliot).
 
 ## Brand Commitments
 
-- Name: "Personality+" (no space), presented as Personality+ by Patrick Knicely.
+- Name: "Personality+" (no space), presented as Personality+ by Patrick Knicely, with the line "You are His workmanship. Made for good works." (Ephesians 2:10). Renaming was considered and set aside for now.
+- Homepage headline: "Find out how God made you. Then find out what for." Closing line of the faith section: "Know how you're made. Live what you're made for." (replaces "understand the top, master the bottom", which reads as innuendo).
 - The five trait colors and the Albers-style nested color squares stay; the owner likes them. Order always E, N, A, C, O. Colors: E #ED5362, N #9A338E, A #3A81CD, C #00C9B7, O #344B47.
 - Faith is woven in early on the homepage, alongside the science, not hidden and not a sermon.
 - Voice: direct, compassionate, deep, clear; closer to Peterson than Heiser. Bird's-eye view first, then details. Stories and hooks; stacked questions; long passages landing on a short punchy line; cites sources, admits limits. No emojis, no shouting caps. Fewer names per paragraph and an earlier payoff for this reader.
@@ -47,7 +49,8 @@ Patrick helps people understand how God made them and discover their role in His
 ## Evidence on Hand
 
 - Credentials: Licensed teacher; Licensed Professional Counselor (LPC) in Virginia; personality researcher working with the Big Five Aspects model; biblical scholarship trained under Michael S. Heiser; former middle and high school teacher, wrestling and swimming coach, conference teacher for other counselors. Not currently seeing clients.
-- Real citations: DeYoung, Quilty & Peterson (2007), JPSP 93, 880–896; Costa; Wilt; Revelle (William).
+- Real citations: DeYoung, Quilty & Peterson (2007), JPSP 93, 880–896; Knicely & Forrest (2021), Counseling and personality: Introducing the taxonomy of the Big Five as an assessment tool, The Virginia Counselors Journal 38, 32–39 (title wording to confirm with Patrick); Costa; Wilt; Revelle (William).
+- Norms: scoring uses gender-stratified Eugene-Springfield Community Sample means and SDs (src/constants/escsData.tsx). Patrick recalls a Peterson paper for the male/female SDs; exact citation not yet given.
 - Real report content in `src/constants/` (interpretations).
 - Patrick's own Big Five scores exist (brand homebase) but he chose not to feature them on the homepage.
 - None exist: testimonials, user counts, press, refund policy. Do not fabricate.
