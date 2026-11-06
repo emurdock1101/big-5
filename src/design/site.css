@@ -1437,3 +1437,256 @@ p {
     grid-template-columns: 1fr;
   }
 }
+
+/* ---------- results: guided walk ---------- */
+
+.pp-plate__sq--btn {
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.pp-plate__sq--btn:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: -8px;
+}
+
+.pp-walk {
+  padding: clamp(32px, 4vw, 56px) 0 clamp(64px, 8vw, 112px);
+}
+
+.pp-walk__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pp-walk__steps ol {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.pp-walk__steps button {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-top: 6px solid var(--pp-step);
+  background: var(--pp-sheet-deep);
+  color: var(--pp-ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  padding: 10px 8px;
+  cursor: pointer;
+  hyphens: manual;
+}
+
+.pp-walk__steps button:hover {
+  background: #fff;
+}
+
+.pp-walk__steps button[aria-current='step'] {
+  background: var(--pp-ink);
+  color: #fff;
+}
+
+.pp-walk__stage {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(32px, 5vw, 80px);
+  padding: clamp(32px, 4vw, 48px) 0;
+  align-items: start;
+}
+
+.pp-walk__aside {
+  display: grid;
+  gap: 16px;
+  position: sticky;
+  top: calc(var(--pp-header-h) + 24px);
+}
+
+.pp-walk__aside .pp-plate {
+  max-width: 440px;
+}
+
+.pp-walk__read {
+  display: grid;
+  gap: 20px;
+  align-content: start;
+  max-width: 68ch;
+}
+
+.pp-walk__read h2:focus,
+.pp-walk__stage h2:focus {
+  outline: none;
+}
+
+.pp-walk__text p {
+  margin: 0 0 1em;
+}
+
+.pp-walk__first {
+  font-size: clamp(19px, 1.5vw, 21px);
+  font-weight: 600;
+}
+
+.pp-walk__aspect {
+  border-top: 2px solid var(--pp-ink);
+  padding-top: 20px;
+  margin-top: 12px;
+  display: grid;
+  gap: 12px;
+}
+
+.pp-walk__how {
+  border-top: 1px solid var(--pp-rule);
+  padding-top: 16px;
+}
+
+.pp-walk__how summary {
+  cursor: pointer;
+  font-weight: 750;
+}
+
+.pp-walk__how p {
+  margin: 12px 0 0;
+  max-width: 64ch;
+}
+
+.pp-rscale {
+  margin: 12px 0;
+}
+
+.pp-rscale .pp-scale__row {
+  margin-bottom: 6px;
+}
+
+.pp-rscale__val {
+  font-weight: 500;
+  color: var(--pp-ink-soft);
+  text-align: right;
+}
+
+.pp-rscale--big .pp-scale__row {
+  font-size: 19px;
+}
+
+.pp-rscale--big .pp-scale__track {
+  height: 20px;
+}
+
+.pp-walk__nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--pp-rule);
+}
+
+/* combination grid */
+
+.pp-walk__stage--combo {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.pp-matrix {
+  display: grid;
+  grid-template-columns: 150px repeat(5, minmax(0, 1fr));
+  gap: 5px;
+  max-width: 560px;
+}
+
+.pp-matrix__h {
+  font-weight: 800;
+  font-stretch: var(--pp-wide);
+  text-align: center;
+  padding-bottom: 4px;
+}
+
+.pp-matrix__rh {
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.pp-matrix__cell,
+.pp-matrix__self {
+  aspect-ratio: 1;
+  border: 0;
+  padding: 0;
+}
+
+.pp-matrix__self {
+  opacity: 0.3;
+}
+
+.pp-matrix__cell {
+  cursor: pointer;
+  transition: transform 0.2s var(--pp-ease);
+}
+
+.pp-matrix__cell:hover {
+  transform: scale(1.06);
+}
+
+.pp-matrix__cell[aria-pressed='true'] {
+  outline: 3px solid var(--pp-ink);
+  outline-offset: 3px;
+}
+
+.pp-walk__note {
+  position: sticky;
+  top: calc(var(--pp-header-h) + 24px);
+  background: #fff;
+  border: 1px solid var(--pp-ink);
+  padding: clamp(20px, 3vw, 32px);
+  display: grid;
+  gap: 8px;
+}
+
+.pp-walk__note p {
+  margin: 8px 0 0;
+}
+
+@media (max-width: 900px) {
+  .pp-walk__stage,
+  .pp-walk__stage--combo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pp-walk__aside,
+  .pp-walk__note {
+    position: static;
+  }
+  .pp-walk__aside .pp-plate {
+    max-width: 260px;
+  }
+  .pp-walk__steps ol {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .pp-walk__steps button {
+    font-size: 12px;
+    padding: 8px 6px;
+  }
+  .pp-matrix {
+    grid-template-columns: 96px repeat(5, minmax(0, 1fr));
+    gap: 4px;
+  }
+  .pp-matrix__rh {
+    font-size: 12px;
+  }
+  .pp-walk__nav .pp-btn {
+    padding: 0 16px;
+    font-size: 16px;
+  }
+}
