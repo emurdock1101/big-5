@@ -2004,3 +2004,217 @@ p {
 .pp a[href^='mailto:'] {
   overflow-wrap: anywhere;
 }
+
+/* ---------- results: read more, splits inside a trait ---------- */
+
+.pp-walk__more {
+  margin-top: 4px;
+}
+
+.pp-walk__more summary {
+  cursor: pointer;
+  font-weight: 750;
+  width: fit-content;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1.5px;
+}
+
+.pp-walk__more[open] summary {
+  margin-bottom: 12px;
+}
+
+.pp-walk__more p {
+  margin: 0 0 1em;
+}
+
+.pp-split {
+  background: var(--pp-sheet-deep);
+  padding: clamp(18px, 3vw, 28px);
+  display: grid;
+  gap: 12px;
+}
+
+.pp-split.is-split {
+  background: #fff;
+  border: 2px solid var(--pp-ink);
+}
+
+.pp-walk__note .pp-split {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+.pp-split__kicker {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pp-ink-soft);
+}
+
+.pp-split__name {
+  margin: 0;
+}
+
+.pp-split p {
+  margin: 0;
+}
+
+.pp-split__bars {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.pp-split__bar {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pp-split__label {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.pp-split__label b {
+  font-weight: 500;
+  color: var(--pp-ink-soft);
+  white-space: nowrap;
+}
+
+.pp-split__track,
+.pp-inside__track {
+  display: block;
+  height: 14px;
+  background: var(--pp-rule);
+}
+
+.pp-split__track > span,
+.pp-inside__track > span {
+  display: block;
+  height: 100%;
+}
+
+.pp-split__gap {
+  font-weight: 800;
+}
+
+.pp-split__frame {
+  border-top: 1px solid var(--pp-rule);
+  padding-top: 12px;
+}
+
+.pp-switch {
+  display: inline-grid;
+  grid-auto-flow: column;
+  margin: 16px 0 20px;
+  border: 2px solid var(--pp-ink);
+}
+
+.pp-switch button {
+  border: 0;
+  background: none;
+  color: var(--pp-ink);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 750;
+  padding: 10px 16px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.pp-switch button[aria-pressed='true'] {
+  background: var(--pp-ink);
+  color: #fff;
+}
+
+.pp-inside {
+  display: grid;
+  gap: 6px;
+}
+
+.pp-inside__row {
+  display: grid;
+  grid-template-columns: minmax(0, 9em) minmax(0, 1fr) 6.5em;
+  align-items: center;
+  gap: 16px;
+  border: 0;
+  background: var(--pp-sheet-deep);
+  color: var(--pp-ink);
+  font: inherit;
+  text-align: left;
+  padding: 14px 16px;
+  min-height: 56px;
+  cursor: pointer;
+}
+
+.pp-inside__row:hover {
+  background: #fff;
+}
+
+.pp-inside__row[aria-pressed='true'] {
+  outline: 3px solid var(--pp-ink);
+  outline-offset: -3px;
+  background: #fff;
+}
+
+.pp-inside__name {
+  font-weight: 750;
+  hyphens: manual;
+}
+
+.pp-inside__pair {
+  display: grid;
+  grid-template-columns: minmax(0, 9.5em) minmax(0, 1fr);
+  align-items: center;
+  gap: 4px 10px;
+  font-size: 13px;
+}
+
+.pp-inside__aspect {
+  font-weight: 600;
+  color: var(--pp-ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pp-inside__track {
+  height: 10px;
+}
+
+.pp-inside__tag {
+  justify-self: end;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 4px 10px;
+  color: var(--pp-ink-soft);
+}
+
+.pp-inside__tag.is-split {
+  background: var(--pp-ink);
+  color: #fff;
+}
+
+@media (max-width: 520px) {
+  .pp-inside__row {
+    grid-template-columns: minmax(0, 1fr) 5.5em;
+    gap: 8px 12px;
+  }
+  .pp-inside__pair {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .pp-split__bars {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .pp-switch {
+    display: grid;
+    width: 100%;
+  }
+}

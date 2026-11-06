@@ -4,6 +4,7 @@ import {BOOKING_LABEL, BOOKING_URL, SOFT_NAME, TRAITS} from './traits';
 import {getInterpretation} from '../utils/interpretations.utils';
 import {traitOverviews} from '../constants/content';
 import {combinationNote} from '../constants/combinations';
+import {aspectSplit} from '../constants/aspectSplits';
 
 interface ResultsWalkProps {
   percentiles: Record<string, number>;
@@ -51,17 +52,68 @@ const Scale: React.FC<{label: string; value: number; color: string; big?: boolea
   </div>
 );
 
-const Paragraphs: React.FC<{trait: string; score: number}> = ({trait, score}) => {
+/** The headline paragraph, with the rest of the write-up folded behind "Read more". */
+const Paragraphs: React.FC<{trait: string; score: number; first?: boolean}> = ({trait, score, first = true}) => {
   const interp = getInterpretation(trait, score);
   if (!interp) return null;
+  const [lead, ...rest] = interp.paragraphs.filter(Boolean);
   return (
     <>
-      {interp.paragraphs.map((p, i) => (
-        <p key={i} className={i === 0 ? 'pp-walk__first' : undefined}>
-          {p}
-        </p>
-      ))}
+      <p className={first ? 'pp-walk__first' : undefined}>{lead}</p>
+      {rest.length > 0 && (
+        <details className='pp-walk__more'>
+          <summary>Read more</summary>
+          {rest.map((para, i) => (
+            <p key={i}>{para}</p>
+          ))}
+        </details>
+      )}
     </>
+  );
+};
+
+/** Two aspect bars side by side, with the gap between them. */
+const SplitCard: React.FC<{
+  trait: (typeof TRAITS)[number];
+  a: number;
+  b: number;
+  compact?: boolean;
+}> = ({trait, a, b, compact}) => {
+  const s = aspectSplit(trait.ocean, a, b);
+  return (
+    <div className={`pp-split${s.split ? ' is-split' : ''}`}>
+      {!compact && (
+        <p className='pp-split__kicker'>{s.split ? 'A split inside this trait' : 'Your two aspects agree'}</p>
+      )}
+      {s.split && s.name && <h3 className='pp-display pp-h3 pp-split__name'>{s.name}</h3>}
+      <div className='pp-split__bars'>
+        {[a, b].map((v, k) => (
+          <div key={k} className='pp-split__bar'>
+            <span className='pp-split__label'>
+              {trait.aspects[k]} <b>{ord(v)}</b>
+            </span>
+            <span className='pp-split__track' aria-hidden='true'>
+              <span style={{width: `${v}%`, background: trait.color}} />
+            </span>
+          </div>
+        ))}
+      </div>
+      {s.split ? (
+        <>
+          <p className='pp-split__gap'>{s.gap} points apart</p>
+          {s.note ? <p>{s.note}</p> : <p className='pp-small'>A note on this split is coming soon.</p>}
+          <p className='pp-small pp-split__frame'>
+            A split isn’t a flaw. It is two real parts of you pulling different ways. Once you can name it, you can
+            stop thinking something is wrong with you.
+          </p>
+        </>
+      ) : (
+        <p className='pp-small' style={{margin: 0}}>
+          Your {trait.aspects[0].toLowerCase()} and {trait.aspects[1].toLowerCase()} sit close together
+          {s.gap > 0 ? ` (${s.gap} points apart)` : ''}, so this trait tends to show up in you as one piece.
+        </p>
+      )}
+    </div>
   );
 };
 
@@ -105,6 +157,8 @@ function savePlate(scores: number[]) {
 const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, onDownload, sample}) => {
   const [step, setStep] = useState(0);
   const [pair, setPair] = useState<[number, number]>([0, 2]);
+  const [view, setView] = useState<'between' | 'inside'>('between');
+  const [insideTrait, setInsideTrait] = useState<number | null>(null);
   const headRef = useRef<HTMLHeadingElement>(null);
   const first = useRef(true);
 
@@ -123,6 +177,17 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, onDownloa
   }, [step]);
 
   const go = (i: number) => setStep(Math.max(0, Math.min(STEPS.length - 1, i)));
+
+  const viewSwitch = (
+    <div className='pp-switch' role='group' aria-label='Which combinations to show'>
+      <button type='button' aria-pressed={view === 'between'} onClick={() => setView('between')}>
+        Between traits
+      </button>
+      <button type='button' aria-pressed={view === 'inside'} onClick={() => setView('inside')}>
+        Inside each trait
+      </button>
+    </div>
+  );
 
   const plate = (focus: number | null) => (
     <ColorPlate
@@ -194,12 +259,13 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, onDownloa
           <div className='pp-walk__text'>
             <Paragraphs trait={t.ocean} score={scores[i]} />
           </div>
+          <SplitCard trait={t} a={p(t.aspects[0])} b={p(t.aspects[1])} />
           {t.aspects.map((a) => (
             <section key={a} className='pp-walk__aspect'>
               <h3 className='pp-display pp-h3'>{a}</h3>
               <Scale label='Your score' value={p(a)} color={t.color} />
               <div className='pp-walk__text'>
-                <Paragraphs trait={a} score={p(a)} />
+                <Paragraphs trait={a} score={p(a)} first={false} />
               </div>
             </section>
           ))}
@@ -214,6 +280,63 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, onDownloa
         </div>
       </div>
     );
+  } else if (step === 6 && view === 'inside') {
+    const gaps = TRAITS.map((t) => aspectSplit(t.ocean, p(t.aspects[0]), p(t.aspects[1])));
+    const chosen = insideTrait ?? gaps.reduce((best, g, k) => (g.gap > gaps[best].gap ? k : best), 0);
+    const t = TRAITS[chosen];
+    body = (
+      <div className='pp-walk__stage pp-walk__stage--combo'>
+        <div>
+          <h2 ref={headRef} tabIndex={-1} className='pp-display pp-h2'>
+            Inside each trait
+          </h2>
+          {viewSwitch}
+          <p className='pp-lede' style={{margin: '0 0 24px'}}>
+            Every trait has two sides. When yours sit far apart, they can pull against each other. Tap a trait to
+            see how its two sides line up in you.
+          </p>
+          <div className='pp-inside' role='group' aria-label='The two sides of each trait'>
+            {TRAITS.map((r, k) => (
+              <button
+                key={r.ocean}
+                type='button'
+                className='pp-inside__row'
+                aria-pressed={chosen === k}
+                aria-label={`${r.ocean}: ${r.aspects[0]} ${ord(p(r.aspects[0]))}, ${r.aspects[1]} ${ord(
+                  p(r.aspects[1]),
+                )}${gaps[k].split ? ', split' : ''}`}
+                onClick={() => {
+                  setInsideTrait(k);
+                  if (window.innerWidth < 900) {
+                    window.setTimeout(() => document.getElementById('pp-combo-note')?.scrollIntoView({block: 'nearest'}), 50);
+                  }
+                }}>
+                <span className='pp-inside__name'>{SOFT_NAME[r.ocean] ?? r.ocean}</span>
+                <span className='pp-inside__pair' aria-hidden='true'>
+                  {[0, 1].map((side) => (
+                    <React.Fragment key={side}>
+                      <span className='pp-inside__aspect'>{r.aspects[side]}</span>
+                      <span className='pp-inside__track'>
+                        <span style={{width: `${p(r.aspects[side])}%`, background: r.color}} />
+                      </span>
+                    </React.Fragment>
+                  ))}
+                </span>
+                <span className={`pp-inside__tag${gaps[k].split ? ' is-split' : ''}`}>
+                  {gaps[k].split ? 'Split' : 'Together'}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className='pp-walk__note' id='pp-combo-note' aria-live='polite'>
+          <h3 className='pp-display pp-h3'>
+            {t.aspects[0]} + {t.aspects[1]}
+          </h3>
+          <SplitCard trait={t} a={p(t.aspects[0])} b={p(t.aspects[1])} compact />
+        </div>
+      </div>
+    );
   } else if (step === 6) {
     const [a, b] = pair;
     const note = combinationNote(TRAITS[a].ocean, TRAITS[b].ocean, scores[a], scores[b]);
@@ -223,7 +346,8 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, onDownloa
           <h2 ref={headRef} tabIndex={-1} className='pp-display pp-h2'>
             No trait acts alone
           </h2>
-          <p className='pp-lede' style={{margin: '12px 0 24px'}}>
+          {viewSwitch}
+          <p className='pp-lede' style={{margin: '0 0 24px'}}>
             Every square is a pair. Tap one to see how those two traits play off each other in you.
           </p>
           <div className='pp-matrix' role='group' aria-label='Trait pairs'>
