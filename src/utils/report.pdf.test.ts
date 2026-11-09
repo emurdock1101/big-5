@@ -8,6 +8,7 @@ import jsPDF from 'jspdf';
 import {Aspect, Ocean} from '../constants/schema';
 import {generateReport, reportFileName, levelWord, cleanName} from './report.pdf';
 import {getShortWriteup} from '../constants/shortWriteups';
+import {aspectSplits} from '../constants/aspectSplits';
 
 const MockJsPDF = jsPDF as unknown as jest.Mock;
 
@@ -102,15 +103,24 @@ describe('generateReport', () => {
     }
   });
 
-  it('includes the short write-up headline for each trait', () => {
+  it('includes the short write-up headline for each aspect', () => {
     generateReport(base);
-    const card = getShortWriteup(Ocean.Agreeableness, 'modHigh');
-    expect(allText()).toContain(card!.headline);
+    expect(allText()).toContain(getShortWriteup(Aspect.Compassion, 'high')!.headline);
   });
 
-  it('includes a split box when a trait’s aspects are far apart', () => {
+  it('gives a split trait the card for its mix instead of the blended trait card', () => {
     generateReport(base);
-    expect(allText().some((t) => t.startsWith('A SPLIT INSIDE THIS TRAIT'))).toBe(true);
+    const text = allText();
+    // Agreeableness: Compassion 86, Politeness 34 → split, Compassion higher
+    expect(text.some((t) => t.startsWith('YOUR MIX  ·  HIGHER COMPASSION'))).toBe(true);
+    expect(text).toContain(aspectSplits[Ocean.Agreeableness].firstHigher.headline);
+    expect(text).not.toContain(getShortWriteup(Ocean.Agreeableness, 'modHigh')!.headline);
+  });
+
+  it('keeps the regular trait card when the aspects agree', () => {
+    generateReport(base);
+    // Extraversion: Enthusiasm 68, Assertiveness 74 → not split
+    expect(allText()).toContain(getShortWriteup(Ocean.Extraversion, 'modHigh')!.headline);
   });
 
   it('places the tree image when one is provided', () => {

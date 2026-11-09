@@ -2325,3 +2325,18 @@ p {
     display: block;
   }
 }
+
+/* a split trait's mix card */
+
+.pp-mix .pp-walk__text p {
+  margin: 0;
+}
+
+.pp-mix .pp-walk__text {
+  display: grid;
+  gap: 12px;
+}
+
+.pp-mix .pp-short {
+  margin: 0;
+}

@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import ColorPlate from './ColorPlate';
 import {BOOKING_LABEL, BOOKING_URL, SOFT_NAME, TRAITS} from './traits';
 import {getInterpretation, getScoreLevel} from '../utils/interpretations.utils';
-import {getShortWriteup} from '../constants/shortWriteups';
+import {getShortWriteup, ShortWriteup} from '../constants/shortWriteups';
 import {traitOverviews} from '../constants/content';
 import {combinationNote} from '../constants/combinations';
 import {aspectSplit} from '../constants/aspectSplits';
@@ -57,11 +57,19 @@ const Scale: React.FC<{label: string; value: number; color: string; big?: boolea
   </div>
 );
 
-/** The headline paragraph, with the rest of the write-up folded behind "Read more". */
-const Paragraphs: React.FC<{trait: string; score: number; first?: boolean}> = ({trait, score, first = true}) => {
+/**
+ * The short card for a trait or aspect, with the full write-up folded behind a disclosure.
+ * `card` overrides the level card (used for a split trait's mix card).
+ */
+const Paragraphs: React.FC<{trait: string; score: number; first?: boolean; card?: ShortWriteup}> = ({
+  trait,
+  score,
+  first = true,
+  card,
+}) => {
   const interp = getInterpretation(trait, score);
   if (!interp) return null;
-  const short = getShortWriteup(trait, getScoreLevel(score));
+  const short = card ?? getShortWriteup(trait, getScoreLevel(score));
   if (short) {
     return (
       <>
@@ -91,7 +99,7 @@ const Paragraphs: React.FC<{trait: string; score: number; first?: boolean}> = ({
           </div>
         </dl>
         <details className='pp-walk__more'>
-          <summary>Read the full write-up</summary>
+          <summary>{card ? `Read the full ${trait.toLowerCase()} write-up` : 'Read the full write-up'}</summary>
           {interp.paragraphs.filter(Boolean).map((para, i) => (
             <p key={i}>{para}</p>
           ))}
@@ -283,6 +291,7 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, onD
     const i = step - 1;
     const t = TRAITS[i];
     const overview = traitOverviews.find((o) => o.trait === t.ocean);
+    const mix = aspectSplit(t.ocean, p(t.aspects[0]), p(t.aspects[1]));
     body = (
       <div className='pp-walk__stage'>
         <div className='pp-walk__aside'>
@@ -299,10 +308,41 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, onD
             {SOFT_NAME[t.ocean] ?? t.ocean}
           </h2>
           <Scale label='Your score' value={scores[i]} color={t.color} big />
-          <div className='pp-walk__text'>
-            <Paragraphs trait={t.ocean} score={scores[i]} />
-          </div>
-          <SplitCard trait={t} a={p(t.aspects[0])} b={p(t.aspects[1])} />
+          {mix.split && mix.card ? (
+            <section className='pp-split is-split pp-mix' aria-label={`Your mix: ${mix.name}`}>
+              <p className='pp-split__kicker'>
+                Your mix · higher {t.aspects[mix.higher]}, lower {t.aspects[1 - mix.higher]}
+              </p>
+              <h3 className='pp-display pp-h3 pp-split__name'>{mix.name}</h3>
+              <div className='pp-split__bars'>
+                {t.aspects.map((a) => (
+                  <div key={a} className='pp-split__bar'>
+                    <span className='pp-split__label'>
+                      {a} <b>{ord(p(a))}</b>
+                    </span>
+                    <span className='pp-split__track' aria-hidden='true'>
+                      <span style={{width: `${p(a)}%`, background: t.color}} />
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className='pp-split__gap'>{mix.gap} points apart</p>
+              <div className='pp-walk__text'>
+                <Paragraphs trait={t.ocean} score={scores[i]} card={mix.card} />
+              </div>
+              <p className='pp-small pp-split__frame'>
+                A split isn’t a flaw. It is two real parts of you pulling different ways. Once you can name it, you
+                can stop thinking something is wrong with you.
+              </p>
+            </section>
+          ) : (
+            <>
+              <div className='pp-walk__text'>
+                <Paragraphs trait={t.ocean} score={scores[i]} />
+              </div>
+              <SplitCard trait={t} a={p(t.aspects[0])} b={p(t.aspects[1])} />
+            </>
+          )}
           {t.aspects.map((a) => (
             <section key={a} className='pp-walk__aspect'>
               <h3 className='pp-display pp-h3'>{a}</h3>

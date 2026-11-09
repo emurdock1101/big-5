@@ -315,34 +315,43 @@ export function generateReport({
     doc.text(t.ocean, M, y);
     y += 20;
     scoreLine(p(t.ocean), t.color);
-    writeup(t.ocean, p(t.ocean));
-
     const s = aspectSplit(t.ocean, p(t.aspects[0]), p(t.aspects[1]));
-    if (s.split && s.note) {
-      const width = pageW - 2 * M - 32;
-      const title = lines(s.name ?? '', width, 12, 'bold');
-      const body = lines(s.note, width, 10);
-      const h = 30 + title.length * 15 + body.length * 13.5 + 12;
-      need(h + 10);
+    if (s.split && s.card) {
+      // A split trait gets the card written for its mix instead of the blended trait card.
+      const hi = t.aspects[s.higher];
+      const lo = t.aspects[1 - s.higher];
+      const title = lines(s.name ?? '', pageW - 2 * M, 15, 'bold');
+      need(60 + title.length * 18);
       doc.setDrawColor(...rgb(INK));
-      doc.setLineWidth(1.2);
-      doc.rect(M, y, pageW - 2 * M, h);
+      doc.setLineWidth(2);
+      doc.line(M, y, pageW - M, y);
+      y += 18;
       font('bold', 7.5);
       color(INK_SOFT);
       doc.text(
-        `A SPLIT INSIDE THIS TRAIT  ·  ${t.aspects[0].toUpperCase()} ${ordinal(p(t.aspects[0]))}, ${t.aspects[1].toUpperCase()} ${ordinal(
-          p(t.aspects[1]),
-        )}`,
-        M + 16,
-        y + 20,
+        `YOUR MIX  ·  HIGHER ${hi.toUpperCase()} ${ordinal(p(hi))}, LOWER ${lo.toUpperCase()} ${ordinal(p(lo))}  ·  ${s.gap} POINTS APART`,
+        M,
+        y,
         {charSpace: 0.5},
       );
-      font('bold', 12);
+      y += 20;
+      font('bold', 15);
       color(INK);
-      doc.text(title, M + 16, y + 38);
-      font('normal', 10);
-      doc.text(body, M + 16, y + 38 + title.length * 15 + 2);
-      y += h + 22;
+      doc.text(title, M, y);
+      y += title.length * 18 + 4;
+      card(s.card);
+      font('normal', 9);
+      color(INK_SOFT);
+      const frame = lines(
+        'A split isn’t a flaw. It is two real parts of you pulling different ways. Once you can name it, you can stop thinking something is wrong with you.',
+        pageW - 2 * M,
+        9,
+      );
+      need(frame.length * 12 + 10);
+      doc.text(frame, M, y - 6);
+      y += frame.length * 12 + 10;
+    } else {
+      writeup(t.ocean, p(t.ocean));
     }
 
     // The two aspects side by side, each as a stacked card.
