@@ -2310,8 +2310,10 @@ p {
   -webkit-overflow-scrolling: touch;
 }
 
-.pp-tree-scroll .pp-tree {
-  min-width: 720px;
+@media (max-width: 700px) {
+  .pp-tree-scroll .pp-tree {
+    min-width: 640px;
+  }
 }
 
 .pp-tree-hint {

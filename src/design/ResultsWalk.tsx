@@ -466,8 +466,10 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, onD
             </div>
             <p className='pp-small pp-tree-hint'>Swipe sideways to see the whole tree.</p>
             <figcaption className='pp-small'>
-              Circle size shows your percentile. {FACTOR_NAME.stability} averages your Agreeableness,
-              Conscientiousness and low Neuroticism. {FACTOR_NAME.plasticity} averages your Extraversion and Openness.
+              Circle size and the number inside show your percentile. The ring around your name is split by your
+              five trait scores. {FACTOR_NAME.stability} averages your Agreeableness, Conscientiousness and low
+              Neuroticism, so its purple slice is 100 minus your Neuroticism. {FACTOR_NAME.plasticity} averages your
+              Extraversion and Openness.
             </figcaption>
           </figure>
           <div style={{display: 'flex', flexWrap: 'wrap', gap: 12}}>

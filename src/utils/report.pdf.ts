@@ -141,7 +141,7 @@ export function generateReport({
   color(INK_SOFT);
   doc.text(
     lines(
-      `Circle size shows your percentile. ${FACTOR_NAME.stability} averages your Agreeableness, Conscientiousness and low Neuroticism. ${FACTOR_NAME.plasticity} averages your Extraversion and Openness.`,
+      `Circle size and the number inside show your percentile. The ring around your name is split by your five trait scores. ${FACTOR_NAME.stability} averages your Agreeableness, Conscientiousness and low Neuroticism, so its purple slice is 100 minus your Neuroticism. ${FACTOR_NAME.plasticity} averages your Extraversion and Openness.`,
       treeW,
       8.5,
     ),
