@@ -40,7 +40,7 @@ const THEM: Record<string, number> = {
 };
 
 const ComparePreview: React.FC = () => (
-  <CompareView me={{name: 'You', percentiles: ME}} them={{name: 'Sam', percentiles: THEM}} relationship='Spouse' />
+  <CompareView me={{name: 'You', percentiles: ME}} them={{name: 'Patrick', percentiles: THEM}} relationship='Spouse' />
 );
 
 export default ComparePreview;

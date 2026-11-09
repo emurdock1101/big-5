@@ -33,7 +33,6 @@ const DIMS: Dim[] = TRAITS.flatMap((t) => [
   ...t.aspects.map((a) => ({key: a, label: a, color: t.color, trait: false})),
 ]);
 
-
 const slicePath = (x: number, y: number, r: number, a0: number, a1: number) => {
   const large = a1 - a0 > Math.PI ? 1 : 0;
   return `M${x},${y} L${x + r * Math.cos(a0)},${y + r * Math.sin(a0)} A${r},${r} 0 ${large} 1 ${x + r * Math.cos(a1)},${
@@ -54,7 +53,9 @@ export const NameRing: React.FC<{person: Person; outline?: string}> = ({person, 
     colors: TRAITS.map((t) => t.color),
     weights: TRAITS.map((t) => person.percentiles[t.ocean] ?? 0),
   };
-  const size = Math.max(14, Math.min(26, 150 / Math.max(3, person.name.length)));
+  // First name only, sized to fit inside the ring (about 80 units across at this weight and width).
+  const shown = person.name.trim().split(/\s+/)[0] || person.name;
+  const size = Math.max(10, Math.min(26, 80 / (shown.length * 0.74)));
   return (
     <svg viewBox='0 0 140 140' className='pp-ring' role='img' aria-label={`${person.name}’s five colors`}>
       {outline && <circle cx={70} cy={70} r={68} fill='none' stroke={outline} strokeWidth={4} />}
@@ -69,7 +70,7 @@ export const NameRing: React.FC<{person: Person; outline?: string}> = ({person, 
       ))}
       <circle cx={70} cy={70} r={46} fill='var(--pp-sheet)' />
       <text x={70} y={71} textAnchor='middle' dominantBaseline='middle' className='pp-tree__name' fontSize={size}>
-        {person.name}
+        {shown}
       </text>
     </svg>
   );
@@ -93,14 +94,23 @@ const Pair: React.FC<{dim: Dim; me: number; them: number; themName: string}> = (
 );
 
 /** Your results next to someone else's: where you are alike, where you may rub, and every score side by side. */
-const CompareView: React.FC<{me: Person; them: Person; relationship?: string}> = ({me, them, relationship}) => {
+const CompareView: React.FC<{me: Person; them: Person; relationship?: string; after?: React.ReactNode}> = ({
+  me,
+  them,
+  relationship,
+  after,
+}) => {
   const rows = DIMS.map((d) => {
     const a = Math.round(me.percentiles[d.key] ?? 0);
     const b = Math.round(them.percentiles[d.key] ?? 0);
     return {d, me: a, them: b, gap: Math.abs(a - b)};
   });
-  const rubRows = rows.filter((r) => r.gap >= RUB_GAP).sort((x, y) => y.gap - x.gap);
-  const alike = rows.filter((r) => r.gap <= ALIKE_GAP);
+  // Alike and rub cards use the ten aspects only. A trait score blends two aspects, and when they
+  // split it describes neither person well (high Extraversion can mean high Assertiveness with low
+  // Enthusiasm). Side by side still shows all fifteen scores.
+  const aspectRows = rows.filter((r) => !r.d.trait);
+  const rubRows = aspectRows.filter((r) => r.gap >= RUB_GAP).sort((x, y) => y.gap - x.gap);
+  const alike = aspectRows.filter((r) => r.gap <= ALIKE_GAP);
   // Both high or both low get a card, strongest first; both in the middle get one line.
   const alikeCards = alike
     .filter((r) => alikeSide(r.me, r.them))
@@ -253,10 +263,8 @@ const CompareView: React.FC<{me: Person; them: Person; relationship?: string}> =
               </div>
             ))}
           </div>
-          <p className='pp-small' style={{marginTop: 24}}>
-            Each person’s scores compare them with other people of their own sex who took the test.
-          </p>
         </section>
+        {after}
       </div>
     </div>
   );

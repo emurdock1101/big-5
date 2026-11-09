@@ -876,11 +876,10 @@ p {
   color: var(--pp-sheet) !important;
 }
 
-@media (max-width: 360px) {
-  .pp-footer .pp-wordmark {
-    flex-wrap: wrap;
-    row-gap: 4px;
-  }
+/* In the footer column, "by Patrick Knicely" drops to its own line when it doesn't fit. */
+.pp-footer .pp-wordmark {
+  flex-wrap: wrap;
+  row-gap: 4px;
 }
 
 .pp-footer ul {
@@ -2680,4 +2679,17 @@ p {
 .pp-compare__middle {
   margin: 0;
   color: var(--pp-ink-soft);
+}
+
+.pp-share__list--received {
+  margin-bottom: 16px;
+}
+
+.pp-share__list--received ul {
+  margin-top: 16px;
+}
+
+.pp-share__actions a.pp-textlink {
+  padding: 8px 0;
+  font-weight: 700;
 }

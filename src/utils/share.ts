@@ -131,6 +131,48 @@ export async function loadShare(ownerId: string, id: string): Promise<ShareRecor
   return readJson<ShareRecord>(shareKey(id), {level: 'protected', identityId: ownerId});
 }
 
+/** A comparison someone shared with you and you have opened, kept so you can come back to it. */
+export interface ReceivedItem {
+  owner: string;
+  id: string;
+  name: string;
+  relationship: Relationship;
+  opened: string;
+  revoked?: boolean;
+}
+
+const RECEIVED_KEY = 'shares/received.json';
+
+export async function listReceived(): Promise<ReceivedItem[]> {
+  return (await readJson<ReceivedItem[]>(RECEIVED_KEY, {level: 'private'})) ?? [];
+}
+
+/** Remember (or refresh) a comparison in the viewer's private list. */
+export async function rememberReceived(item: ReceivedItem): Promise<void> {
+  const list = await listReceived();
+  const rest = list.filter((x) => !(x.owner === item.owner && x.id === item.id));
+  await writeJson(RECEIVED_KEY, [item, ...rest], 'private');
+}
+
+/** Mark a remembered comparison as unlinked by its owner. */
+export async function markReceivedUnlinked(owner: string, id: string): Promise<void> {
+  const list = await listReceived();
+  if (!list.some((x) => x.owner === owner && x.id === id && !x.revoked)) return;
+  await writeJson(
+    RECEIVED_KEY,
+    list.map((x) => (x.owner === owner && x.id === id ? {...x, revoked: true} : x)),
+    'private',
+  );
+}
+
+export async function forgetReceived(owner: string, id: string): Promise<ReceivedItem[]> {
+  const next = (await listReceived()).filter((x) => !(x.owner === owner && x.id === id));
+  await writeJson(RECEIVED_KEY, next, 'private');
+  return next;
+}
+
+export const comparePath = (owner: string, id: string) => `/compare/${encodeURIComponent(owner)}/${id}`;
+
 /** The signed-in person's own saved results. */
 export async function loadMyResults(): Promise<{
   name: string;

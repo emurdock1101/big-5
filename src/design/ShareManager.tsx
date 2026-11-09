@@ -1,6 +1,11 @@
 import React, {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
 import {
+  comparePath,
   createShare,
+  forgetReceived,
+  listReceived,
+  ReceivedItem,
   listShares,
   myIdentityId,
   Relationship,
@@ -24,6 +29,9 @@ const when = (iso: string) =>
 /** "Compare with someone": make a private link, copy it, and unlink it later. */
 const ShareManager: React.FC<ShareManagerProps> = ({name, gender, percentiles, demo}) => {
   const [list, setList] = useState<ShareListItem[]>([]);
+  const [received, setReceived] = useState<ReceivedItem[]>(
+    demo ? [{owner: 'demo', id: 'demo', name: 'Sam', relationship: 'Spouse', opened: new Date().toISOString()}] : [],
+  );
   const [ownerId, setOwnerId] = useState('');
   const [relationship, setRelationship] = useState<Relationship>('Spouse');
   const [label, setLabel] = useState('');
@@ -36,6 +44,7 @@ const ShareManager: React.FC<ShareManagerProps> = ({name, gender, percentiles, d
   useEffect(() => {
     if (demo) return;
     listShares().then(setList);
+    listReceived().then(setReceived);
     myIdentityId()
       .then(setOwnerId)
       .catch(() => setOwnerId(''));
@@ -94,8 +103,46 @@ const ShareManager: React.FC<ShareManagerProps> = ({name, gender, percentiles, d
 
   const urlFor = (id: string) => (demo ? `${window.location.origin}/compare-preview` : shareUrl(ownerId, id));
 
+  const forget = async (item: ReceivedItem) => {
+    if (!window.confirm(`Remove your comparison with ${item.name} from this list?`)) return;
+    if (demo) return setReceived((r) => r.filter((x) => x !== item));
+    try {
+      setReceived(await forgetReceived(item.owner, item.id));
+    } catch {
+      setError('We couldn’t remove it. Check your connection and try again.');
+    }
+  };
+
   return (
     <section className='pp-walk__aspect pp-share' aria-labelledby='pp-share-h'>
+      {received.length > 0 && (
+        <div className='pp-share__list pp-share__list--received'>
+          <h3 className='pp-display pp-h3'>Your comparisons</h3>
+          <p style={{margin: '8px 0 0'}}>People who shared their results with you. Open one to see you side by side.</p>
+          <ul>
+            {received.map((item) => (
+              <li key={item.owner + item.id} className={item.revoked ? 'is-off' : undefined}>
+                <span className='pp-share__who'>
+                  <b>You and {item.name}</b>
+                  <span>
+                    {item.relationship} · {item.revoked ? 'Unlinked by ' + item.name : 'Opened ' + when(item.opened)}
+                  </span>
+                </span>
+                <span className='pp-share__actions'>
+                  {!item.revoked && (
+                    <Link className='pp-textlink' to={demo ? '/compare-preview' : comparePath(item.owner, item.id)}>
+                      Open
+                    </Link>
+                  )}
+                  <button type='button' className='pp-textlink' onClick={() => forget(item)}>
+                    Remove
+                  </button>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <h3 id='pp-share-h' className='pp-display pp-h3'>
         Compare with someone
       </h3>

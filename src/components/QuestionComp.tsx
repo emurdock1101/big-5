@@ -8,7 +8,8 @@ interface QuestionProps {
   showMissing?: boolean;
 }
 
-const LABELS = ['Strongly disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly agree'];
+// Exactly as in the original test (same words, order and capitals).
+export const LABELS = ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree'];
 
 /** One statement with all five answers always visible; the chosen one is struck forward. */
 const QuestionComp: React.FC<QuestionProps> = (props: QuestionProps) => {
