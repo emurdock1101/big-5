@@ -1,5 +1,7 @@
 import React from 'react';
 import ResultsWalk from '../design/ResultsWalk';
+import {treePng} from '../design/tree';
+import {generateReport} from '../utils/report.pdf';
 import {Aspect, Ocean} from '../constants/schema';
 
 // Sample scores for previewing the results page during development. Not a real person.
@@ -23,7 +25,16 @@ const SAMPLE: Record<string, number> = {
 
 /** Development-only page: the results walk with sample scores, no login needed. */
 const ResultsPreview: React.FC = () => (
-  <ResultsWalk percentiles={SAMPLE} gender='male' sample onDownload={() => window.alert('The PDF download needs a signed-in account.')} />
+  <ResultsWalk
+    percentiles={SAMPLE}
+    gender='male'
+    name='Alex'
+    sample
+    onDownload={async () => {
+      const treeImage = await treePng(SAMPLE, 'Alex');
+      generateReport({name: 'Alex', email: 'sample@example.com', gender: 'male', percentiles: SAMPLE, treeImage, mode: 'open'});
+    }}
+  />
 );
 
 export default ResultsPreview;
