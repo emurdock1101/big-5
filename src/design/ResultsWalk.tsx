@@ -6,11 +6,15 @@ import {getShortWriteup} from '../constants/shortWriteups';
 import {traitOverviews} from '../constants/content';
 import {combinationNote} from '../constants/combinations';
 import {aspectSplit} from '../constants/aspectSplits';
+import PersonalityTree from './PersonalityTree';
+import {FACTOR_NAME} from './tree';
 
 interface ResultsWalkProps {
   percentiles: Record<string, number>;
   /** 'male' | 'female' — the comparison group scores were normed against. */
   gender: string;
+  /** The name the person gave before the test, if any. */
+  name?: string;
   onDownload: () => void;
   /** Shown on the preview page only. */
   sample?: boolean;
@@ -193,7 +197,7 @@ function savePlate(scores: number[]) {
   a.click();
 }
 
-const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, onDownload, sample}) => {
+const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, onDownload, sample}) => {
   const [step, setStep] = useState(0);
   const [pair, setPair] = useState<[number, number]>([0, 2]);
   const [view, setView] = useState<'between' | 'inside'>('between');
@@ -439,21 +443,39 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, onDownloa
     );
   } else {
     body = (
-      <div className='pp-walk__stage'>
-        <div className='pp-walk__aside'>{plate(null)}</div>
+      <div className='pp-walk__stage pp-walk__stage--wide'>
         <div className='pp-walk__read'>
           <h2 ref={headRef} tabIndex={-1} className='pp-display pp-h2'>
             Keep your results
           </h2>
           <p className='pp-lede'>
-            Save your five colors as an image to share, or download the full report to read again later.
+            Your whole personality on one page. Download the full report to keep it, or save your five colors to
+            share.
           </p>
+          <figure className='pp-tree-wrap' style={{margin: 0}}>
+            <div
+              className='pp-tree-scroll'
+              ref={(el) => {
+                // On narrow screens, open centered on the person's name.
+                if (el && !el.dataset.centered) {
+                  el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2;
+                  el.dataset.centered = '1';
+                }
+              }}>
+              <PersonalityTree percentiles={percentiles} name={name} />
+            </div>
+            <p className='pp-small pp-tree-hint'>Swipe sideways to see the whole tree.</p>
+            <figcaption className='pp-small'>
+              Circle size shows your percentile. {FACTOR_NAME.stability} averages your Agreeableness,
+              Conscientiousness and low Neuroticism. {FACTOR_NAME.plasticity} averages your Extraversion and Openness.
+            </figcaption>
+          </figure>
           <div style={{display: 'flex', flexWrap: 'wrap', gap: 12}}>
-            <button type='button' className='pp-btn' onClick={() => savePlate(scores)}>
-              Save my colors
+            <button type='button' className='pp-btn' onClick={onDownload}>
+              Download my report (PDF)
             </button>
-            <button type='button' className='pp-btn pp-btn--ghost' onClick={onDownload}>
-              Download full report (PDF)
+            <button type='button' className='pp-btn pp-btn--ghost' onClick={() => savePlate(scores)}>
+              Save my colors
             </button>
           </div>
           <div className='pp-walk__aspect'>

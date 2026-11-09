@@ -2269,3 +2269,57 @@ p {
     gap: 4px;
   }
 }
+
+/* personality tree */
+
+.pp-tree {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: inherit;
+}
+
+.pp-tree__name {
+  font-weight: 850;
+  font-stretch: var(--pp-wide);
+  fill: var(--pp-ink);
+}
+
+.pp-tree-wrap {
+  background: var(--pp-sheet);
+  border: 1px solid var(--pp-ink);
+  padding: clamp(16px, 3vw, 32px);
+  display: grid;
+  gap: 12px;
+}
+
+.pp-tree-wrap .pp-small {
+  margin: 0;
+}
+
+.pp-walk__stage--wide {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pp-walk__stage--wide .pp-walk__read {
+  max-width: 960px;
+}
+
+.pp-tree-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pp-tree-scroll .pp-tree {
+  min-width: 720px;
+}
+
+.pp-tree-hint {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .pp-tree-hint {
+    display: block;
+  }
+}

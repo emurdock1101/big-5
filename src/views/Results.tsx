@@ -2,7 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {Storage} from '@aws-amplify/storage';
 import {Auth} from 'aws-amplify';
 import ResultsWalk from '../design/ResultsWalk';
-import {generatePdfDoc} from '../utils/pdf.utils';
+import {generateReport} from '../utils/report.pdf';
+import {treePng} from '../design/tree';
 
 interface S3Results {
   name: string;
@@ -14,13 +15,15 @@ interface S3Results {
 const Results: React.FC = () => {
   const [percentiles, setPercentiles] = useState<Record<string, number> | null>(null);
   const [gender, setGender] = useState('gender');
+  const [name, setName] = useState('');
   const [failed, setFailed] = useState(false);
 
   const downloadResults = async () => {
     const user = await Auth.currentAuthenticatedUser();
     const email: string = user.attributes?.email ?? '';
 
-    generatePdfDoc(email, percentiles);
+    const treeImage = percentiles ? await treePng(percentiles, name) : null;
+    generateReport({name, email, gender, percentiles, treeImage});
   };
 
   useEffect(() => {
@@ -38,6 +41,7 @@ const Results: React.FC = () => {
         const url: string = await Storage.get(`${email}-${subId}/${email}-results`);
         const dataWithUserInfo: S3Results = await fetch(url).then((response) => response.json());
         setGender(dataWithUserInfo.gender);
+        setName(dataWithUserInfo.name ?? '');
         setPercentiles(dataWithUserInfo.percentiles);
       } catch (error) {
         console.error(error);
@@ -64,7 +68,7 @@ const Results: React.FC = () => {
     );
   }
 
-  return <ResultsWalk percentiles={percentiles} gender={gender} onDownload={downloadResults} />;
+  return <ResultsWalk percentiles={percentiles} gender={gender} name={name} onDownload={downloadResults} />;
 };
 
 export default Results;
