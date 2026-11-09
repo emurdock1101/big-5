@@ -15,6 +15,8 @@ interface ResultsWalkProps {
   gender: string;
   /** The name the person gave before the test, if any. */
   name?: string;
+  /** The "Compare with someone" panel, shown on the last step. */
+  share?: React.ReactNode;
   onDownload: () => void;
   /** Shown on the preview page only. */
   sample?: boolean;
@@ -205,7 +207,7 @@ function savePlate(scores: number[]) {
   a.click();
 }
 
-const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, onDownload, sample}) => {
+const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, share, onDownload, sample}) => {
   const [step, setStep] = useState(0);
   const [pair, setPair] = useState<[number, number]>([0, 2]);
   const [view, setView] = useState<'between' | 'inside'>('between');
@@ -520,6 +522,7 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, onD
               Save my colors
             </button>
           </div>
+          {share}
           <div className='pp-walk__aspect'>
             <h3 className='pp-display pp-h3'>Talk it through</h3>
             <p style={{margin: '0 0 16px'}}>Want to go deeper? Book a results conversation with Patrick.</p>

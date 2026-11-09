@@ -26,6 +26,15 @@ const Privacy: React.FC = () => (
           <h2 className='pp-display pp-h3'>Sharing</h2>
           <p>No personal data is sold or shared with anyone. Never has been, never will be.</p>
         </section>
+        <section>
+          <h2 className='pp-display pp-h3'>Comparing with someone</h2>
+          <p>
+            Only if you choose to. When you make a compare link, we save a copy of your scores and the name you choose
+            to show, but not your email. Anyone with that link and an account can see those scores. Unlink it from your
+            results page and the link stops working right away; anyone who already viewed it may remember what they
+            saw.
+          </p>
+        </section>
         <p className='pp-small'>
           Questions about this policy? <Link to='/contact'>Get in touch</Link>.
         </p>

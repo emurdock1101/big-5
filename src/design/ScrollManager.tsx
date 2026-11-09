@@ -22,6 +22,7 @@ const TITLES: Record<string, string> = {
   '/checkouterror': `Checkout didn’t start · ${SITE}`,
   '/results-preview': `Results preview · ${SITE}`,
   '/test-preview': `Test preview · ${SITE}`,
+  '/compare-preview': `Compare preview · ${SITE}`,
 };
 
 /** On page change: set the tab title, then scroll to top or to the #section the link names. */
@@ -29,7 +30,13 @@ const ScrollManager: React.FC = () => {
   const {pathname, hash} = useLocation();
 
   useEffect(() => {
-    document.title = TITLES[pathname] ?? (pathname.startsWith('/admin') ? TITLES['/admin'] : TITLES['/']);
+    document.title =
+      TITLES[pathname] ??
+      (pathname.startsWith('/admin')
+        ? TITLES['/admin']
+        : pathname.startsWith('/compare/')
+        ? `Compare results · ${SITE}`
+        : TITLES['/']);
   }, [pathname]);
 
   useEffect(() => {

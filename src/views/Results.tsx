@@ -4,6 +4,8 @@ import {Auth} from 'aws-amplify';
 import ResultsWalk from '../design/ResultsWalk';
 import {generateReport} from '../utils/report.pdf';
 import {treePng} from '../design/tree';
+import ShareManager from '../design/ShareManager';
+import {cleanName} from '../utils/report.pdf';
 
 interface S3Results {
   name: string;
@@ -68,7 +70,15 @@ const Results: React.FC = () => {
     );
   }
 
-  return <ResultsWalk percentiles={percentiles} gender={gender} name={name} onDownload={downloadResults} />;
+  return (
+    <ResultsWalk
+      percentiles={percentiles}
+      gender={gender}
+      name={name}
+      onDownload={downloadResults}
+      share={<ShareManager name={cleanName(name)} gender={gender} percentiles={percentiles} />}
+    />
+  );
 };
 
 export default Results;

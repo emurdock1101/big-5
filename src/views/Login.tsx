@@ -3,6 +3,7 @@ import {Auth} from 'aws-amplify';
 import {Link, useNavigate} from 'react-router-dom';
 import {AuthLayout, Field, FormError, authMessage} from '../design/AuthKit';
 import {PRICE} from '../design/traits';
+import {takeReturnPath} from '../utils/share';
 
 interface LoginProps {
   onLogIn: () => void;
@@ -31,7 +32,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
     try {
       await Auth.signIn(username, password);
       props.onLogIn();
-      handleNav('/results');
+      handleNav(takeReturnPath() ?? '/results');
     } catch (err: unknown) {
       console.error(JSON.stringify(err));
       setError(authMessage((err as {code?: string}).code));
