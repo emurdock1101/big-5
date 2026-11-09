@@ -2,6 +2,7 @@ import React from 'react';
 import ResultsWalk from '../design/ResultsWalk';
 import {treePng} from '../design/tree';
 import {generateReport} from '../utils/report.pdf';
+import ShareManager from '../design/ShareManager';
 import {Aspect, Ocean} from '../constants/schema';
 
 // Sample scores for previewing the results page during development. Not a real person.
@@ -30,6 +31,7 @@ const ResultsPreview: React.FC = () => (
     gender='male'
     name='Alex'
     sample
+    share={<ShareManager name='Alex' gender='male' percentiles={SAMPLE} demo />}
     onDownload={async () => {
       const treeImage = await treePng(SAMPLE, 'Alex');
       generateReport({name: 'Alex', email: 'sample@example.com', gender: 'male', percentiles: SAMPLE, treeImage, mode: 'open'});
