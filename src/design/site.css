@@ -2630,30 +2630,6 @@ p {
   font-variant-numeric: tabular-nums;
 }
 
-.pp-alike {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.pp-alike li {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--pp-sheet-deep);
-  padding: 8px 12px;
-  font-size: 15px;
-}
-
-.pp-alike__dot {
-  width: 10px;
-  height: 10px;
-  flex: none;
-}
-
 .pp-compare__all {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
@@ -2695,4 +2671,13 @@ p {
   color: #fff;
   padding: 2px 8px;
   white-space: nowrap;
+}
+
+.pp-rub--alike {
+  border-color: var(--pp-rule);
+}
+
+.pp-compare__middle {
+  margin: 0;
+  color: var(--pp-ink-soft);
 }

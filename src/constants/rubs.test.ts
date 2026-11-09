@@ -11,16 +11,16 @@ describe('rub notes', () => {
   });
 
   it('fills in names', () => {
-    expect(fillRub(rubs[Aspect.Politeness].hi, 'Sam', 'Alex')).toBe('Sam may hear Alex as rude or disrespectful.');
+    expect(fillRub(rubs[Aspect.Politeness].hi, 'Sam', 'Alex')).toBe('Sam may hear Alex as rude, or as disrespecting the people in charge.');
   });
 
   it('writes "you" in lowercase mid-sentence and capitalized at the start', () => {
-    expect(fillRub(rubs[Aspect.Politeness].hi, 'Sam', 'You')).toBe('Sam may hear you as rude or disrespectful.');
+    expect(fillRub(rubs[Aspect.Politeness].hi, 'Sam', 'You')).toBe('Sam may hear you as rude, or as disrespecting the people in charge.');
     expect(fillRub(rubs[Aspect.Politeness].together, 'Sam', 'You')).toBe(
       'You can soften the opening, and Sam can say the real thing plainly.',
     );
-    expect(fillRub(rubs[Ocean.Agreeableness].together, 'Sam', 'You')).toBe(
-      'Make it safe to disagree: you can soften the start, and Sam can say plainly what is needed.',
+    expect(fillRub(rubs[Aspect.Volatility].together, 'Sam', 'You')).toBe(
+      'Agree on a pause word. Afterward, you can ask what felt threatening, and Sam can say it calmly.',
     );
   });
 });

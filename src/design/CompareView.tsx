@@ -2,6 +2,7 @@ import React from 'react';
 import {TRAITS} from './traits';
 import {ordinal, slicesOf, TreeNode} from './tree';
 import {fillRub, rubs} from '../constants/rubs';
+import {alikes, alikeSide} from '../constants/alikes';
 
 /** The other person's color everywhere in a comparison. Yours are the trait colors. */
 export const THEM_COLOR = '#c68a12';
@@ -32,8 +33,6 @@ const DIMS: Dim[] = TRAITS.flatMap((t) => [
   ...t.aspects.map((a) => ({key: a, label: a, color: t.color, trait: false})),
 ]);
 
-const levelWord = (p: number) =>
-  p >= 75 ? 'high' : p >= 60 ? 'moderately high' : p >= 40 ? 'average' : p >= 25 ? 'moderately low' : 'low';
 
 const slicePath = (x: number, y: number, r: number, a0: number, a1: number) => {
   const large = a1 - a0 > Math.PI ? 1 : 0;
@@ -93,7 +92,7 @@ const Pair: React.FC<{dim: Dim; me: number; them: number; themName: string}> = (
   </div>
 );
 
-/** Your results next to someone else's: where you rub, where you are alike, and every score side by side. */
+/** Your results next to someone else's: where you are alike, where you may rub, and every score side by side. */
 const CompareView: React.FC<{me: Person; them: Person; relationship?: string}> = ({me, them, relationship}) => {
   const rows = DIMS.map((d) => {
     const a = Math.round(me.percentiles[d.key] ?? 0);
@@ -102,6 +101,41 @@ const CompareView: React.FC<{me: Person; them: Person; relationship?: string}> =
   });
   const rubRows = rows.filter((r) => r.gap >= RUB_GAP).sort((x, y) => y.gap - x.gap);
   const alike = rows.filter((r) => r.gap <= ALIKE_GAP);
+  // Both high or both low get a card, strongest first; both in the middle get one line.
+  const alikeCards = alike
+    .filter((r) => alikeSide(r.me, r.them))
+    .sort((x, y) => Math.abs((y.me + y.them) / 2 - 50) - Math.abs((x.me + x.them) / 2 - 50));
+  const middle = alike.filter((r) => !alikeSide(r.me, r.them));
+
+  const alikeTitle = (side: 'high' | 'low', a: number, b: number) => {
+    const avg = (a + b) / 2;
+    const strong = side === 'high' ? avg >= 75 : avg < 25;
+    return strong ? `You’re both ${side} in` : `You both lean ${side} in`;
+  };
+
+  const alikeCard = (r: (typeof rows)[number]) => {
+    const side = alikeSide(r.me, r.them)!;
+    const note = alikes[r.d.key]?.[side];
+    return (
+      <article key={r.d.key} className='pp-rub pp-rub--alike'>
+        <h3 className='pp-rub__title'>
+          {alikeTitle(side, r.me, r.them)} {r.d.label}.
+        </h3>
+        <Pair dim={r.d} me={r.me} them={r.them} themName={them.name} />
+        {note && (
+          <>
+            <p>{note.share}</p>
+            <p>
+              <b>Shared blind spot:</b> {note.watch}
+            </p>
+            <p className='pp-rub__try'>
+              <b>Try this together:</b> {note.together}
+            </p>
+          </>
+        )}
+      </article>
+    );
+  };
 
   const rubCard = (r: (typeof rows)[number]) => {
     const note = rubs[r.d.key];
@@ -150,6 +184,34 @@ const CompareView: React.FC<{me: Person; them: Person; relationship?: string}> =
         </header>
 
         <section className='pp-compare__section'>
+          <h2 className='pp-display pp-h3'>Where you’re alike</h2>
+          {alikeCards.length === 0 && middle.length === 0 ? (
+            <p>No scores sit within {ALIKE_GAP} points of each other, so you will often see things differently.</p>
+          ) : (
+            <>
+              {alikeCards.length > 0 && (
+                <div className='pp-compare__rubs'>{alikeCards.slice(0, SHOW_RUBS).map((r) => alikeCard(r))}</div>
+              )}
+              {alikeCards.length > SHOW_RUBS && (
+                <details className='pp-walk__more'>
+                  <summary>
+                    Show {alikeCards.length - SHOW_RUBS} more {alikeCards.length - SHOW_RUBS === 1 ? 'place' : 'places'}{' '}
+                    you’re alike
+                  </summary>
+                  <div className='pp-compare__rubs'>{alikeCards.slice(SHOW_RUBS).map((r) => alikeCard(r))}</div>
+                </details>
+              )}
+              {middle.length > 0 && (
+                <p className='pp-compare__middle'>
+                  You both sit near the middle on <b>{middle.map((r) => r.d.label).join(', ')}</b>, so neither of you
+                  pulls the other far on {middle.length === 1 ? 'it' : 'these'}.
+                </p>
+              )}
+            </>
+          )}
+        </section>
+
+        <section className='pp-compare__section'>
           <h2 className='pp-display pp-h3'>Where you may rub</h2>
           {rubRows.length === 0 ? (
             <p>
@@ -171,20 +233,6 @@ const CompareView: React.FC<{me: Person; them: Person; relationship?: string}> =
             </>
           )}
         </section>
-
-        {alike.length > 0 && (
-          <section className='pp-compare__section'>
-            <h2 className='pp-display pp-h3'>Where you’re alike</h2>
-            <ul className='pp-alike'>
-              {alike.map((r) => (
-                <li key={r.d.key}>
-                  <span className='pp-alike__dot' style={{background: r.d.color}} aria-hidden='true' />
-                  <b>{r.d.label}</b> both {levelWord((r.me + r.them) / 2)} · {ordinal(r.me)} and {ordinal(r.them)}
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
 
         <section className='pp-compare__section'>
           <h2 className='pp-display pp-h3'>Side by side</h2>
