@@ -33,7 +33,6 @@ const DIMS: Dim[] = TRAITS.flatMap((t) => [
   ...t.aspects.map((a) => ({key: a, label: a, color: t.color, trait: false})),
 ]);
 
-
 const slicePath = (x: number, y: number, r: number, a0: number, a1: number) => {
   const large = a1 - a0 > Math.PI ? 1 : 0;
   return `M${x},${y} L${x + r * Math.cos(a0)},${y + r * Math.sin(a0)} A${r},${r} 0 ${large} 1 ${x + r * Math.cos(a1)},${
@@ -93,7 +92,12 @@ const Pair: React.FC<{dim: Dim; me: number; them: number; themName: string}> = (
 );
 
 /** Your results next to someone else's: where you are alike, where you may rub, and every score side by side. */
-const CompareView: React.FC<{me: Person; them: Person; relationship?: string}> = ({me, them, relationship}) => {
+const CompareView: React.FC<{me: Person; them: Person; relationship?: string; after?: React.ReactNode}> = ({
+  me,
+  them,
+  relationship,
+  after,
+}) => {
   const rows = DIMS.map((d) => {
     const a = Math.round(me.percentiles[d.key] ?? 0);
     const b = Math.round(them.percentiles[d.key] ?? 0);
@@ -257,6 +261,7 @@ const CompareView: React.FC<{me: Person; them: Person; relationship?: string}> =
             Each person’s scores compare them with other people of their own sex who took the test.
           </p>
         </section>
+        {after}
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ interface ResultsWalkProps {
   sample?: boolean;
 }
 
-const STEPS = ['Overview', ...TRAITS.map((t) => t.ocean as string), 'Combinations', 'Keep your results'];
+const STEPS = ['Overview', ...TRAITS.map((t) => t.ocean as string), 'Combinations', 'Keep and compare'];
 
 const ord = (n: number) => {
   const v = Math.round(n);
@@ -34,16 +34,16 @@ const levelWord = (p: number) =>
   p >= 90
     ? 'very high'
     : p >= 75
-    ? 'high'
-    : p >= 60
-    ? 'moderately high'
-    : p >= 40
-    ? 'average'
-    : p >= 25
-    ? 'moderately low'
-    : p >= 10
-    ? 'low'
-    : 'very low';
+      ? 'high'
+      : p >= 60
+        ? 'moderately high'
+        : p >= 40
+          ? 'average'
+          : p >= 25
+            ? 'moderately low'
+            : p >= 10
+              ? 'low'
+              : 'very low';
 
 const Scale: React.FC<{label: string; value: number; color: string; big?: boolean}> = ({label, value, color, big}) => (
   <div className={`pp-rscale${big ? ' pp-rscale--big' : ''}`}>
@@ -156,8 +156,8 @@ const SplitCard: React.FC<{
           <p className='pp-split__gap'>{s.gap} points apart</p>
           {s.note ? <p>{s.note}</p> : <p className='pp-small'>A note on this split is coming soon.</p>}
           <p className='pp-small pp-split__frame'>
-            A split isn’t a flaw. It is two real parts of you pulling different ways. Once you can name it, you can
-            stop thinking something is wrong with you.
+            A split isn’t a flaw. It is two real parts of you pulling different ways. Once you can name it, you can stop
+            thinking something is wrong with you.
           </p>
         </>
       ) : (
@@ -277,13 +277,13 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, sha
             <summary>How to read your results</summary>
             <p>
               Every trait and aspect, and where you sit on it, has advantages and disadvantages. That is why the
-              variation exists: there is a place for each kind of personality. Much of what goes well in life comes
-              from finding the place in relationships, work and commitment that fits how you are built.
+              variation exists: there is a place for each kind of personality. Much of what goes well in life comes from
+              finding the place in relationships, work and commitment that fits how you are built.
             </p>
             <p>
-              These results come from your own answers, compared with other {group}. If some descriptions feel
-              harsher than seems fair, you may have been harder on yourself than necessary, or answered on a day you
-              were tired, unhappy or anxious.
+              These results come from your own answers, compared with other {group}. If some descriptions feel harsher
+              than seems fair, you may have been harder on yourself than necessary, or answered on a day you were tired,
+              unhappy or anxious.
             </p>
           </details>
         </div>
@@ -333,8 +333,8 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, sha
                 <Paragraphs trait={t.ocean} score={scores[i]} card={mix.card} />
               </div>
               <p className='pp-small pp-split__frame'>
-                A split isn’t a flaw. It is two real parts of you pulling different ways. Once you can name it, you
-                can stop thinking something is wrong with you.
+                A split isn’t a flaw. It is two real parts of you pulling different ways. Once you can name it, you can
+                stop thinking something is wrong with you.
               </p>
             </section>
           ) : (
@@ -377,8 +377,8 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, sha
           </h2>
           {viewSwitch}
           <p className='pp-lede' style={{margin: '0 0 24px'}}>
-            Every trait has two sides. When yours sit far apart, they can pull against each other. Tap a trait to
-            see how its two sides line up in you.
+            Every trait has two sides. When yours sit far apart, they can pull against each other. Tap a trait to see
+            how its two sides line up in you.
           </p>
           <div className='pp-inside' role='group' aria-label='The two sides of each trait'>
             {TRAITS.map((r, k) => (
@@ -393,7 +393,10 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, sha
                 onClick={() => {
                   setInsideTrait(k);
                   if (window.innerWidth < 900) {
-                    window.setTimeout(() => document.getElementById('pp-combo-note')?.scrollIntoView({block: 'nearest'}), 50);
+                    window.setTimeout(
+                      () => document.getElementById('pp-combo-note')?.scrollIntoView({block: 'nearest'}),
+                      50,
+                    );
                   }
                 }}>
                 <span className='pp-inside__name'>{SOFT_NAME[r.ocean] ?? r.ocean}</span>
@@ -463,7 +466,10 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, sha
                       onClick={() => {
                         setPair([i, j]);
                         if (window.innerWidth < 900) {
-                          window.setTimeout(() => document.getElementById('pp-combo-note')?.scrollIntoView({block: 'nearest'}), 50);
+                          window.setTimeout(
+                            () => document.getElementById('pp-combo-note')?.scrollIntoView({block: 'nearest'}),
+                            50,
+                          );
                         }
                       }}
                     />
@@ -488,11 +494,11 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, sha
       <div className='pp-walk__stage pp-walk__stage--wide'>
         <div className='pp-walk__read'>
           <h2 ref={headRef} tabIndex={-1} className='pp-display pp-h2'>
-            Keep your results
+            Keep and compare
           </h2>
           <p className='pp-lede'>
-            Your whole personality on one page. Download the full report to keep it, or save your five colors to
-            share.
+            Your whole personality on one page. Download the full report, save your five colors, or compare with someone
+            you love.
           </p>
           <figure className='pp-tree-wrap' style={{margin: 0}}>
             <div
@@ -508,10 +514,10 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, sha
             </div>
             <p className='pp-small pp-tree-hint'>Swipe sideways to see the whole tree.</p>
             <figcaption className='pp-small'>
-              Circle size and the number inside show your percentile. The ring around your name is split by your
-              five trait scores. {FACTOR_NAME.stability} averages your Agreeableness, Conscientiousness and low
-              Neuroticism, so its purple slice is 100 minus your Neuroticism. {FACTOR_NAME.plasticity} averages your
-              Extraversion and Openness.
+              Circle size and the number inside show your percentile. The ring around your name is split by your five
+              trait scores. {FACTOR_NAME.stability} averages your Agreeableness, Conscientiousness and low Neuroticism,
+              so its purple slice is 100 minus your Neuroticism. {FACTOR_NAME.plasticity} averages your Extraversion and
+              Openness.
             </figcaption>
           </figure>
           <div style={{display: 'flex', flexWrap: 'wrap', gap: 12}}>
