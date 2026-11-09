@@ -1,7 +1,8 @@
-import {Aspect, Ocean} from './schema';
+import {Aspect} from './schema';
 
 /**
- * Where two people tend to rub when they sit far apart on a trait or aspect.
+ * Where two people tend to rub when they sit far apart on one of the ten aspects.
+ * (Aspect level only: a trait score blends two aspects, and a split trait would mislead.)
  * DRAFTS for Patrick to edit, drawn from his trait notes.
  *
  * {hi} is the person higher on it, {lo} the person lower. Either may be "you" (the reader),
@@ -15,31 +16,6 @@ export interface RubNote {
 }
 
 export const rubs: Record<string, RubNote> = {
-  [Ocean.Extraversion]: {
-    hi: '{hi} may want more people, plans and excitement, and lean toward the fun that is here now.',
-    lo: '{lo} may need quiet to recharge after time with people, and that can look like pulling away.',
-    together: 'Plan social time and recovery time on purpose, and agree ahead of time when to leave.',
-  },
-  [Ocean.Neuroticism]: {
-    hi: '{hi} may feel losses and setbacks more sharply, and want to guard against what could go wrong.',
-    lo: '{lo} may downplay risks and miss how heavy a worry really feels.',
-    together: 'When one of you is anxious, the steadier one can listen first, then help find one small next step.',
-  },
-  [Ocean.Agreeableness]: {
-    hi: '{hi} may give in to keep the peace, then quietly resent it.',
-    lo: '{lo} may say the hard thing bluntly and move on, while the other is still hurting.',
-    together: 'Aim for a fair give and take. Treat resentment as a sign that a need went unspoken, and say it early.',
-  },
-  [Ocean.Conscientiousness]: {
-    hi: '{hi} may feel like the only one who plans, tidies and follows through, and judge the other for it.',
-    lo: '{lo} may feel nagged, judged or boxed in by schedules.',
-    together: '{hi} can keep set “no work” hours, and {lo} can keep a short weekly planning time.',
-  },
-  [Ocean.Openness]: {
-    hi: '{hi} may crave new ideas, places and change.',
-    lo: '{lo} may value what is proven and familiar, and feel pushed.',
-    together: 'You need each other: one brings new ideas, the other keeps them grounded. Take turns choosing.',
-  },
   [Aspect.Enthusiasm]: {
     hi: '{hi} may want celebration and fun that feels like a lot to {lo}.',
     lo: '{lo} may show joy quietly, and that can be mistaken for not caring.',
@@ -53,7 +29,8 @@ export const rubs: Record<string, RubNote> = {
   [Aspect.Withdrawal]: {
     hi: '{hi} may worry ahead, hold back from the unknown, and want a plan for what could go wrong.',
     lo: '{lo} may see that caution as needless and want to push ahead.',
-    together: 'Name the worry, then take new steps together, a little at a time. Avoiding them only makes the fear bigger.',
+    together:
+      'Name the worry, then take new steps together, a little at a time. Avoiding them only makes the fear bigger.',
   },
   [Aspect.Volatility]: {
     hi: '{hi} may get frustrated fast and push back sharply, often when feeling criticized or cornered.',

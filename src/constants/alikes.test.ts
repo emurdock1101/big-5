@@ -1,9 +1,9 @@
-import {Aspect, Ocean} from './schema';
+import {Aspect} from './schema';
 import {alikes, alikeSide} from './alikes';
 
 describe('alike notes', () => {
-  it('has both-high and both-low notes for every trait and aspect', () => {
-    for (const k of [...Object.values(Ocean), ...Object.values(Aspect)]) {
+  it('has both-high and both-low notes for every aspect', () => {
+    for (const k of Object.values(Aspect)) {
       for (const side of ['high', 'low'] as const) {
         expect(alikes[k]?.[side]?.share).toBeTruthy();
         expect(alikes[k]?.[side]?.watch).toBeTruthy();

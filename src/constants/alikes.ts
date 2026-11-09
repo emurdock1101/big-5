@@ -1,9 +1,10 @@
-import {Aspect, Ocean} from './schema';
+import {Aspect} from './schema';
 
 /**
  * Where two people are alike: what they share, the blind spot they share, and something to
  * try together. Being alike in a high score is a different story from being alike in a low one,
- * so each trait and aspect has a "both high" and a "both low" note.
+ * so each of the ten aspects has a "both high" and a "both low" note.
+ * (Aspect level only: a trait score blends two aspects, and a split trait would mislead.)
  *
  * DRAFTS for Patrick to edit, drawn from his trait notes. Written to "you both", so no names.
  */
@@ -19,18 +20,6 @@ export interface AlikeNote {
 }
 
 export const alikes: Record<string, AlikeNote> = {
-  [Ocean.Extraversion]: {
-    high: {
-      share: 'You both draw energy from people and good times, so life together can be full and lively.',
-      watch: 'Together you may overbook, overspend, or say yes to the fun thing before the wise thing.',
-      together: 'Before you say yes as a pair, check the calendar and the budget together.',
-    },
-    low: {
-      share: 'You both value quiet, home and a few deep friendships, and you give each other room to recharge.',
-      watch: 'You may both drift into isolation and let friendships and opportunities slip.',
-      together: 'Plan one social outing a month on purpose, and keep it.',
-    },
-  },
   [Aspect.Enthusiasm]: {
     high: {
       share: 'You both feel joy easily and show it, so celebrating comes naturally.',
@@ -53,18 +42,6 @@ export const alikes: Record<string, AlikeNote> = {
       share: 'You both make room for each other and rarely push.',
       watch: 'Decisions can stall while each of you waits for the other to lead.',
       together: 'Take turns being the one who decides, and set a deadline for it.',
-    },
-  },
-  [Ocean.Neuroticism]: {
-    high: {
-      share: 'You both feel stress deeply, so you understand each other’s worries without long explanations.',
-      watch: 'Worry can feed worry; you may both expect the worst and pass up good risks.',
-      together: 'Build islands of stability together, like regular meals, bedtimes and a weekly check-in.',
-    },
-    low: {
-      share: 'You are both steady under pressure, a calm home in a storm.',
-      watch: 'You may both downplay real risks, and miss each other’s quieter pain.',
-      together: 'Once a week, ask each other: what is weighing on you that I might not see?',
     },
   },
   [Aspect.Withdrawal]: {
@@ -91,18 +68,6 @@ export const alikes: Record<string, AlikeNote> = {
       together: 'Set a regular time to name small irritations while they are still small.',
     },
   },
-  [Ocean.Agreeableness]: {
-    high: {
-      share: 'You both care deeply and want peace, so your relationship can feel gentle and safe.',
-      watch: 'You may both avoid hard conversations, and let others take advantage of you.',
-      together: 'Practice disagreeing kindly on small things, so the big things can be said.',
-    },
-    low: {
-      share: 'You both speak plainly and can handle honest disagreement; neither of you is easily used.',
-      watch: 'Arguments can turn into contests, and tenderness may be rare.',
-      together: 'After a hard conversation, each say one thing you value about the other.',
-    },
-  },
   [Aspect.Compassion]: {
     high: {
       share: 'You both feel other people’s pain and love to help, so you serve well together.',
@@ -127,18 +92,6 @@ export const alikes: Record<string, AlikeNote> = {
       together: 'Agree on a few lines you will not cross when you argue.',
     },
   },
-  [Ocean.Conscientiousness]: {
-    high: {
-      share: 'You both plan, follow through and keep your word, so life runs smoothly.',
-      watch: 'You may both struggle to rest, and judge each other’s mistakes harshly.',
-      together: 'Set “no work” hours together, and forgive small misses quickly.',
-    },
-    low: {
-      share: 'You are both relaxed and flexible, and neither of you nags the other.',
-      watch: 'Bills, chores and goals can slip for both of you.',
-      together: 'Set a short weekly planning time, and choose the few things that must get done.',
-    },
-  },
   [Aspect.Industriousness]: {
     high: {
       share: 'You both love getting things done, and you push each other forward.',
@@ -161,18 +114,6 @@ export const alikes: Record<string, AlikeNote> = {
       share: 'Neither of you minds a little chaos, so you are easy on each other.',
       watch: 'Clutter and missed details can pile up for both of you.',
       together: 'Pick one space to keep in order, and one simple routine to share.',
-    },
-  },
-  [Ocean.Openness]: {
-    high: {
-      share: 'You both love new ideas, places and experiences, so life together rarely gets dull.',
-      watch: 'You may both chase the next new thing and struggle to settle and finish.',
-      together: 'Finish one shared project before you start the next.',
-    },
-    low: {
-      share: 'You both value tradition, stability and what has been proven; you are guardians of what works.',
-      watch: 'You may both resist change, even when it is needed.',
-      together: 'Try one new thing together each season, however small.',
     },
   },
   [Aspect.Interest]: {

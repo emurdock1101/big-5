@@ -1,9 +1,9 @@
-import {Aspect, Ocean} from './schema';
+import {Aspect} from './schema';
 import {fillRub, rubs} from './rubs';
 
 describe('rub notes', () => {
-  it('has a note for every trait and aspect', () => {
-    for (const k of [...Object.values(Ocean), ...Object.values(Aspect)]) {
+  it('has a note for every aspect', () => {
+    for (const k of Object.values(Aspect)) {
       expect(rubs[k]?.hi).toBeTruthy();
       expect(rubs[k]?.lo).toBeTruthy();
       expect(rubs[k]?.together).toBeTruthy();

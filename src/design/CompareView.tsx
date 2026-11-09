@@ -53,7 +53,9 @@ export const NameRing: React.FC<{person: Person; outline?: string}> = ({person, 
     colors: TRAITS.map((t) => t.color),
     weights: TRAITS.map((t) => person.percentiles[t.ocean] ?? 0),
   };
-  const size = Math.max(14, Math.min(26, 150 / Math.max(3, person.name.length)));
+  // First name only, sized to fit inside the ring (about 80 units across at this weight and width).
+  const shown = person.name.trim().split(/\s+/)[0] || person.name;
+  const size = Math.max(10, Math.min(26, 80 / (shown.length * 0.74)));
   return (
     <svg viewBox='0 0 140 140' className='pp-ring' role='img' aria-label={`${person.name}’s five colors`}>
       {outline && <circle cx={70} cy={70} r={68} fill='none' stroke={outline} strokeWidth={4} />}
@@ -68,7 +70,7 @@ export const NameRing: React.FC<{person: Person; outline?: string}> = ({person, 
       ))}
       <circle cx={70} cy={70} r={46} fill='var(--pp-sheet)' />
       <text x={70} y={71} textAnchor='middle' dominantBaseline='middle' className='pp-tree__name' fontSize={size}>
-        {person.name}
+        {shown}
       </text>
     </svg>
   );
@@ -103,8 +105,12 @@ const CompareView: React.FC<{me: Person; them: Person; relationship?: string; af
     const b = Math.round(them.percentiles[d.key] ?? 0);
     return {d, me: a, them: b, gap: Math.abs(a - b)};
   });
-  const rubRows = rows.filter((r) => r.gap >= RUB_GAP).sort((x, y) => y.gap - x.gap);
-  const alike = rows.filter((r) => r.gap <= ALIKE_GAP);
+  // Alike and rub cards use the ten aspects only. A trait score blends two aspects, and when they
+  // split it describes neither person well (high Extraversion can mean high Assertiveness with low
+  // Enthusiasm). Side by side still shows all fifteen scores.
+  const aspectRows = rows.filter((r) => !r.d.trait);
+  const rubRows = aspectRows.filter((r) => r.gap >= RUB_GAP).sort((x, y) => y.gap - x.gap);
+  const alike = aspectRows.filter((r) => r.gap <= ALIKE_GAP);
   // Both high or both low get a card, strongest first; both in the middle get one line.
   const alikeCards = alike
     .filter((r) => alikeSide(r.me, r.them))
@@ -257,9 +263,6 @@ const CompareView: React.FC<{me: Person; them: Person; relationship?: string; af
               </div>
             ))}
           </div>
-          <p className='pp-small' style={{marginTop: 24}}>
-            Each person’s scores compare them with other people of their own sex who took the test.
-          </p>
         </section>
         {after}
       </div>
