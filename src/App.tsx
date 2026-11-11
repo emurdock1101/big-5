@@ -45,6 +45,7 @@ const ResultsPreview = lazy(() => import('./views/ResultsPreview'));
 const TestPreview = lazy(() => import('./views/TestPreview'));
 const Compare = lazy(() => import('./views/Compare'));
 const ComparePreview = lazy(() => import('./views/ComparePreview'));
+const GiftFinderPreview = lazy(() => import('./views/GiftFinderPreview'));
 
 Amplify.configure(awsconfig);
 
@@ -140,7 +141,7 @@ function App() {
   };
 
   // Public pages render straight away; only account pages wait for the sign-in check.
-  const publicPaths = ['/', '/results-preview', '/test-preview', '/compare-preview', '/about', '/faqs', '/contact', '/buy', '/privacy', '/error', '/checkouterror'];
+  const publicPaths = ['/', '/results-preview', '/test-preview', '/compare-preview', '/gift-finder-preview', '/about', '/faqs', '/contact', '/buy', '/privacy', '/error', '/checkouterror'];
   if (loading && !publicPaths.includes(window.location.pathname)) {
     return <React.Fragment />;
   }
@@ -200,6 +201,7 @@ function App() {
             {process.env.NODE_ENV === 'development' && <Route path='/results-preview' element={<ResultsPreview />} />}
             {process.env.NODE_ENV === 'development' && <Route path='/test-preview' element={<TestPreview />} />}
             {process.env.NODE_ENV === 'development' && <Route path='/compare-preview' element={<ComparePreview />} />}
+            {process.env.NODE_ENV === 'development' && <Route path='/gift-finder-preview' element={<GiftFinderPreview />} />}
             <Route path='/compare/:owner/:share' element={<Compare />} />
             <Route path='/' element={<Home loggedIn={!!user.loggedIn} completed={!!user.completed} />} />
             <Route path='/about' element={<About />} />
