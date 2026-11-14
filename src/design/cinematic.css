@@ -1,0 +1,716 @@
+/* Personality+ — the cinematic look (live from Nov 2026): homepage, results, About, FAQs, Buy.
+   Everything here is scoped to .pp-flow--cinematic or .pp-cine-body, so the live
+   light pages (test, contact, privacy, account) are unaffected. Landscapes are drawn as flat planes,
+   Albers-style; no outside images. */
+
+/* ---------- header goes dark while this page is open ---------- */
+
+.pp-cine-body .pp-header {
+  background: #0b1226;
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.pp-cine-body .pp-header a,
+.pp-cine-body .pp-header .pp-textlink,
+.pp-cine-body .pp-wordmark {
+  color: #fff !important;
+}
+
+.pp-cine-body .pp-wordmark__by {
+  color: #b9bacb;
+}
+
+.pp-cine-body .pp-nav a:hover,
+.pp-cine-body .pp-nav a[aria-current='page'] {
+  border-bottom-color: #fff;
+}
+
+.pp-cine-body .pp-header .pp-btn {
+  background: var(--pp-sheet);
+  border-color: var(--pp-sheet);
+  color: var(--pp-ink) !important;
+}
+
+.pp-cine-body .pp-menu-btn {
+  border-color: #fff;
+  color: #fff;
+}
+
+.pp-cine-body .pp-mobile-menu {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.pp-cine-body .pp-mobile-menu a,
+.pp-cine-body .pp-mobile-menu button.pp-textlink {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ---------- rooms ---------- */
+
+.pp-flow--cinematic .pp-room--night {
+  background: radial-gradient(90% 70% at 15% 0%, rgba(58, 129, 205, 0.2), transparent 60%), #0b1226;
+}
+
+.pp-flow--cinematic .pp-room--dawn {
+  background: linear-gradient(180deg, #0b1226 0%, #24163a 50%, #5b1f38 100%);
+  color: #fff;
+}
+
+.pp-flow--cinematic .pp-dock .pp-btn {
+  background: var(--pp-sheet);
+  border-color: var(--pp-sheet);
+  color: var(--pp-ink) !important;
+}
+
+.pp-flow--cinematic .pp-dock {
+  background: #0b1226;
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+/* buttons on dark grounds: light plates with ink type */
+.pp-flow--cinematic .pp-field .pp-btn {
+  background: var(--pp-sheet);
+  border-color: var(--pp-sheet);
+  color: var(--pp-ink) !important;
+}
+
+.pp-flow--cinematic .pp-field .pp-btn:hover {
+  background: #fff;
+}
+
+/* ---------- hero on night ---------- */
+
+.pp-flow--cinematic .pp-hero {
+  padding-bottom: clamp(200px, 26vw, 360px);
+}
+
+.pp-flow--cinematic .pp-hero .pp-verse,
+.pp-flow--cinematic .pp-hero .pp-hero__facts,
+.pp-flow--cinematic .pp-hero .pp-small {
+  color: #b9bfd6;
+}
+
+.pp-flow--cinematic .pp-sliders input[type='range']::-webkit-slider-runnable-track {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.pp-flow--cinematic .pp-sliders input[type='range']::-moz-range-track {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.pp-flow--cinematic .pp-sliders input[type='range']::-webkit-slider-thumb {
+  border-color: #fff;
+}
+
+.pp-flow--cinematic .pp-sliders input[type='range']::-moz-range-thumb {
+  border-color: #fff;
+}
+
+/* ---------- how it works on night ---------- */
+
+.pp-flow--cinematic .pp-room--night .pp-steps {
+  border-top-color: rgba(255, 255, 255, 0.6);
+}
+
+.pp-flow--cinematic .pp-room--night .pp-steps__n {
+  -webkit-text-stroke-color: var(--pp-c);
+}
+
+.pp-flow--cinematic .pp-room--night .pp-steps li:nth-child(2) .pp-steps__n {
+  -webkit-text-stroke-color: var(--pp-a);
+}
+
+.pp-flow--cinematic .pp-room--night .pp-steps li:nth-child(3) .pp-steps__n {
+  -webkit-text-stroke-color: var(--pp-e);
+}
+
+.pp-flow--cinematic .pp-room--night .pp-steps p {
+  color: #d5d7e3;
+}
+
+/* ---------- the band: a row of small landscapes, one per trait ---------- */
+
+.pp-flow--cinematic .pp-flow__band {
+  background: #15172b;
+}
+
+.pp-flow--cinematic .pp-flow__card {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  background: linear-gradient(180deg, rgba(11, 18, 38, 0.15), rgba(11, 18, 38, 0.75)), var(--pp-card) !important;
+  border-right: 2px solid #15172b;
+}
+
+.pp-flow--cinematic .pp-flow__card > span {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- drawn scenes ---------- */
+
+.pp-scene {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+/* ridge planes: far light, near dark (aerial perspective) */
+.pp-scene--ridges .pp-scene__l1 polygon {
+  fill: #2a3a63;
+}
+.pp-scene--ridges .pp-scene__l2 polygon {
+  fill: #1e2c51;
+}
+.pp-scene--ridges .pp-scene__l3 polygon {
+  fill: #172240;
+}
+.pp-scene--ridges .pp-scene__l4 polygon {
+  fill: #15172b;
+}
+
+.pp-scene__fog {
+  fill: #fff;
+  opacity: 0.035;
+}
+
+.pp-scene--hero {
+  height: clamp(240px, 32vw, 480px);
+}
+
+.pp-scene--card {
+  height: 100%;
+}
+
+.pp-scene--card .pp-scene__l1 polygon {
+  fill: rgba(11, 18, 38, 0.35);
+}
+.pp-scene--card .pp-scene__l2 polygon {
+  fill: rgba(11, 18, 38, 0.55);
+}
+.pp-scene--card .pp-scene__l3 polygon {
+  fill: rgba(11, 18, 38, 0.75);
+}
+.pp-scene--card .pp-scene__l4 polygon {
+  fill: #0b1226;
+}
+.pp-scene--card .pp-scene__fog {
+  display: none;
+}
+.pp-scene--card .pp-scene__sun circle {
+  fill: #fff;
+  opacity: 0.85;
+}
+
+/* dawn: warmer planes, a red square sun */
+.pp-scene--dawn {
+  height: 72%;
+}
+.pp-scene--dawn .pp-scene__l1 polygon {
+  fill: #4a1d3c;
+}
+.pp-scene--dawn .pp-scene__l2 polygon {
+  fill: #351837;
+}
+.pp-scene--dawn .pp-scene__l3 polygon {
+  fill: #23152f;
+}
+.pp-scene--dawn .pp-scene__l4 polygon {
+  fill: #15172b;
+}
+
+.pp-flow--cinematic .pp-room--dawn .pp-close {
+  padding-bottom: clamp(80px, 12vw, 180px);
+}
+
+/* the dark sea under the faith room */
+.pp-flow--cinematic #why {
+  padding-bottom: clamp(200px, 24vw, 340px);
+}
+
+.pp-scene--sea {
+  height: clamp(200px, 26vw, 380px);
+}
+
+.pp-scene--waves .pp-scene__wave {
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 2;
+  animation: pp-wave 22s linear infinite;
+}
+.pp-scene--waves .pp-scene__l1 .pp-scene__wave {
+  fill: #2c3d68;
+  animation-duration: 34s;
+}
+.pp-scene--waves .pp-scene__l2 .pp-scene__wave {
+  fill: #213157;
+  animation-duration: 26s;
+  animation-direction: reverse;
+}
+.pp-scene--waves .pp-scene__l3 .pp-scene__wave {
+  fill: #172443;
+  animation-duration: 19s;
+}
+.pp-scene--waves .pp-scene__l4 .pp-scene__wave {
+  fill: #0b1226;
+  animation-duration: 14s;
+  animation-direction: reverse;
+}
+
+@keyframes pp-wave {
+  to {
+    transform: translateX(calc(-1 * var(--len, 360px)));
+  }
+}
+
+.pp-flow:not(.pp-flow--motion) .pp-scene__wave {
+  animation: none;
+}
+
+/* scenes build in: the sun rises, the planes stack up front to back */
+.pp-scene__sun,
+.pp-scene__l {
+  transition: transform 1.4s var(--pp-ease), opacity 1s var(--pp-ease);
+}
+.pp-scene__l2 {
+  transition-delay: 0.1s;
+}
+.pp-scene__l3 {
+  transition-delay: 0.2s;
+}
+.pp-scene__l4 {
+  transition-delay: 0.3s;
+}
+.pp-scene__sun {
+  transition-duration: 2.2s;
+  transition-delay: 0.2s;
+}
+
+.pp-flow--motion .pp-scene:not([data-in]) .pp-scene__l {
+  transform: translateY(70px);
+  opacity: 0;
+}
+
+.pp-flow--motion .pp-scene:not([data-in]) .pp-scene__l4 {
+  transform: none;
+  opacity: 1;
+}
+
+.pp-flow--motion .pp-scene:not([data-in]) .pp-scene__sun {
+  transform: translateY(160px);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-scene__wave {
+    animation: none;
+  }
+}
+
+/* ---------- threads (hero) and the color wheel (sample report) ---------- */
+
+.pp-flow__threadswrap {
+  max-width: 560px;
+}
+
+.pp-threads {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.pp-threads__thread {
+  transition: stroke-width 0.3s var(--pp-ease), opacity 0.3s var(--pp-ease);
+}
+
+.pp-threads__knot {
+  stroke: #0b1226;
+  stroke-width: 3;
+  transition: r 0.3s var(--pp-ease);
+}
+
+/* round slider handles to match the knots */
+.pp-flow--cinematic .pp-sliders input[type='range']::-webkit-slider-thumb {
+  border-radius: 50%;
+}
+
+.pp-flow--cinematic .pp-sliders input[type='range']::-moz-range-thumb {
+  border-radius: 50%;
+}
+
+.pp-flow--cinematic .pp-sliders .pp-chip {
+  border-radius: 50%;
+}
+
+.pp-wheel {
+  display: block;
+  width: 100%;
+  max-width: 160px;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.pp-wheel__arc {
+  stroke-dasharray: var(--dash);
+  transition: stroke-dasharray 0.9s var(--pp-ease);
+}
+
+.pp-flow--motion .pp-wheel:not([data-in]) .pp-wheel__arc {
+  stroke-dasharray: var(--dash0);
+}
+
+/* ---------- round shapes in the dark variant ---------- */
+
+.pp-flow--cinematic .pp-waypoint {
+  border-radius: 50%;
+}
+
+/* the mountains sway gently, each range at its own pace, like the sea */
+.pp-scene--ridges .pp-scene__l polygon {
+  animation: pp-ridge 16s ease-in-out infinite alternate;
+}
+.pp-scene--ridges .pp-scene__l1 polygon {
+  animation-duration: 21s;
+}
+.pp-scene--ridges .pp-scene__l2 polygon {
+  animation-duration: 15s;
+  animation-direction: alternate-reverse;
+}
+.pp-scene--ridges .pp-scene__l3 polygon {
+  animation-duration: 11s;
+}
+.pp-scene--ridges .pp-scene__l4 polygon {
+  animation: none;
+}
+
+.pp-scene__fog {
+  animation: pp-ridge 13s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes pp-ridge {
+  from {
+    transform: translateX(-34px);
+  }
+  to {
+    transform: translateX(34px);
+  }
+}
+
+/* the sun breathes slowly once it has risen */
+.pp-scene__sun circle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pp-sun 7s ease-in-out infinite alternate;
+}
+
+@keyframes pp-sun {
+  to {
+    transform: translateY(-10px) scale(1.04);
+  }
+}
+
+.pp-flow:not(.pp-flow--motion) .pp-scene--ridges polygon,
+.pp-flow:not(.pp-flow--motion) .pp-scene__fog,
+.pp-flow:not(.pp-flow--motion) .pp-scene__sun circle {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-scene--ridges polygon,
+  .pp-scene__fog,
+  .pp-scene__sun circle {
+    animation: none;
+  }
+}
+
+/* clickable threads (results) */
+.pp-threads--pick .pp-threads__hit,
+.pp-threads--pick .pp-threads__knotbtn {
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.pp-threads__ring {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
+  opacity: 0;
+}
+
+.pp-threads__knotbtn:focus {
+  outline: none;
+}
+
+.pp-threads__knotbtn:hover .pp-threads__ring,
+.pp-threads__knotbtn:focus-visible .pp-threads__ring {
+  opacity: 0.9;
+}
+
+/* ---------- results sample (ResultsWalk look='cinematic') ---------- */
+
+.pp.pp-walk--cine {
+  padding-top: 0;
+}
+
+/* the opening band: night sky, a red sun, ridges that fade into the reading page */
+.pp-walk__band {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  background: radial-gradient(90% 80% at 85% 0%, rgba(58, 129, 205, 0.22), transparent 60%), #0b1226;
+  padding: clamp(32px, 4vw, 56px) 0 clamp(190px, 23vw, 310px);
+}
+
+.pp-walk__band > .pp-wrap {
+  position: relative;
+  z-index: 1;
+}
+
+.pp-scene--walk {
+  height: clamp(170px, 22vw, 300px);
+  bottom: -2px;
+}
+
+/* the nearest range is the page itself, so the mountains open straight onto the reading */
+.pp-scene--walk .pp-scene__l4 polygon {
+  fill: var(--pp-sheet);
+}
+
+.pp-walk__band .pp-sample-tag {
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.pp-walk__band .pp-walk__steps button {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.pp-walk__band .pp-walk__steps button:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.pp-walk__band .pp-walk__steps button[aria-current='step'] {
+  background: var(--pp-sheet);
+  color: var(--pp-ink);
+}
+
+/* each step builds in when you arrive at it */
+.pp-walk__swap {
+  animation: pp-walk-in 0.7s var(--pp-ease);
+}
+
+@keyframes pp-walk-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+/* the threads and your aspect scores sit on a dark panel beside the reading */
+.pp-walk--cine .pp-walk__aside {
+  background: radial-gradient(120% 70% at 50% 0%, rgba(58, 129, 205, 0.18), transparent 70%), #0b1226;
+  color: #fff;
+  padding: clamp(16px, 2vw, 28px);
+}
+
+.pp-walk--cine .pp-walk__aside .pp-small {
+  color: #b9bfd6;
+}
+
+.pp-walk--cine .pp-walk__aside .pp-rscale__val {
+  color: #b9bfd6;
+}
+
+.pp-walk--cine .pp-walk__aside .pp-scale__track {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.14) 0 calc(10% - 2px),
+    transparent calc(10% - 2px) 10%
+  );
+}
+
+.pp-walk--cine .pp-walk__aside .pp-threads {
+  max-width: 480px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-walk__swap {
+    animation: none;
+  }
+}
+
+/* Openness ink disappears on the dark panel; use the same lighter green as its threads */
+.pp-walk--cine .pp-walk__aside .pp-scale__fill[style*='52, 75, 71'] {
+  background: #6f9189 !important;
+}
+
+@media (max-width: 560px) {
+  .pp-walk__band {
+    padding-bottom: 130px;
+  }
+  .pp-scene--walk {
+    height: 130px;
+  }
+}
+
+/* ---------- results: Combinations (pairs on a dark panel, as circles) ---------- */
+
+.pp-walk--cine .pp-matrix {
+  background: radial-gradient(120% 70% at 50% 0%, rgba(58, 129, 205, 0.18), transparent 70%), #0b1226;
+  color: #fff;
+  padding: clamp(14px, 2vw, 24px);
+  gap: 8px;
+  max-width: 600px;
+}
+
+.pp-walk--cine .pp-matrix__cell,
+.pp-walk--cine .pp-matrix__self {
+  border-radius: 50%;
+}
+
+.pp-walk--cine .pp-matrix__self {
+  opacity: 0.45;
+}
+
+.pp-walk--cine .pp-matrix__cell[aria-pressed='true'] {
+  outline-color: #fff;
+}
+
+/* ---------- inner pages (About, FAQs, Buy): a lighter dose ---------- */
+
+.pp-cinepage {
+  position: relative;
+  overflow-x: clip;
+}
+
+.pp-cinepage__band {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  background: radial-gradient(90% 80% at 85% 0%, rgba(58, 129, 205, 0.22), transparent 60%), #0b1226;
+}
+
+.pp-scene--page {
+  height: clamp(140px, 18vw, 250px);
+  bottom: -2px;
+}
+
+/* the nearest range is the page itself */
+.pp-scene--page .pp-scene__l4 polygon {
+  fill: var(--pp-sheet);
+}
+
+.pp-cinepage .pp-pagehead {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  padding-bottom: calc(clamp(32px, 4vw, 56px) + clamp(140px, 18vw, 250px));
+}
+
+.pp-cinepage .pp-pagehead .pp-lede {
+  color: #d5d7e3;
+}
+
+.pp-cinepage .pp-pagehead .pp-strip {
+  height: 14px;
+}
+
+/* photos get the teal block offset behind them, as on the homepage */
+.pp-cinepage .pp-member img {
+  box-shadow: 14px 14px 0 var(--pp-c);
+}
+
+/* sections rise in */
+.pp-cinepage [data-cine] {
+  transition: opacity 0.8s var(--pp-ease), translate 0.9s var(--pp-ease);
+}
+
+.pp-cinepage [data-cine='wait'] {
+  opacity: 0;
+  translate: 0 28px;
+}
+
+@media (max-width: 560px) {
+  .pp-scene--page {
+    height: 120px;
+  }
+  .pp-cinepage .pp-pagehead {
+    padding-bottom: 150px;
+  }
+}
+
+/* ---------- full-room pages (sign-in, 404): one night room, mountains along the bottom ---------- */
+
+.pp-cinepage--full {
+  min-height: calc(100vh - var(--pp-header-h));
+  padding-bottom: clamp(150px, 18vw, 260px);
+  color: #fff;
+}
+
+.pp-cinepage--full .pp-cinepage__band {
+  inset: 0;
+}
+
+.pp-scene--room {
+  height: clamp(170px, 22vw, 300px);
+  bottom: -2px;
+}
+
+.pp-cinepage--full > .pp {
+  position: relative;
+  z-index: 1;
+}
+
+.pp-cinepage--full .pp-auth,
+.pp-cinepage--full .pp-lost {
+  padding-bottom: 0;
+}
+
+.pp-cinepage--full .pp-auth__head .pp-lede,
+.pp-cinepage--full .pp-lost .pp-lede {
+  color: #d5d7e3;
+}
+
+.pp-cinepage--full .pp-auth__form {
+  color: var(--pp-ink);
+}
+
+.pp-cinepage--full .pp-lost .pp-btn {
+  background: var(--pp-sheet);
+  border-color: var(--pp-sheet);
+  color: var(--pp-ink) !important;
+}
+
+/* ---------- the test's sticky progress bar sits on the night ground too ---------- */
+
+.pp-cine-body .pp > .pp-header {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+/* buttons and small print that sit inside a dark title block (checkout error, submit) */
+.pp-cinepage .pp-pagehead .pp-btn {
+  background: var(--pp-sheet);
+  border-color: var(--pp-sheet);
+  color: var(--pp-ink) !important;
+}
+
+.pp-cinepage .pp-pagehead .pp-btn--ghost {
+  background: transparent;
+  border-color: #fff;
+  color: #fff !important;
+}
+
+.pp-cinepage .pp-pagehead .pp-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.pp-cinepage .pp-pagehead .pp-small {
+  color: #b9bfd6;
+}

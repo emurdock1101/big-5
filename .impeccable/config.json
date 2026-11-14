@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "permanent marker",
+        "createdAt": "2026-11-14T00:11:21.847Z",
+        "reason": "site-brief.md 'Next project' (agreed direction #2): hand-lettered margin notes; sample only, add to DESIGN.md if Patrick approves"
+      }
+    ]
+  }
+}

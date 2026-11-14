@@ -10,7 +10,8 @@ import About from './views/About';
 import Contact from './views/Contact';
 import FAQs from './views/Faqs';
 import ErrorPage from './views/Error';
-import Home from './views/Home';
+import HomeCinematic from './views/HomeCinematic';
+import CinePage from './views/CinePage';
 import BuyTest from './views/BuyTest';
 import CheckoutErrorPage from './views/CheckoutError';
 // Components
@@ -45,6 +46,7 @@ const ResultsPreview = lazy(() => import('./views/ResultsPreview'));
 const TestPreview = lazy(() => import('./views/TestPreview'));
 const Compare = lazy(() => import('./views/Compare'));
 const ComparePreview = lazy(() => import('./views/ComparePreview'));
+const GiftFinderPreview = lazy(() => import('./views/GiftFinderPreview'));
 
 Amplify.configure(awsconfig);
 
@@ -91,6 +93,11 @@ function App() {
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  // The cinematic look darkens the site header on every page.
+  useEffect(() => {
+    document.body.classList.add('pp-cine-body');
   }, []);
 
   // Check Cognito for user on mount
@@ -140,7 +147,7 @@ function App() {
   };
 
   // Public pages render straight away; only account pages wait for the sign-in check.
-  const publicPaths = ['/', '/results-preview', '/test-preview', '/compare-preview', '/about', '/faqs', '/contact', '/buy', '/privacy', '/error', '/checkouterror'];
+  const publicPaths = ['/', '/results-preview', '/test-preview', '/compare-preview', '/gift-finder-preview', '/home-flow-preview', '/about', '/faqs', '/contact', '/buy', '/privacy', '/error', '/checkouterror'];
   if (loading && !publicPaths.includes(window.location.pathname)) {
     return <React.Fragment />;
   }
@@ -164,7 +171,11 @@ function App() {
               element={
                 <ProtectedRoute
                   type={'loggedInAndUncompleted'}
-                  component={<Quiz onComplete={completeTest} questionData={questionData} />}
+                  component={
+                    <CinePage>
+                      <Quiz onComplete={completeTest} questionData={questionData} />
+                    </CinePage>
+                  }
                 />
               }
             />
@@ -173,41 +184,81 @@ function App() {
               element={
                 <ProtectedRoute
                   type={'loggedInAndUncompleted'}
-                  component={<Submit onComplete={() => {}} prevStep={() => {}} />}
+                  component={
+                    <CinePage>
+                      <Submit onComplete={() => {}} prevStep={() => {}} />
+                    </CinePage>
+                  }
                 />
               }
             />
-            <Route path='/results' element={<ProtectedRoute type={'loggedInAndCompleted'} component={<Results />} />} />
+            <Route path='/results' element={<ProtectedRoute type={'loggedInAndCompleted'} component={<CinePage><Results /></CinePage>} />} />
             <Route
               path='/reset'
-              element={<ProtectedRoute type={'loggedOut'} component={<Forgot onLogIn={assessLoggedInState} />} />}
+              element={<ProtectedRoute type={'loggedOut'} component={
+                    <CinePage full>
+                      <Forgot onLogIn={assessLoggedInState} />
+                    </CinePage>
+                  } />}
             />
             <Route
               path='/login'
-              element={<ProtectedRoute type={'loggedOut'} component={<Login onLogIn={assessLoggedInState} />} />}
+              element={<ProtectedRoute type={'loggedOut'} component={
+                    <CinePage full>
+                      <Login onLogIn={assessLoggedInState} />
+                    </CinePage>
+                  } />}
             />
             <Route
               path='/signup'
-              element={<ProtectedRoute type={'loggedOut'} component={<Signup onLogIn={assessLoggedInState} />} />}
+              element={<ProtectedRoute type={'loggedOut'} component={
+                    <CinePage full>
+                      <Signup onLogIn={assessLoggedInState} />
+                    </CinePage>
+                  } />}
             />
-            <Route path='/buy' element={<ProtectedRoute type={'loggedOut'} component={<BuyTest />} />} />
+            <Route path='/buy' element={<ProtectedRoute type={'loggedOut'} component={<CinePage><BuyTest /></CinePage>} />} />
 
-            <Route path='/admin' element={<ProtectedRoute type={'admin'} component={<AdminView />} />} />
+            <Route path='/admin' element={<ProtectedRoute type={'admin'} component={<CinePage><AdminView /></CinePage>} />} />
             <Route
               path='/admin/user/:email/:subId'
-              element={<ProtectedRoute type={'admin'} component={<AdminUserResults />} />}
+              element={<ProtectedRoute type={'admin'} component={<CinePage><AdminUserResults /></CinePage>} />}
             />
             {process.env.NODE_ENV === 'development' && <Route path='/results-preview' element={<ResultsPreview />} />}
-            {process.env.NODE_ENV === 'development' && <Route path='/test-preview' element={<TestPreview />} />}
+            {process.env.NODE_ENV === 'development' && <Route path='/test-preview' element={<CinePage><TestPreview /></CinePage>} />}
             {process.env.NODE_ENV === 'development' && <Route path='/compare-preview' element={<ComparePreview />} />}
-            <Route path='/compare/:owner/:share' element={<Compare />} />
-            <Route path='/' element={<Home loggedIn={!!user.loggedIn} completed={!!user.completed} />} />
-            <Route path='/about' element={<About />} />
-            <Route path='/faqs' element={<FAQs />} />
-            <Route path='/contact' element={<Contact />} />
-            <Route path='/privacy' element={<Privacy />} />
-            <Route path='/error' element={<ErrorPage />} />
-            <Route path='/checkouterror' element={<CheckoutErrorPage />} />
+            {process.env.NODE_ENV === 'development' && <Route path='/gift-finder-preview' element={<GiftFinderPreview />} />}
+            {process.env.NODE_ENV === 'development' && (
+              <Route
+                path='/home-flow-preview'
+                element={<HomeCinematic variant='flow' loggedIn={!!user.loggedIn} completed={!!user.completed} />}
+              />
+            )}
+            <Route path='/compare/:owner/:share' element={<CinePage><Compare /></CinePage>} />
+            <Route
+              path='/'
+              element={<HomeCinematic variant='cinematic' loggedIn={!!user.loggedIn} completed={!!user.completed} />}
+            />
+            <Route
+              path='/about'
+              element={
+                <CinePage>
+                  <About />
+                </CinePage>
+              }
+            />
+            <Route
+              path='/faqs'
+              element={
+                <CinePage>
+                  <FAQs />
+                </CinePage>
+              }
+            />
+            <Route path='/contact' element={<CinePage><Contact /></CinePage>} />
+            <Route path='/privacy' element={<CinePage><Privacy /></CinePage>} />
+            <Route path='/error' element={<CinePage full><ErrorPage /></CinePage>} />
+            <Route path='/checkouterror' element={<CinePage><CheckoutErrorPage /></CinePage>} />
             <Route path='*' element={<Navigate to='/error' replace />} />
           </Routes>
           </Suspense>

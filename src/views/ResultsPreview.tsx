@@ -27,6 +27,7 @@ const SAMPLE: Record<string, number> = {
 /** Development-only page: the results walk with sample scores, no login needed. */
 const ResultsPreview: React.FC = () => (
   <ResultsWalk
+    look='cinematic'
     percentiles={SAMPLE}
     gender='male'
     name='Alex'

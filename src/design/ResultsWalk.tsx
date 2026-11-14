@@ -1,5 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import ColorPlate from './ColorPlate';
+import Threads from './Threads';
+import Scene from './Scene';
 import {BOOKING_LABEL, BOOKING_URL, SOFT_NAME, TRAITS} from './traits';
 import {getInterpretation, getScoreLevel} from '../utils/interpretations.utils';
 import {getShortWriteup, ShortWriteup} from '../constants/shortWriteups';
@@ -20,6 +22,11 @@ interface ResultsWalkProps {
   onDownload: () => void;
   /** Shown on the preview page only. */
   sample?: boolean;
+  /**
+   * 'cinematic' (the live look, Nov 2026): threads instead of the color plate, a dark band with
+   * mountains, a dark panel beside the reading. Left unset, the earlier light look with the plate.
+   */
+  look?: 'cinematic';
 }
 
 const STEPS = ['Overview', ...TRAITS.map((t) => t.ocean as string), 'Combinations', 'Keep and compare'];
@@ -170,44 +177,11 @@ const SplitCard: React.FC<{
   );
 };
 
-/** Save the person's color plate as a shareable image. */
-function savePlate(scores: number[]) {
-  const c = document.createElement('canvas');
-  c.width = 1080;
-  c.height = 1350;
-  const g = c.getContext('2d');
-  if (!g) return;
-  g.fillStyle = '#ebeced';
-  g.fillRect(0, 0, c.width, c.height);
-  const w = scores.map((s) => 0.35 + s / 100);
-  const tot = w.reduce((a, b) => a + b, 0);
-  let inset = 0;
-  const S = 920;
-  const X = 80;
-  const Y = 110;
-  TRAITS.forEach((t, i) => {
-    const top = ((inset * 1.25) / 100) * S;
-    const side = (inset / 100) * S;
-    const bottom = ((inset * 0.75) / 100) * S;
-    g.fillStyle = t.color;
-    g.fillRect(X + side, Y + top, S - 2 * side, S - top - bottom);
-    inset += (w[i] / tot) * 46;
-  });
-  g.fillStyle = '#15172b';
-  g.font = '800 46px Archivo, sans-serif';
-  g.fillText('My five colors', X, 1130);
-  g.font = '600 30px Archivo, sans-serif';
-  g.fillText(TRAITS.map((t, i) => `${t.ocean[0]} ${Math.round(scores[i])}`).join('    '), X, 1188);
-  g.fillStyle = '#4a4c60';
-  g.font = '500 28px Archivo, sans-serif';
-  g.fillText('Personality+ by Patrick Knicely', X, 1250);
-  const a = document.createElement('a');
-  a.download = 'my-five-colors.png';
-  a.href = c.toDataURL('image/png');
-  a.click();
-}
-
-const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, share, onDownload, sample}) => {
+const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, share, onDownload, sample, look}) => {
+  const cine = look === 'cinematic';
+  const [motion] = useState(
+    () => typeof window !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
   const [step, setStep] = useState(0);
   const [pair, setPair] = useState<[number, number]>([0, 2]);
   const [view, setView] = useState<'between' | 'inside'>('between');
@@ -242,7 +216,17 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, sha
     </div>
   );
 
-  const plate = (focus: number | null) => (
+  const plate = (focus: number | null) =>
+    cine ? (
+      <Threads
+        scores={scores}
+        focus={focus}
+        swell={false}
+        motion={motion}
+        onPick={(i) => go(i + 1)}
+        label={`Your threads. ${TRAITS.map((t, i) => `${t.ocean} ${ord(scores[i])} percentile`).join(', ')}.`}
+      />
+    ) : (
     <ColorPlate
       scores={scores}
       focus={focus}
@@ -436,7 +420,7 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, sha
           </h2>
           {viewSwitch}
           <p className='pp-lede' style={{margin: '0 0 24px'}}>
-            Every square is a pair. Tap one to see how those two traits play off each other in you.
+            Every {cine ? 'circle' : 'square'} is a pair. Tap one to see how those two traits play off each other in you.
           </p>
           <div className='pp-matrix' role='group' aria-label='Trait pairs'>
             <span aria-hidden='true' />
@@ -497,8 +481,7 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, sha
             Keep and compare
           </h2>
           <p className='pp-lede'>
-            Your whole personality on one page. Download the full report, save your five colors, or compare with someone
-            you love.
+            Your whole personality on one page. Download the full report, or compare with someone you love.
           </p>
           <figure className='pp-tree-wrap' style={{margin: 0}}>
             <div
@@ -524,9 +507,6 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, sha
             <button type='button' className='pp-btn' onClick={onDownload}>
               Download my report (PDF)
             </button>
-            <button type='button' className='pp-btn pp-btn--ghost' onClick={() => savePlate(scores)}>
-              Save my colors
-            </button>
           </div>
           {share}
           <div className='pp-walk__aspect'>
@@ -541,39 +521,71 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, sha
     );
   }
 
+  const top = (
+    <div className='pp-walk__top'>
+      <h1 className='pp-display pp-h2'>Your results</h1>
+      {sample && <span className='pp-sample-tag'>Sample scores, for preview</span>}
+    </div>
+  );
+
+  const steps = (
+    <nav className='pp-walk__steps' aria-label='Results sections'>
+      <ol>
+        {STEPS.map((s, i) => (
+          <li key={s}>
+            <button
+              type='button'
+              aria-current={step === i ? 'step' : undefined}
+              style={{'--pp-step': i >= 1 && i <= 5 ? TRAITS[i - 1].color : 'var(--pp-ink)'} as React.CSSProperties}
+              onClick={() => go(i)}>
+              {SOFT_NAME[s] ?? (s === 'Combinations' ? 'Combi\u00ADnations' : s)}
+            </button>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+
+  const stepNav = (
+    <div className='pp-walk__nav'>
+      <button type='button' className='pp-btn pp-btn--ghost' disabled={step === 0} onClick={() => go(step - 1)}>
+        Back
+      </button>
+      {step < STEPS.length - 1 && (
+        <button type='button' className='pp-btn' onClick={() => go(step + 1)}>
+          Next: {STEPS[step + 1]}
+        </button>
+      )}
+    </div>
+  );
+
+  if (cine) {
+    return (
+      <div className='pp pp-walk pp-walk--cine'>
+        <header className='pp-walk__band'>
+          <Scene kind='ridges' className='pp-scene--walk' sun={TRAITS[0].color} sunX={1110} sunY={175} sunFront />
+          <div className='pp-wrap'>
+            {top}
+            {steps}
+          </div>
+        </header>
+        <div className='pp-wrap'>
+          <div key={step} className='pp-walk__swap'>
+            {body}
+          </div>
+          {stepNav}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='pp pp-walk'>
       <div className='pp-wrap'>
-        <div className='pp-walk__top'>
-          <h1 className='pp-display pp-h2'>Your results</h1>
-          {sample && <span className='pp-sample-tag'>Sample scores, for preview</span>}
-        </div>
-        <nav className='pp-walk__steps' aria-label='Results sections'>
-          <ol>
-            {STEPS.map((s, i) => (
-              <li key={s}>
-                <button
-                  type='button'
-                  aria-current={step === i ? 'step' : undefined}
-                  style={{'--pp-step': i >= 1 && i <= 5 ? TRAITS[i - 1].color : 'var(--pp-ink)'} as React.CSSProperties}
-                  onClick={() => go(i)}>
-                  {SOFT_NAME[s] ?? (s === 'Combinations' ? 'Combi\u00ADnations' : s)}
-                </button>
-              </li>
-            ))}
-          </ol>
-        </nav>
+        {top}
+        {steps}
         {body}
-        <div className='pp-walk__nav'>
-          <button type='button' className='pp-btn pp-btn--ghost' disabled={step === 0} onClick={() => go(step - 1)}>
-            Back
-          </button>
-          {step < STEPS.length - 1 && (
-            <button type='button' className='pp-btn' onClick={() => go(step + 1)}>
-              Next: {STEPS[step + 1]}
-            </button>
-          )}
-        </div>
+        {stepNav}
       </div>
     </div>
   );
