@@ -1667,6 +1667,15 @@ p {
   margin: 8px 0 0;
 }
 
+/* keep the pair note's bars and labels inside its card on narrow phones */
+.pp-walk__note {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pp-walk__note .pp-rscale__val {
+  white-space: normal;
+}
+
 @media (max-width: 900px) {
   .pp-walk__stage,
   .pp-walk__stage--combo {

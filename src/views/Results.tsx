@@ -72,6 +72,7 @@ const Results: React.FC = () => {
 
   return (
     <ResultsWalk
+      look='cinematic'
       percentiles={percentiles}
       gender={gender}
       name={name}
