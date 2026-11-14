@@ -205,13 +205,6 @@ const ResultsWalk: React.FC<ResultsWalkProps> = ({percentiles, gender, name, sha
 
   const go = (i: number) => setStep(Math.max(0, Math.min(STEPS.length - 1, i)));
 
-  // The cinematic sample darkens the site header too, only while it is open.
-  useEffect(() => {
-    if (!cine) return;
-    document.body.classList.add('pp-cine-body');
-    return () => document.body.classList.remove('pp-cine-body');
-  }, [cine]);
-
   const viewSwitch = (
     <div className='pp-switch' role='group' aria-label='Which combinations to show'>
       <button type='button' aria-pressed={view === 'between'} onClick={() => setView('between')}>

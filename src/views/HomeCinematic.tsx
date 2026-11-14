@@ -88,13 +88,6 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
     () => typeof window !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
 
-  // The dark variant darkens the site header too, only while this page is open.
-  useEffect(() => {
-    if (!cine) return;
-    document.body.classList.add('pp-cine-body');
-    return () => document.body.classList.remove('pp-cine-body');
-  }, [cine]);
-
   // The hand-lettering face, loaded only for this sample.
   useEffect(() => {
     const id = 'pp-flow-font';

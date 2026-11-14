@@ -593,7 +593,6 @@
   top: 0;
   left: 0;
   right: 0;
-  min-height: 320px;
   overflow: hidden;
   background: radial-gradient(90% 80% at 85% 0%, rgba(58, 129, 205, 0.22), transparent 60%), #0b1226;
 }
@@ -645,4 +644,73 @@
   .pp-cinepage .pp-pagehead {
     padding-bottom: 150px;
   }
+}
+
+/* ---------- full-room pages (sign-in, 404): one night room, mountains along the bottom ---------- */
+
+.pp-cinepage--full {
+  min-height: calc(100vh - var(--pp-header-h));
+  padding-bottom: clamp(150px, 18vw, 260px);
+  color: #fff;
+}
+
+.pp-cinepage--full .pp-cinepage__band {
+  inset: 0;
+}
+
+.pp-scene--room {
+  height: clamp(170px, 22vw, 300px);
+  bottom: -2px;
+}
+
+.pp-cinepage--full > .pp {
+  position: relative;
+  z-index: 1;
+}
+
+.pp-cinepage--full .pp-auth,
+.pp-cinepage--full .pp-lost {
+  padding-bottom: 0;
+}
+
+.pp-cinepage--full .pp-auth__head .pp-lede,
+.pp-cinepage--full .pp-lost .pp-lede {
+  color: #d5d7e3;
+}
+
+.pp-cinepage--full .pp-auth__form {
+  color: var(--pp-ink);
+}
+
+.pp-cinepage--full .pp-lost .pp-btn {
+  background: var(--pp-sheet);
+  border-color: var(--pp-sheet);
+  color: var(--pp-ink) !important;
+}
+
+/* ---------- the test's sticky progress bar sits on the night ground too ---------- */
+
+.pp-cine-body .pp > .pp-header {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+/* buttons and small print that sit inside a dark title block (checkout error, submit) */
+.pp-cinepage .pp-pagehead .pp-btn {
+  background: var(--pp-sheet);
+  border-color: var(--pp-sheet);
+  color: var(--pp-ink) !important;
+}
+
+.pp-cinepage .pp-pagehead .pp-btn--ghost {
+  background: transparent;
+  border-color: #fff;
+  color: #fff !important;
+}
+
+.pp-cinepage .pp-pagehead .pp-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.pp-cinepage .pp-pagehead .pp-small {
+  color: #b9bfd6;
 }
