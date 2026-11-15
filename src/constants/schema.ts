@@ -54,6 +54,8 @@ export type User = {
   loggedIn?: boolean;
   completed?: boolean;
   isAdmin?: boolean;
+  /** In the Cognito group for people who bought the Gift Finder. */
+  hasGiftFinder?: boolean;
 };
 
 export type ScoreLevel = 'veryLow' | 'low' | 'modLow' | 'average' | 'modHigh' | 'high' | 'veryHigh';

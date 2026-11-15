@@ -25,6 +25,7 @@ const TITLES: Record<string, string> = {
   '/compare-preview': `Compare preview · ${SITE}`,
   '/gift-finder-preview': `Gift Finder preview · ${SITE}`,
   '/gift-finder': `Gift Finder · ${SITE}`,
+  '/gift-finder-buy-preview': `Gift Finder buy preview · ${SITE}`,
 };
 
 /** On page change: set the tab title, then scroll to top or to the #section the link names. */
