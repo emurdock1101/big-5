@@ -212,7 +212,12 @@ const Ranker: React.FC<{
       {order.length > KEEP_MIN && (
         <div className='pp-gf-keep'>
           <span>Write about my top</span>
-          <button type='button' className='pp-gf-keep__btn' aria-label='Keep one fewer' disabled={kept <= 1} onClick={() => setKeep(kept - 1)}>
+          <button
+            type='button'
+            className='pp-gf-keep__btn'
+            aria-label='Keep one fewer'
+            disabled={kept <= 1}
+            onClick={() => setKeep(kept - 1)}>
             −
           </button>
           <b aria-live='polite'>{kept}</b>
@@ -256,7 +261,9 @@ const Ranker: React.FC<{
                   onPointerUp={() => setDrag(null)}
                   onPointerCancel={() => setDrag(null)}>
                   <svg viewBox='0 0 12 20' width='12' height='20'>
-                    {[3, 10, 17].map((cy) => [3, 9].map((cx) => <circle key={`${cx}${cy}`} cx={cx} cy={cy} r='1.8' fill='currentColor' />))}
+                    {[3, 10, 17].map((cy) =>
+                      [3, 9].map((cx) => <circle key={`${cx}${cy}`} cx={cx} cy={cy} r='1.8' fill='currentColor' />),
+                    )}
                   </svg>
                 </span>
                 <span className='pp-gf-row__num'>{i < kept ? i + 1 : ''}</span>
@@ -265,10 +272,18 @@ const Ranker: React.FC<{
                   <span className='pp-gf-row__tag'>{x.aspect}</span>
                 </span>
                 <span className='pp-gf-row__arrows'>
-                  <button type='button' aria-label={`Move up: ${x.text}`} disabled={i === 0} onClick={() => move(i, i - 1)}>
+                  <button
+                    type='button'
+                    aria-label={`Move up: ${x.text}`}
+                    disabled={i === 0}
+                    onClick={() => move(i, i - 1)}>
                     ↑
                   </button>
-                  <button type='button' aria-label={`Move down: ${x.text}`} disabled={i === order.length - 1} onClick={() => move(i, i + 1)}>
+                  <button
+                    type='button'
+                    aria-label={`Move down: ${x.text}`}
+                    disabled={i === order.length - 1}
+                    onClick={() => move(i, i + 1)}>
                     ↓
                   </button>
                 </span>
@@ -374,7 +389,11 @@ const Writer: React.FC<{
         </p>
 
         <div className='pp-gf-sheet__nav'>
-          <button type='button' className='pp-btn pp-btn--ghost pp-btn--sm' disabled={at === 0} onClick={() => goTo(at - 1)}>
+          <button
+            type='button'
+            className='pp-btn pp-btn--ghost pp-btn--sm'
+            disabled={at === 0}
+            onClick={() => goTo(at - 1)}>
             Previous {n.one}
           </button>
           {at < ids.length - 1 && (
@@ -390,7 +409,11 @@ const Writer: React.FC<{
 
 /* ---------- putting it together ---------- */
 
-const Together: React.FC<{gifts: string[]; blinds: string[]; entries: Record<string, Entry>}> = ({gifts, blinds, entries}) => {
+const Together: React.FC<{gifts: string[]; blinds: string[]; entries: Record<string, Entry>}> = ({
+  gifts,
+  blinds,
+  entries,
+}) => {
   const [g, setG] = useState<string[]>(gifts.slice(0, 3));
   const [b, setB] = useState<string[]>(blinds.slice(0, 2));
   const [use, setUse] = useState<string>(gifts[0] ?? '');
@@ -399,13 +422,14 @@ const Together: React.FC<{gifts: string[]; blinds: string[]; entries: Record<str
   useEffect(() => {
     setG((s) => (s.length ? s.filter((x) => gifts.includes(x)) : gifts.slice(0, 3)));
     setB((s) => (s.length ? s.filter((x) => blinds.includes(x)) : blinds.slice(0, 2)));
-    setUse((u) => (gifts.includes(u) ? u : gifts[0] ?? ''));
+    setUse((u) => (gifts.includes(u) ? u : (gifts[0] ?? '')));
   }, [gifts, blinds]);
 
   const toggle = (list: string[], set: (v: string[]) => void, id: string, max: number) =>
     set(list.includes(id) ? list.filter((x) => x !== id) : list.length >= max ? list : [...list, id]);
   /** "Make friends easily" -> "I make friends easily"; "My mood can change a lot" stays as is. */
-  const iPhrase = (text: string) => (/^my /i.test(text) ? `my ${text.slice(3)}` : `I ${text[0].toLowerCase()}${text.slice(1)}`);
+  const iPhrase = (text: string) =>
+    /^my /i.test(text) ? `my ${text.slice(3)}` : `I ${text[0].toLowerCase()}${text.slice(1)}`;
   const words = (ids: string[]) => {
     const t = ids.map((id) => iPhrase(itemById(id)!.text));
     return t.length <= 1 ? t.join('') : `${t.slice(0, -1).join(', ')} and ${t[t.length - 1]}`;
@@ -419,7 +443,16 @@ const Together: React.FC<{gifts: string[]; blinds: string[]; entries: Record<str
   if (!gifts.length) return null;
 
   return (
-    <section className='pp-gf-together'>
+    // The ending sits in the dawn scene, as the homepage closes.
+    <section className='pp-gf-together pp-gf-room pp-gf-room--dawn'>
+      <Scene
+        kind='ridges'
+        className='pp-scene--dawn pp-scene--gfdawn'
+        sun={TRAITS[0].color}
+        sunX={1060}
+        sunY={210}
+        sunFront
+      />
       <h2 className='pp-display pp-h3'>Putting it together</h2>
       <p className='pp-small' style={{margin: 0}}>
         Tap to choose which gifts (up to 3) and blind spots (up to 2) go into your statement.
@@ -466,7 +499,13 @@ const Together: React.FC<{gifts: string[]; blinds: string[]; entries: Record<str
           </select>{' '}
           <br />
           to serve{' '}
-          <input aria-label='Who you will serve' value={who} onChange={(e) => setWho(e.target.value)} placeholder='whom?' />.
+          <input
+            aria-label='Who you will serve'
+            value={who}
+            onChange={(e) => setWho(e.target.value)}
+            placeholder='whom?'
+          />
+          .
         </p>
       </blockquote>
       {serveHint && <p className='pp-small'>You wrote that this gift could serve: {serveHint}</p>}
@@ -544,17 +583,21 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
     lede = UNIQUE.abcd.map((x) => x.name).join(' · ');
     body = <Unique p={p} answers={answers} setAnswer={setAnswer} />;
   } else if (step === 4) {
+    // A night room: the move from personality to imager is a threshold, like the site's dark openings.
     body = (
-      <div className='pp-gf-imager'>
-        <div className='pp-gf-prose'>
-          {IMAGER.draft && <span className='pp-gf-draft'>Draft · Patrick to write this page</span>}
-          {IMAGER.paragraphs.map((t) => (
-            <p key={t}>{t}</p>
-          ))}
-          <p className='pp-small'>{IMAGER.verse}</p>
+      <section className='pp-gf-room pp-gf-room--night'>
+        <Scene kind='ridges' className='pp-scene--gfroom' sun={TRAITS[0].color} sunX={1180} sunY={150} sunFront />
+        <div className='pp-gf-imager'>
+          <div className='pp-gf-prose'>
+            {IMAGER.draft && <span className='pp-gf-draft'>Draft · Patrick to write this page</span>}
+            {IMAGER.paragraphs.map((t) => (
+              <p key={t}>{t}</p>
+            ))}
+            <p className='pp-small'>{IMAGER.verse}</p>
+          </div>
+          <ImagerTree name={name} p={p} gifts={[]} blinds={[]} entries={entries} seed />
         </div>
-        <ImagerTree name={name} p={p} gifts={[]} blinds={[]} entries={entries} seed />
-      </div>
+      </section>
     );
   } else if (cur.kind && cur.stage === 'pick') {
     const n = NOUN[cur.kind];
@@ -569,7 +612,16 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
         </span>
       </>
     );
-    body = <Picker key={cur.kind} kind={cur.kind} p={p} picked={picked[cur.kind]} toggle={toggle(cur.kind)} review={review} />;
+    body = (
+      <Picker
+        key={cur.kind}
+        kind={cur.kind}
+        p={p}
+        picked={picked[cur.kind]}
+        toggle={toggle(cur.kind)}
+        review={review}
+      />
+    );
   } else if (cur.kind && cur.stage === 'rank') {
     const kind = cur.kind;
     title = kind === 'gift' ? 'Which gifts matter most?' : 'Which blind spots cost you most?';
@@ -603,7 +655,14 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
     lede = 'What you have been given, and where you are growing, in your own words.';
     body = (
       <div className='pp-gf-flow'>
-        <ImagerTree name={name} p={p} gifts={top('gift')} blinds={top('blind')} entries={entries} onWrite={openWriter} />
+        <ImagerTree
+          name={name}
+          p={p}
+          gifts={top('gift')}
+          blinds={top('blind')}
+          entries={entries}
+          onWrite={openWriter}
+        />
         <Together gifts={top('gift')} blinds={top('blind')} entries={entries} />
         <div>
           <button type='button' className='pp-btn' disabled>
@@ -626,8 +685,8 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
               <div className='pp-gf-sampletools'>
                 <span className='pp-sample-tag'>Sample scores and draft wording, for preview</span>
                 <label className='pp-gf-reviewtoggle'>
-                  <input type='checkbox' checked={review} onChange={(e) => setReview(e.target.checked)} /> Show where each
-                  item comes from
+                  <input type='checkbox' checked={review} onChange={(e) => setReview(e.target.checked)} /> Show where
+                  each item comes from
                 </label>
               </div>
             )}
