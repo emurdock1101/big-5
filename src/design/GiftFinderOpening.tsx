@@ -1,8 +1,17 @@
 import React, {useState} from 'react';
 import {TRAITS, SOFT_NAME} from './traits';
+import Threads from './Threads';
 import {Ocean} from '../constants/schema';
 import {motivationFor} from '../constants/giftFinder';
-import {ANEW, DISCOVERING, predict, reflectionQuestion, SCENARIOS, SCORES_PAGE, UNIQUE} from '../constants/giftFinderPages';
+import {
+  ANEW,
+  DISCOVERING,
+  predict,
+  reflectionQuestion,
+  SCENARIOS,
+  SCORES_PAGE,
+  UNIQUE,
+} from '../constants/giftFinderPages';
 
 /** The four opening pages of the Gift Finder, from Patrick's workbook. Sample: answers stay in memory. */
 
@@ -99,6 +108,11 @@ export const Scores: React.FC<{p: (a: string) => number; name?: string}> = ({p, 
   const [open, setOpen] = useState<Ocean | null>(TRAITS[0].ocean);
   const [sorted, setSorted] = useState(false);
   const rows = sorted ? [...TRAITS].sort((a, b) => p(b.ocean) - p(a.ocean)) : TRAITS;
+  const [motion] = useState(
+    () => typeof window !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  );
+  const scores = TRAITS.map((t) => p(t.ocean));
+  const openIdx = TRAITS.findIndex((t) => t.ocean === open);
   return (
     <div className='pp-gf-flow'>
       <div className='pp-gf-prose'>
@@ -119,36 +133,53 @@ export const Scores: React.FC<{p: (a: string) => number; name?: string}> = ({p, 
           </button>
         </div>
       </div>
-      <ul className='pp-gf-scores'>
-        {rows.map((t) => {
-          const on = open === t.ocean;
-          return (
-            <li key={t.ocean} className={on ? 'is-open' : undefined} style={{'--pp-step': t.color} as React.CSSProperties}>
-              <button type='button' aria-expanded={on} onClick={() => setOpen(on ? null : t.ocean)}>
-                <span className='pp-gf-scores__name'>{t.ocean}</span>
-                <span className='pp-gf-scores__val'>{ord(p(t.ocean))}</span>
-                <Bar value={p(t.ocean)} color={t.color} />
-                <span className='pp-gf-scores__chev' aria-hidden='true'>
-                  {on ? '−' : '+'}
-                </span>
-              </button>
-              {on && (
-                <div className='pp-gf-scores__aspects'>
-                  {t.aspects.map((a) => (
-                    <div key={a}>
-                      <p className='pp-gf-scores__aname'>
-                        {a} <b>{ord(p(a))} percentile</b>
-                      </p>
-                      <Bar value={p(a)} color={t.color} thin />
-                      <p className='pp-gf-scores__motive'>{motivationFor(a, p(a))}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+      <div className='pp-gf-scoresgrid'>
+        {/* the person's own threads on a night panel, as on results; tap a knot to open that trait */}
+        <div className='pp-gf-threadpanel'>
+          <Threads
+            scores={scores}
+            focus={openIdx >= 0 ? openIdx : null}
+            swell={false}
+            motion={motion}
+            onPick={(i) => setOpen(TRAITS[i].ocean)}
+            label={`Your threads. ${TRAITS.map((t, i) => `${t.ocean} ${ord(scores[i])} percentile`).join(', ')}.`}
+          />
+          <p className='pp-small'>Tap a knot to open that trait.</p>
+        </div>
+        <ul className='pp-gf-scores'>
+          {rows.map((t) => {
+            const on = open === t.ocean;
+            return (
+              <li
+                key={t.ocean}
+                className={on ? 'is-open' : undefined}
+                style={{'--pp-step': t.color} as React.CSSProperties}>
+                <button type='button' aria-expanded={on} onClick={() => setOpen(on ? null : t.ocean)}>
+                  <span className='pp-gf-scores__name'>{t.ocean}</span>
+                  <span className='pp-gf-scores__val'>{ord(p(t.ocean))}</span>
+                  <Bar value={p(t.ocean)} color={t.color} />
+                  <span className='pp-gf-scores__chev' aria-hidden='true'>
+                    {on ? '−' : '+'}
+                  </span>
+                </button>
+                {on && (
+                  <div className='pp-gf-scores__aspects'>
+                    {t.aspects.map((a) => (
+                      <div key={a}>
+                        <p className='pp-gf-scores__aname'>
+                          {a} <b>{ord(p(a))} percentile</b>
+                        </p>
+                        <Bar value={p(a)} color={t.color} thin />
+                        <p className='pp-gf-scores__motive'>{motivationFor(a, p(a))}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
       <p className='pp-small'>
         Tap a trait to open its two aspects. Each line under an aspect is the strength that tends to come with your
         score.
@@ -177,7 +208,10 @@ export const Anew: React.FC<{
           const on = open === i;
           const done = !!answers[t.ocean]?.trim();
           return (
-            <li key={t.ocean} className={on ? 'is-open' : undefined} style={{'--pp-step': t.color} as React.CSSProperties}>
+            <li
+              key={t.ocean}
+              className={on ? 'is-open' : undefined}
+              style={{'--pp-step': t.color} as React.CSSProperties}>
               <button type='button' aria-expanded={on} onClick={() => setOpen(on ? -1 : i)}>
                 <span className='pp-gf-accordion__n'>{done ? '✓' : i + 1}</span>
                 <span className='pp-gf-accordion__name'>{t.ocean}</span>
@@ -190,7 +224,12 @@ export const Anew: React.FC<{
               {on && (
                 <div className='pp-gf-accordion__body'>
                   <p className='pp-gf-question'>{reflectionQuestion(t.ocean, p)}</p>
-                  <TextBox label='Your thoughts' value={answers[t.ocean] ?? ''} onChange={(v) => setAnswer(t.ocean, v)} rows={5} />
+                  <TextBox
+                    label='Your thoughts'
+                    value={answers[t.ocean] ?? ''}
+                    onChange={(v) => setAnswer(t.ocean, v)}
+                    rows={5}
+                  />
                   {i < TRAITS.length - 1 && (
                     <button type='button' className='pp-btn pp-btn--ghost pp-btn--sm' onClick={() => setOpen(i + 1)}>
                       Next: {TRAITS[i + 1].ocean}
@@ -216,7 +255,6 @@ export const Unique: React.FC<{
   setAnswer: (k: string, v: string) => void;
 }> = ({p, answers, setAnswer}) => {
   const [big, setBig] = useState<string>('a');
-  const [fit, setFit] = useState<Record<string, Fit>>({});
   const cur = UNIQUE.abcd.find((x) => x.key === big)!;
   return (
     <div className='pp-gf-flow'>
@@ -246,7 +284,11 @@ export const Unique: React.FC<{
       </div>
       <div className='pp-gf-abcdpanel' role='tabpanel'>
         <p>{cur.body}</p>
-        <TextBox label={cur.ask} value={answers[`abcd-${cur.key}`] ?? ''} onChange={(v) => setAnswer(`abcd-${cur.key}`, v)} />
+        <TextBox
+          label={cur.ask}
+          value={answers[`abcd-${cur.key}`] ?? ''}
+          onChange={(v) => setAnswer(`abcd-${cur.key}`, v)}
+        />
       </div>
 
       <h2 className='pp-display pp-h3' style={{marginTop: 16}}>
@@ -258,7 +300,7 @@ export const Unique: React.FC<{
       <ol className='pp-gf-scen'>
         {SCENARIOS.map((s, i) => {
           const lines = predict(s, p);
-          const f = fit[s.id];
+          const f = answers[`fit-${s.id}`] as Fit | undefined;
           return (
             <li key={s.id}>
               <p className='pp-gf-scen__n'>Scenario {i + 1}</p>
@@ -294,7 +336,7 @@ export const Unique: React.FC<{
                     ['no', 'Not really'],
                   ] as [Fit, string][]
                 ).map(([k, label]) => (
-                  <button key={k} type='button' aria-pressed={f === k} onClick={() => setFit((s0) => ({...s0, [s.id]: k}))}>
+                  <button key={k} type='button' aria-pressed={f === k} onClick={() => setAnswer(`fit-${s.id}`, k)}>
                     {label}
                   </button>
                 ))}
@@ -318,7 +360,13 @@ export const Unique: React.FC<{
           Looking back over the scenarios
         </p>
         {UNIQUE.patterns.map((q, i) => (
-          <TextBox key={q} label={q} value={answers[`pattern-${i}`] ?? ''} onChange={(v) => setAnswer(`pattern-${i}`, v)} rows={2} />
+          <TextBox
+            key={q}
+            label={q}
+            value={answers[`pattern-${i}`] ?? ''}
+            onChange={(v) => setAnswer(`pattern-${i}`, v)}
+            rows={2}
+          />
         ))}
       </div>
     </div>

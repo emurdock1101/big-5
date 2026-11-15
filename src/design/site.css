@@ -3809,7 +3809,13 @@ p {
 }
 
 .pp-tree__frame {
-  background: #fff;
+  /* the night panel, as on results; colors the tree drawing reads */
+  --tree-bg: #0b1226;
+  --tree-line: rgba(255, 255, 255, 0.55);
+  --tree-twig: rgba(255, 255, 255, 0.4);
+  --tree-on: #fff;
+  --tree-imager: var(--pp-sheet);
+  background: radial-gradient(120% 60% at 50% 0%, rgba(58, 129, 205, 0.2), transparent 70%), #0b1226;
   overflow: hidden;
 }
 
@@ -3841,7 +3847,7 @@ p {
 }
 
 .pp-tree-imager {
-  fill: #fff;
+  fill: var(--pp-ink);
   font-weight: 850;
   font-stretch: var(--pp-wide);
   font-size: 22px;
@@ -3861,7 +3867,7 @@ p {
 }
 
 .pp-tree-label {
-  fill: var(--pp-ink);
+  fill: #fff;
   font-size: 16px;
   font-weight: 600;
 }
@@ -3871,13 +3877,13 @@ p {
 }
 
 .pp-tree-me-label {
-  fill: var(--pp-ink);
+  fill: #fff;
   font-weight: 850;
   font-size: 18px;
 }
 
 .pp-tree-ghost {
-  fill: var(--pp-ink-soft);
+  fill: #b9bfd6;
   font-size: 15px;
   font-style: italic;
 }
@@ -4050,4 +4056,212 @@ p {
   .pp-gf-cards button {
     min-height: 110px;
   }
+}
+
+/* ---------- Gift Finder: circles, not squares, for the small markers ----------
+   Cards, tabs and writing boxes keep their straight edges for easy reading. */
+
+.pp-gf-tile__box,
+.pp-gf-keep__btn,
+.pp-gf-row__arrows button,
+.pp-tree__tools button:not(.pp-tree__whole) {
+  border-radius: 50%;
+}
+
+.pp-gf-row__arrows button {
+  width: 40px;
+  height: 40px;
+}
+
+/* rank numbers sit in a filled circle in the item's trait color */
+.pp-gf-row__num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--pp-step);
+  color: #fff;
+  font-size: 16px;
+}
+
+.pp-gf-row.is-out .pp-gf-row__num {
+  background: none;
+}
+
+/* numbered markers (writing queue, reflection list) */
+.pp-gf-queue__n,
+.pp-gf-accordion__n {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 2px solid currentColor;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.pp-gf-scores__chev {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 2px solid currentColor;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* the ABCD letters in circles, stacked above their names so narrow tiles don't clip */
+.pp-gf-abcdgrid button {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: start;
+  align-content: start;
+  gap: 8px;
+}
+
+.pp-gf-abcdgrid__letter {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 3px solid currentColor;
+  font-size: 30px;
+}
+
+/* small choice buttons and counters become pills */
+.pp-gf-fit button,
+.pp-gf-chips button,
+.pp-gf-total,
+.pp-tree__tools .pp-tree__whole {
+  border-radius: 999px;
+}
+
+.pp-gf-chips button {
+  border-left-width: 2px;
+  border-color: var(--pp-step);
+}
+
+@media (max-width: 640px) {
+  .pp-gf-row__arrows button {
+    width: 34px;
+    height: 34px;
+  }
+  .pp-gf-row {
+    grid-template-columns: 30px 26px minmax(0, 1fr) auto;
+  }
+  .pp-gf-row__num {
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
+  }
+  .pp-gf-abcdgrid__letter {
+    width: 44px;
+    height: 44px;
+    font-size: 24px;
+  }
+}
+
+/* ---------- Gift Finder: the night bridge and the dawn ending ---------- */
+
+.pp-gf-room {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  padding: clamp(24px, 4vw, 48px) clamp(16px, 3vw, 40px) clamp(150px, 18vw, 240px);
+}
+
+.pp-gf-room > :not(.pp-scene) {
+  position: relative;
+  z-index: 1;
+}
+
+.pp-gf-room--night {
+  background: radial-gradient(90% 70% at 15% 0%, rgba(58, 129, 205, 0.2), transparent 60%), #0b1226;
+}
+
+.pp-gf-room--dawn {
+  background: linear-gradient(180deg, #0b1226 0%, #24163a 50%, #5b1f38 100%);
+  border-top: 0;
+}
+
+.pp-scene--gfroom,
+.pp-scene--gfdawn {
+  height: clamp(130px, 17vw, 230px);
+  bottom: -2px;
+}
+
+/* the nearest range meets the light page below the room */
+.pp-scene--gfroom .pp-scene__l4 polygon,
+.pp-scene--gfdawn .pp-scene__l4 polygon {
+  fill: var(--pp-sheet);
+}
+
+.pp-gf-room .pp-small {
+  color: #b9bfd6;
+}
+
+/* the night tree frame sits a shade lighter so it reads against the room */
+.pp-gf-room--night .pp-tree__frame {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.pp-gf-room .pp-tree__tools button {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.pp-gf-room .pp-tree__panel {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* the statement stays a light card on the dawn */
+.pp-gf-room--dawn .pp-gf-statement {
+  color: var(--pp-ink);
+}
+
+.pp-gf-room--dawn .pp-gf-verse--slot {
+  color: var(--pp-ink);
+}
+
+/* on the dawn, chosen chips fill with their trait color; the rest stay outlined */
+.pp-gf-room--dawn .pp-gf-chips button {
+  background: transparent;
+  color: #fff;
+}
+
+.pp-gf-room--dawn .pp-gf-chips button[aria-pressed='true'] {
+  background: var(--pp-step);
+  color: #fff;
+}
+
+/* let the ending shrink to phone width; a long gift name in the dropdown must not widen the section */
+.pp-gf-flow,
+.pp-gf-together {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pp-gf-statement select {
+  width: 100%;
+  max-width: 28em;
+  text-overflow: ellipsis;
+}
+
+/* Gift Finder: the save status in the band */
+.pp-gf-status {
+  font-size: 15px;
+  font-weight: 700;
+  color: #b9bfd6;
+}
+
+.pp-gf-saved.is-error {
+  color: #ffb3bb;
+}
+
+.pp-gf-saved .pp-textlink {
+  color: #fff;
 }

@@ -51,3 +51,32 @@ test('a writing part counts as done once any of its boxes has words', () => {
   expect(partDone({...EMPTY_ENTRY, c: 'thinking'}, 'story')).toBe(true);
   expect(partDone({...EMPTY_ENTRY, serve: ' '}, 'serve')).toBe(false);
 });
+
+describe('saved progress', () => {
+  const {cleanSave, emptySave} = require('./giftFinder');
+  const realId = GIFT_ITEMS[0].id;
+
+  test('an empty or broken file starts fresh', () => {
+    expect(cleanSave(null)).toEqual(emptySave());
+    expect(cleanSave('nonsense')).toEqual(emptySave());
+    expect(cleanSave({picked: 'oops', entries: 7})).toEqual(emptySave());
+  });
+
+  test('a real file comes back as saved, and items no longer in the lists are dropped', () => {
+    const s = cleanSave({
+      v: 1,
+      step: 6,
+      picked: {gift: [realId, 'gift-gone-high-0'], blind: []},
+      keep: {gift: 6, blind: 7},
+      writeAt: {gift: 1, blind: 0},
+      entries: {[realId]: {story: 'A time', forward: 'Next'}, 'gift-gone-high-0': {story: 'x'}},
+      answers: {Extraversion: 'thoughts', 'fit-party': 'yes', bad: 3},
+    });
+    expect(s.step).toBe(6);
+    expect(s.picked.gift).toEqual([realId]);
+    expect(s.keep.gift).toBe(6);
+    expect(s.entries[realId]).toEqual({...EMPTY_ENTRY, story: 'A time', forward: 'Next'});
+    expect(s.entries['gift-gone-high-0']).toBeUndefined();
+    expect(s.answers).toEqual({Extraversion: 'thoughts', 'fit-party': 'yes'});
+  });
+});

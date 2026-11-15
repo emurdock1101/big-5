@@ -94,6 +94,7 @@ const HeaderDrawer = (props: HeaderDrawerProps) => {
               </NavLink>
             ),
           )}
+          {props.isAdmin && <NavLink to='/gift-finder'>Gift Finder</NavLink>}
           {props.isAdmin && <NavLink to='/admin'>Admin</NavLink>}
         </nav>
         <div className='pp-header__actions'>
@@ -123,6 +124,7 @@ const HeaderDrawer = (props: HeaderDrawerProps) => {
             </Link>
           ))}
           <Link to='/contact'>Contact</Link>
+          {props.isAdmin && <Link to='/gift-finder'>Gift Finder</Link>}
           {props.isAdmin && <Link to='/admin'>Admin</Link>}
           {account}
         </nav>

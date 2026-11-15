@@ -4,6 +4,8 @@ import {Aspect} from '../constants/schema';
 import {
   EMPTY_ENTRY,
   Entry,
+  emptySave,
+  GiftFinderSave,
   fitsScore,
   GIFT_ITEMS,
   GiftItem,
@@ -15,16 +17,25 @@ import {
 import {IMAGER, UNIQUE, VERSES} from '../constants/giftFinderPages';
 import {Anew, Discovering, ord, Scores, TextBox, Unique} from './GiftFinderOpening';
 import ImagerTree from './ImagerTree';
+import Scene from './Scene';
 
 /**
- * The Gift Finder walk. Sample version: everything lives in this page's memory.
- * Nothing is saved or sent anywhere.
+ * The Gift Finder walk. The page that hosts it decides where progress is kept: the real page
+ * saves privately to the person's account; the preview keeps it in the browser tab.
  */
 
 interface GiftFinderProps {
   percentiles: Record<string, number>;
   name?: string;
   sample?: boolean;
+  /** Where to start (a saved file); empty when new. */
+  initial?: GiftFinderSave;
+  /** Called after every change with the whole state, for saving. */
+  onChange?: (state: GiftFinderSave) => void;
+  /** Shown in the band, e.g. "Saved". */
+  status?: React.ReactNode;
+  /** The line under each writing page about saving. */
+  saveNote?: string;
 }
 
 type Group = 'you' | 'imager' | 'gift' | 'blind' | 'tree';
@@ -211,7 +222,12 @@ const Ranker: React.FC<{
       {order.length > KEEP_MIN && (
         <div className='pp-gf-keep'>
           <span>Write about my top</span>
-          <button type='button' className='pp-gf-keep__btn' aria-label='Keep one fewer' disabled={kept <= 1} onClick={() => setKeep(kept - 1)}>
+          <button
+            type='button'
+            className='pp-gf-keep__btn'
+            aria-label='Keep one fewer'
+            disabled={kept <= 1}
+            onClick={() => setKeep(kept - 1)}>
             −
           </button>
           <b aria-live='polite'>{kept}</b>
@@ -255,7 +271,9 @@ const Ranker: React.FC<{
                   onPointerUp={() => setDrag(null)}
                   onPointerCancel={() => setDrag(null)}>
                   <svg viewBox='0 0 12 20' width='12' height='20'>
-                    {[3, 10, 17].map((cy) => [3, 9].map((cx) => <circle key={`${cx}${cy}`} cx={cx} cy={cy} r='1.8' fill='currentColor' />))}
+                    {[3, 10, 17].map((cy) =>
+                      [3, 9].map((cx) => <circle key={`${cx}${cy}`} cx={cx} cy={cy} r='1.8' fill='currentColor' />),
+                    )}
                   </svg>
                 </span>
                 <span className='pp-gf-row__num'>{i < kept ? i + 1 : ''}</span>
@@ -264,10 +282,18 @@ const Ranker: React.FC<{
                   <span className='pp-gf-row__tag'>{x.aspect}</span>
                 </span>
                 <span className='pp-gf-row__arrows'>
-                  <button type='button' aria-label={`Move up: ${x.text}`} disabled={i === 0} onClick={() => move(i, i - 1)}>
+                  <button
+                    type='button'
+                    aria-label={`Move up: ${x.text}`}
+                    disabled={i === 0}
+                    onClick={() => move(i, i - 1)}>
                     ↑
                   </button>
-                  <button type='button' aria-label={`Move down: ${x.text}`} disabled={i === order.length - 1} onClick={() => move(i, i + 1)}>
+                  <button
+                    type='button'
+                    aria-label={`Move down: ${x.text}`}
+                    disabled={i === order.length - 1}
+                    onClick={() => move(i, i + 1)}>
                     ↓
                   </button>
                 </span>
@@ -293,7 +319,8 @@ const Writer: React.FC<{
   p: (a: string) => number;
   entries: Record<string, Entry>;
   setEntry: (id: string, e: Entry) => void;
-}> = ({kind, ids, at: rawAt, setAt, p, entries, setEntry}) => {
+  saveNote?: string;
+}> = ({kind, ids, at: rawAt, setAt, p, entries, setEntry, saveNote}) => {
   const headRef = useRef<HTMLHeadingElement>(null);
   const n = NOUN[kind];
   const pr = PROMPTS[kind];
@@ -367,13 +394,14 @@ const Writer: React.FC<{
           <TextBox label={pr.serve.title} hint={pr.serve.ask} value={e.serve} onChange={set('serve')} rows={3} />
         </fieldset>
 
-        <p className='pp-small pp-gf-save'>
-          Sample only: what you type stays on this page until you reload it. The real version will save privately to
-          your account as you type, so you can stop and come back.
-        </p>
+        {saveNote && <p className='pp-small pp-gf-save'>{saveNote}</p>}
 
         <div className='pp-gf-sheet__nav'>
-          <button type='button' className='pp-btn pp-btn--ghost pp-btn--sm' disabled={at === 0} onClick={() => goTo(at - 1)}>
+          <button
+            type='button'
+            className='pp-btn pp-btn--ghost pp-btn--sm'
+            disabled={at === 0}
+            onClick={() => goTo(at - 1)}>
             Previous {n.one}
           </button>
           {at < ids.length - 1 && (
@@ -389,22 +417,32 @@ const Writer: React.FC<{
 
 /* ---------- putting it together ---------- */
 
-const Together: React.FC<{gifts: string[]; blinds: string[]; entries: Record<string, Entry>}> = ({gifts, blinds, entries}) => {
-  const [g, setG] = useState<string[]>(gifts.slice(0, 3));
-  const [b, setB] = useState<string[]>(blinds.slice(0, 2));
-  const [use, setUse] = useState<string>(gifts[0] ?? '');
-  const [who, setWho] = useState<string>('');
-
-  useEffect(() => {
-    setG((s) => (s.length ? s.filter((x) => gifts.includes(x)) : gifts.slice(0, 3)));
-    setB((s) => (s.length ? s.filter((x) => blinds.includes(x)) : blinds.slice(0, 2)));
-    setUse((u) => (gifts.includes(u) ? u : gifts[0] ?? ''));
-  }, [gifts, blinds]);
+const Together: React.FC<{
+  gifts: string[];
+  blinds: string[];
+  entries: Record<string, Entry>;
+  answers: Record<string, string>;
+  setAnswer: (k: string, v: string) => void;
+}> = ({gifts, blinds, entries, answers, setAnswer}) => {
+  // Choices are kept with the other answers so they are saved; until chosen, the top ranked ones show.
+  const listOf = (key: string, from: string[], n: number) => {
+    const saved = answers[key];
+    return saved === undefined ? from.slice(0, n) : saved.split(',').filter((x) => from.includes(x));
+  };
+  const g = listOf('together-gifts', gifts, 3);
+  const b = listOf('together-blinds', blinds, 2);
+  const setG = (v: string[]) => setAnswer('together-gifts', v.join(','));
+  const setB = (v: string[]) => setAnswer('together-blinds', v.join(','));
+  const use = gifts.includes(answers['together-use']) ? answers['together-use'] : (gifts[0] ?? '');
+  const setUse = (v: string) => setAnswer('together-use', v);
+  const who = answers['together-who'] ?? '';
+  const setWho = (v: string) => setAnswer('together-who', v);
 
   const toggle = (list: string[], set: (v: string[]) => void, id: string, max: number) =>
     set(list.includes(id) ? list.filter((x) => x !== id) : list.length >= max ? list : [...list, id]);
   /** "Make friends easily" -> "I make friends easily"; "My mood can change a lot" stays as is. */
-  const iPhrase = (text: string) => (/^my /i.test(text) ? `my ${text.slice(3)}` : `I ${text[0].toLowerCase()}${text.slice(1)}`);
+  const iPhrase = (text: string) =>
+    /^my /i.test(text) ? `my ${text.slice(3)}` : `I ${text[0].toLowerCase()}${text.slice(1)}`;
   const words = (ids: string[]) => {
     const t = ids.map((id) => iPhrase(itemById(id)!.text));
     return t.length <= 1 ? t.join('') : `${t.slice(0, -1).join(', ')} and ${t[t.length - 1]}`;
@@ -418,7 +456,16 @@ const Together: React.FC<{gifts: string[]; blinds: string[]; entries: Record<str
   if (!gifts.length) return null;
 
   return (
-    <section className='pp-gf-together'>
+    // The ending sits in the dawn scene, as the homepage closes.
+    <section className='pp-gf-together pp-gf-room pp-gf-room--dawn'>
+      <Scene
+        kind='ridges'
+        className='pp-scene--dawn pp-scene--gfdawn'
+        sun={TRAITS[0].color}
+        sunX={1060}
+        sunY={210}
+        sunFront
+      />
       <h2 className='pp-display pp-h3'>Putting it together</h2>
       <p className='pp-small' style={{margin: 0}}>
         Tap to choose which gifts (up to 3) and blind spots (up to 2) go into your statement.
@@ -465,7 +512,13 @@ const Together: React.FC<{gifts: string[]; blinds: string[]; entries: Record<str
           </select>{' '}
           <br />
           to serve{' '}
-          <input aria-label='Who you will serve' value={who} onChange={(e) => setWho(e.target.value)} placeholder='whom?' />.
+          <input
+            aria-label='Who you will serve'
+            value={who}
+            onChange={(e) => setWho(e.target.value)}
+            placeholder='whom?'
+          />
+          .
         </p>
       </blockquote>
       {serveHint && <p className='pp-small'>You wrote that this gift could serve: {serveHint}</p>}
@@ -493,13 +546,25 @@ const Together: React.FC<{gifts: string[]; blinds: string[]; entries: Record<str
 
 /* ---------- the walk ---------- */
 
-const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
-  const [step, setStep] = useState(0);
-  const [picked, setPicked] = useState<Record<GiftKind, string[]>>({gift: [], blind: []});
-  const [keep, setKeep] = useState<Record<GiftKind, number>>({gift: 7, blind: 7});
-  const [writeAt, setWriteAt] = useState<Record<GiftKind, number>>({gift: 0, blind: 0});
-  const [entries, setEntries] = useState<Record<string, Entry>>({});
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample, initial, onChange, status, saveNote}) => {
+  const [start] = useState(() => initial ?? emptySave());
+  const [step, setStep] = useState(Math.min(start.step, STEPS.length - 1));
+  const [picked, setPicked] = useState<Record<GiftKind, string[]>>(start.picked);
+  const [keep, setKeep] = useState<Record<GiftKind, number>>(start.keep);
+  const [writeAt, setWriteAt] = useState<Record<GiftKind, number>>(start.writeAt);
+  const [entries, setEntries] = useState<Record<string, Entry>>(start.entries);
+  const [answers, setAnswers] = useState<Record<string, string>>(start.answers);
+  const loaded = useRef(true);
+
+  // Hand every change to the host page for saving (not the first render: nothing has changed yet).
+  useEffect(() => {
+    if (loaded.current) {
+      loaded.current = false;
+      return;
+    }
+    onChange?.({v: 1, step, picked, keep, writeAt, entries, answers});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, picked, keep, writeAt, entries, answers]);
   const [review, setReview] = useState(false);
   const headRef = useRef<HTMLHeadingElement>(null);
   const first = useRef(true);
@@ -543,17 +608,21 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
     lede = UNIQUE.abcd.map((x) => x.name).join(' · ');
     body = <Unique p={p} answers={answers} setAnswer={setAnswer} />;
   } else if (step === 4) {
+    // A night room: the move from personality to imager is a threshold, like the site's dark openings.
     body = (
-      <div className='pp-gf-imager'>
-        <div className='pp-gf-prose'>
-          {IMAGER.draft && <span className='pp-gf-draft'>Draft · Patrick to write this page</span>}
-          {IMAGER.paragraphs.map((t) => (
-            <p key={t}>{t}</p>
-          ))}
-          <p className='pp-small'>{IMAGER.verse}</p>
+      <section className='pp-gf-room pp-gf-room--night'>
+        <Scene kind='ridges' className='pp-scene--gfroom' sun={TRAITS[0].color} sunX={1180} sunY={150} sunFront />
+        <div className='pp-gf-imager'>
+          <div className='pp-gf-prose'>
+            {IMAGER.draft && <span className='pp-gf-draft'>Draft · Patrick to write this page</span>}
+            {IMAGER.paragraphs.map((t) => (
+              <p key={t}>{t}</p>
+            ))}
+            <p className='pp-small'>{IMAGER.verse}</p>
+          </div>
+          <ImagerTree name={name} p={p} gifts={[]} blinds={[]} entries={entries} seed />
         </div>
-        <ImagerTree name={name} p={p} gifts={[]} blinds={[]} entries={entries} seed />
-      </div>
+      </section>
     );
   } else if (cur.kind && cur.stage === 'pick') {
     const n = NOUN[cur.kind];
@@ -568,7 +637,16 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
         </span>
       </>
     );
-    body = <Picker key={cur.kind} kind={cur.kind} p={p} picked={picked[cur.kind]} toggle={toggle(cur.kind)} review={review} />;
+    body = (
+      <Picker
+        key={cur.kind}
+        kind={cur.kind}
+        p={p}
+        picked={picked[cur.kind]}
+        toggle={toggle(cur.kind)}
+        review={review}
+      />
+    );
   } else if (cur.kind && cur.stage === 'rank') {
     const kind = cur.kind;
     title = kind === 'gift' ? 'Which gifts matter most?' : 'Which blind spots cost you most?';
@@ -595,6 +673,7 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
         p={p}
         entries={entries}
         setEntry={(id, e) => setEntries((s) => ({...s, [id]: e}))}
+        saveNote={saveNote}
       />
     );
   } else {
@@ -602,8 +681,15 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
     lede = 'What you have been given, and where you are growing, in your own words.';
     body = (
       <div className='pp-gf-flow'>
-        <ImagerTree name={name} p={p} gifts={top('gift')} blinds={top('blind')} entries={entries} onWrite={openWriter} />
-        <Together gifts={top('gift')} blinds={top('blind')} entries={entries} />
+        <ImagerTree
+          name={name}
+          p={p}
+          gifts={top('gift')}
+          blinds={top('blind')}
+          entries={entries}
+          onWrite={openWriter}
+        />
+        <Together gifts={top('gift')} blinds={top('blind')} entries={entries} answers={answers} setAnswer={setAnswer} />
         <div>
           <button type='button' className='pp-btn' disabled>
             Download as PDF (coming)
@@ -614,37 +700,44 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
   }
 
   return (
-    <div className='pp pp-walk pp-gf'>
-      <div className='pp-wrap'>
-        <div className='pp-walk__top'>
-          <p className='pp-display pp-h3'>Gift Finder</p>
-          {sample && (
-            <div className='pp-gf-sampletools'>
-              <span className='pp-sample-tag'>Sample scores and draft wording, for preview</span>
-              <label className='pp-gf-reviewtoggle'>
-                <input type='checkbox' checked={review} onChange={(e) => setReview(e.target.checked)} /> Show where each item
-                comes from
-              </label>
-            </div>
-          )}
+    <div className='pp pp-walk pp-walk--cine pp-gf'>
+      {/* the opening band: night sky, red sun and mountains behind the title and steps (as on results) */}
+      <header className='pp-walk__band'>
+        <Scene kind='ridges' className='pp-scene--walk' sun={TRAITS[0].color} sunX={1110} sunY={175} sunFront />
+        <div className='pp-wrap'>
+          <div className='pp-walk__top'>
+            <p className='pp-display pp-h2'>Gift Finder</p>
+            {status && <div className='pp-gf-status'>{status}</div>}
+            {sample && (
+              <div className='pp-gf-sampletools'>
+                <span className='pp-sample-tag'>Sample scores and draft wording, for preview</span>
+                <label className='pp-gf-reviewtoggle'>
+                  <input type='checkbox' checked={review} onChange={(e) => setReview(e.target.checked)} /> Show where
+                  each item comes from
+                </label>
+              </div>
+            )}
+          </div>
+          <nav className='pp-gf-steps' aria-label='Gift Finder sections'>
+            <ol>
+              {STEPS.map((s, i) => (
+                <li key={s.label}>
+                  <button
+                    type='button'
+                    aria-current={step === i ? 'step' : undefined}
+                    style={{'--pp-step': GROUP_COLOR[s.group]} as React.CSSProperties}
+                    onClick={() => go(i)}>
+                    {s.label}
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </nav>
         </div>
-        <nav className='pp-gf-steps' aria-label='Gift Finder sections'>
-          <ol>
-            {STEPS.map((s, i) => (
-              <li key={s.label}>
-                <button
-                  type='button'
-                  aria-current={step === i ? 'step' : undefined}
-                  style={{'--pp-step': GROUP_COLOR[s.group]} as React.CSSProperties}
-                  onClick={() => go(i)}>
-                  {s.label}
-                </button>
-              </li>
-            ))}
-          </ol>
-        </nav>
+      </header>
 
-        <div className='pp-gf-stage'>
+      <div className='pp-wrap'>
+        <div key={step} className='pp-gf-stage pp-walk__swap'>
           <header className='pp-gf-head'>
             <h1 ref={headRef} tabIndex={-1} className='pp-display pp-h2'>
               {title}

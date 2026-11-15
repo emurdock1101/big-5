@@ -714,3 +714,61 @@
 .pp-cinepage .pp-pagehead .pp-small {
   color: #b9bfd6;
 }
+
+/* ---------- Gift Finder (dev preview): the same night band as results ---------- */
+
+.pp-walk__band .pp-gf-steps button {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.pp-walk__band .pp-gf-steps button:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.pp-walk__band .pp-gf-steps button[aria-current='step'] {
+  background: var(--pp-sheet);
+  color: var(--pp-ink);
+}
+
+/* ink-colored step tops (bridge and tree) would vanish on the night sky */
+.pp-walk__band .pp-gf-steps button[style*='--pp-ink'] {
+  border-top-color: rgba(255, 255, 255, 0.75);
+}
+
+.pp-walk__band .pp-gf-reviewtoggle input {
+  accent-color: var(--pp-sheet);
+}
+
+/* Gift Finder scores: the person's threads on a night panel beside the score list */
+.pp-gf-scoresgrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(20px, 3vw, 40px);
+  align-items: start;
+}
+
+.pp-gf-threadpanel {
+  position: sticky;
+  top: calc(var(--pp-header-h) + 24px);
+  background: radial-gradient(120% 70% at 50% 0%, rgba(58, 129, 205, 0.18), transparent 70%), #0b1226;
+  color: #fff;
+  padding: clamp(16px, 2vw, 28px);
+  display: grid;
+  gap: 8px;
+}
+
+.pp-gf-threadpanel .pp-small {
+  color: #b9bfd6;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .pp-gf-scoresgrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pp-gf-threadpanel {
+    position: static;
+  }
+}
+
