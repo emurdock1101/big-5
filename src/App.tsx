@@ -31,6 +31,7 @@ import {Storage} from '@aws-amplify/storage';
 import {questionData as qd} from './constants/questionData';
 import {User} from './constants/schema';
 import {shuffle} from './utils/array.utils';
+import {GIFT_FINDER_GROUP, GIFT_FINDER_ON_SALE} from './utils/giftFinderAccess';
 
 // Routes loaded on demand, kept out of the first download
 const AdminView = lazy(() => import('./views/AdminView'));
@@ -47,7 +48,8 @@ const TestPreview = lazy(() => import('./views/TestPreview'));
 const Compare = lazy(() => import('./views/Compare'));
 const ComparePreview = lazy(() => import('./views/ComparePreview'));
 const GiftFinderPreview = lazy(() => import('./views/GiftFinderPreview'));
-const GiftFinderPage = lazy(() => import('./views/GiftFinderPage'));
+const GiftFinderGate = lazy(() => import('./views/GiftFinderGate'));
+const GiftFinderBuy = lazy(() => import('./views/GiftFinderBuy'));
 const MadeToImage = lazy(() => import('./views/MadeToImage'));
 
 Amplify.configure(awsconfig);
@@ -88,10 +90,11 @@ function App() {
       const cognitoUser = await Auth.currentAuthenticatedUser();
       const groups: string[] = cognitoUser.signInUserSession?.accessToken?.payload?.['cognito:groups'] ?? [];
       const isAdmin = groups.includes('admins');
-      setUser((prev) => ({...prev, loggedIn: true, isAdmin}));
+      const hasGiftFinder = groups.includes(GIFT_FINDER_GROUP);
+      setUser((prev) => ({...prev, loggedIn: true, isAdmin, hasGiftFinder}));
       setLoggedIn(true);
     } catch (error) {
-      setUser((prev) => ({...prev, loggedIn: false, isAdmin: false}));
+      setUser((prev) => ({...prev, loggedIn: false, isAdmin: false, hasGiftFinder: false}));
     } finally {
       setLoading(false);
     }
@@ -149,7 +152,7 @@ function App() {
   };
 
   // Public pages render straight away; only account pages wait for the sign-in check.
-  const publicPaths = ['/', '/made-to-image', '/results-preview', '/test-preview', '/compare-preview', '/gift-finder-preview', '/home-flow-preview', '/about', '/faqs', '/contact', '/buy', '/privacy', '/error', '/checkouterror'];
+  const publicPaths = ['/', '/made-to-image', '/results-preview', '/test-preview', '/compare-preview', '/gift-finder-preview', '/gift-finder-buy-preview', '/home-flow-preview', '/about', '/faqs', '/contact', '/buy', '/privacy', '/error', '/checkouterror'];
   if (loading && !publicPaths.includes(window.location.pathname)) {
     return <React.Fragment />;
   }
@@ -162,6 +165,9 @@ function App() {
             loggedIn={!!user.loggedIn}
             completed={!!user.completed}
             isAdmin={!!user.isAdmin}
+            showGiftFinder={
+              !!user.isAdmin || !!user.hasGiftFinder || (GIFT_FINDER_ON_SALE && !!user.loggedIn && !!user.completed)
+            }
             onLogOut={assessLoggedInState}
           />
           <ScrollManager />
@@ -222,8 +228,8 @@ function App() {
             <Route path='/made-to-image' element={<MadeToImage />} />
             <Route path='/buy' element={<ProtectedRoute type={'loggedOut'} component={<CinePage><BuyTest /></CinePage>} />} />
 
-            {/* The Gift Finder add-on. Stage 1: admins only, for testing; payment comes later. */}
-            <Route path='/gift-finder' element={<ProtectedRoute type={'admin'} component={<CinePage><GiftFinderPage /></CinePage>} />} />
+            {/* The Gift Finder add-on: owners and admins get it; others with results are offered it once it's on sale. */}
+            <Route path='/gift-finder' element={<CinePage><GiftFinderGate /></CinePage>} />
             <Route path='/admin' element={<ProtectedRoute type={'admin'} component={<CinePage><AdminView /></CinePage>} />} />
             <Route
               path='/admin/user/:email/:subId'
@@ -233,6 +239,7 @@ function App() {
             {process.env.NODE_ENV === 'development' && <Route path='/test-preview' element={<CinePage><TestPreview /></CinePage>} />}
             {process.env.NODE_ENV === 'development' && <Route path='/compare-preview' element={<ComparePreview />} />}
             {process.env.NODE_ENV === 'development' && <Route path='/gift-finder-preview' element={<GiftFinderPreview />} />}
+            {process.env.NODE_ENV === 'development' && <Route path='/gift-finder-buy-preview' element={<CinePage><GiftFinderBuy preview /></CinePage>} />}
             {process.env.NODE_ENV === 'development' && (
               <Route
                 path='/home-flow-preview'
