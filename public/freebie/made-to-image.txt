@@ -1,0 +1,1293 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Made to Image</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@72..125,400..900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sheet: #ebeced;
+    --sheet-deep: #dcdee1;
+    --ink: #15172b;
+    --night: #0b1226;
+    --night-2: #16213f;
+    --ink-soft: #4a4c60;
+    --rule: #c3c6cc;
+    --e: #ed5362; --n: #9a338e; --a: #3a81cd; --c: #00c9b7; --o: #344b47;
+    --e-ink: #b52637; --a-ink: #255f9e; --c-ink: #00756b;
+  }
+  @page { size: letter; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--night);
+    color: var(--ink);
+    font-family: 'Archivo', system-ui, sans-serif;
+    font-size: 13.5px;
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .draft-note {
+    max-width: 816px; margin: 24px auto 0; padding: 14px 18px;
+    background: var(--ink); color: var(--sheet); font-size: 14px;
+  }
+  .draft-note b { color: #fff; }
+  .page {
+    width: 816px; height: 1056px; margin: 24px auto;
+    background: var(--sheet); position: relative; overflow: hidden;
+    padding: 56px 64px 64px;
+    display: flex; flex-direction: column;
+  }
+  .folio {
+    position: absolute; bottom: 26px; left: 64px; right: 64px;
+    display: flex; justify-content: space-between;
+    font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft);
+  }
+  h1, h2, h3 { font-stretch: 125%; font-weight: 850; line-height: 1.05; margin: 0; letter-spacing: -.01em; }
+  h1 { font-size: 64px; }
+  h2 { font-size: 36px; margin-bottom: 18px; }
+  h3 { font-size: 16px; margin: 0 0 4px; }
+  p { margin: 0 0 11px; }
+  .kicker { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 10px; }
+  .lede { font-size: 16px; }
+  .verse { border-left: 6px solid var(--ink); padding: 4px 0 4px 16px; font-size: 16px; }
+  .verse cite { display: block; font-style: normal; font-size: 12px; font-weight: 700; margin-top: 6px; letter-spacing: .04em; }
+  .callout {
+    background: var(--ink); color: var(--sheet); padding: 22px 26px; margin: 8px 0 16px;
+    font-stretch: 112%; font-weight: 750; font-size: 21px; line-height: 1.35;
+  }
+  .callout em { color: #fff; }
+  .small { font-size: 12.5px; color: var(--ink-soft); }
+  .lines { flex: 1; min-height: 60px;
+    background-image: repeating-linear-gradient(to bottom, transparent 0 29px, var(--rule) 29px 30px); }
+  .lines.n2 { flex: none; height: 60px; }
+  .lines.n3 { flex: none; height: 90px; }
+  .lines.n4 { flex: none; height: 120px; }
+  .fill { display: inline-block; min-width: 260px; border-bottom: 1px solid var(--ink); }
+
+  /* cover: a night room with mountains, a red sun, the color wheel and the threads */
+  #cover.page { padding-top: 48px; padding-bottom: 250px; color: #fff; overflow: hidden;
+    background: radial-gradient(90% 70% at 15% 0%, rgba(58, 129, 205, .2), transparent 60%), var(--night); }
+  .cover > *:not(.scene) { position: relative; z-index: 1; }
+  .cover .kicker, .cover .promise, .cover .small, .cover .verse cite { color: #b9bfd6; }
+  .cover .ask { font-stretch: 112%; font-weight: 750; font-size: 24px; line-height: 1.2; margin: 6px 0 4px; }
+  .cover h1 { font-size: 66px; line-height: 1; color: #fff; }
+  .tree { margin: 18px 0 0; display: flex; flex-direction: column; align-items: center; }
+  .tree .root { width: 150px; height: 150px; display: block; overflow: visible; }
+  .tree .stem { width: 2.5px; background: rgba(255, 255, 255, .25); }
+  .tree .bar { height: 2.5px; background: rgba(255, 255, 255, .25); align-self: stretch; margin: 0 calc(100% / 8); }
+  .abcd { display: grid; grid-template-columns: repeat(4, 1fr); align-self: stretch; }
+  .abcd .col { display: flex; flex-direction: column; align-items: center; }
+  .abcd .lbl { font-stretch: 115%; font-weight: 850; font-size: 16px; margin-top: 6px; }
+  .abcd .end { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #b9bfd6; background: none; padding: 0; }
+  .abcd .end + .end { border: 0; }
+  .slider { position: relative; width: 40px; height: 128px; margin: 4px 0; }
+  .slider::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; margin-left: -2px; background: rgba(255, 255, 255, .3); }
+  .slider input {
+    position: absolute; left: 50%; top: 50%; width: 128px; height: 40px; margin: -20px 0 0 -64px;
+    transform: rotate(-90deg); -webkit-appearance: none; appearance: none; background: transparent; cursor: ns-resize; touch-action: none;
+  }
+  .slider input::-webkit-slider-runnable-track { height: 40px; background: transparent; }
+  .slider input::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; margin-top: 6px; background: var(--night); border: 3px solid #fff; border-radius: 50%; }
+  .slider input::-moz-range-track { height: 40px; background: transparent; }
+  .slider input::-moz-range-thumb { width: 22px; height: 22px; background: var(--night); border: 3px solid #fff; border-radius: 50%; }
+  .slider input:focus-visible { outline: 3px solid var(--a); outline-offset: 2px; }
+  .tree .threads { width: 100%; height: auto; aspect-ratio: 600 / 260; max-width: 100%; display: block; overflow: visible; }
+  .threads .knot { stroke: var(--night); stroke-width: 3; }
+  .wheel-arc { transition: stroke-dasharray .9s cubic-bezier(.16, 1, .3, 1), transform .6s cubic-bezier(.16, 1, .3, 1); transform-box: view-box; transform-origin: 50px 50px; }
+  .drives { text-align: center; margin-top: 4px; }
+  .drives b { display: block; font-stretch: 112%; font-weight: 750; font-size: 20px; }
+  .cover .foot { margin-top: 28px; }
+  .cover .foot .verse { font-size: 15px; max-width: 560px; border-left-color: #fff; color: #fff; }
+
+  /* drawn mountains: flat layered planes, far light and near dark, under a red sun */
+  .scene { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 240px; display: block; pointer-events: none; z-index: 0; }
+  .scene .l1 polygon { fill: #2a3a63; }
+  .scene .l2 polygon { fill: #1e2c51; }
+  .scene .l3 polygon { fill: #172240; }
+  .scene .l4 polygon { fill: #15172b; }
+  .scene .fog { fill: #fff; opacity: .035; }
+  .scene .sun circle { fill: var(--e); transform-box: fill-box; transform-origin: center; }
+  .scene .lyr, .scene .sun { transition: transform 1.4s cubic-bezier(.16, 1, .3, 1), opacity 1s ease; }
+  .scene .l2 { transition-delay: .1s; } .scene .l3 { transition-delay: .2s; }
+  .scene .sun { transition-duration: 2.2s; transition-delay: .2s; }
+  .scene:not(.in) .lyr:not(.l4) { transform: translateY(70px); opacity: 0; }
+  .scene:not(.in) .sun { transform: translateY(160px); opacity: 0; }
+  .scene .l1 polygon { animation: ridge 21s ease-in-out infinite alternate; }
+  .scene .l2 polygon { animation: ridge 15s ease-in-out infinite alternate-reverse; }
+  .scene .l3 polygon { animation: ridge 11s ease-in-out infinite alternate; }
+  .scene .fog { animation: ridge 13s ease-in-out infinite alternate-reverse; }
+  .scene .sun circle { animation: sun 7s ease-in-out infinite alternate; }
+  @keyframes ridge { from { transform: translateX(-34px); } to { transform: translateX(34px); } }
+  @keyframes sun { to { transform: translateY(-10px) scale(1.04); } }
+  @media (prefers-reduced-motion: reduce) {
+    .scene polygon, .scene .fog, .scene .sun circle { animation: none; }
+    .scene:not(.in) .lyr, .scene:not(.in) .sun { transform: none; opacity: 1; }
+  }
+
+  /* trait pages */
+  .trait-head { display: flex; gap: 22px; align-items: stretch; margin-bottom: 20px; }
+  .trait-box { width: 120px; height: 120px; flex: none; display: flex; align-items: center; justify-content: center; }
+  .trait-sq { width: 75px; height: 75px; flex: none; border-radius: 50%; transition: width .3s ease, height .3s ease; }
+  .guess { display: flex; align-items: center; gap: 10px; margin-top: 14px; flex-wrap: wrap;
+    font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+  .guess .guess-q { flex-basis: 100%; text-transform: none; letter-spacing: 0; font-size: 13.5px; font-weight: 750; color: var(--ink); }
+  .guess input { flex: 1; max-width: 300px; height: 28px; -webkit-appearance: none; appearance: none; background: transparent; cursor: ew-resize; }
+  .guess input::-webkit-slider-runnable-track { height: 4px; background: var(--ink); }
+  .guess input::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; margin-top: -10px; background: var(--ink); border: 3px solid var(--sheet); border-radius: 50%; }
+  .guess input::-moz-range-track { height: 4px; background: var(--ink); }
+  .guess input::-moz-range-thumb { width: 18px; height: 18px; background: var(--ink); border: 3px solid var(--sheet); border-radius: 50%; }
+  textarea.write { flex: 1; min-height: 140px; width: 100%; resize: none; border: 0; border-radius: 0; background: var(--sheet-deep);
+    padding: 14px 16px; font: inherit; font-size: 15px; line-height: 1.55; color: var(--ink); }
+  textarea.write::placeholder { color: var(--ink-soft); }
+  textarea.write:focus { outline: 3px solid var(--a); outline-offset: 0; }
+  .trait-head h2 { margin: 0 0 8px; font-size: 40px; }
+  .trait-head p { margin: 0; font-size: 15.5px; }
+  .aspects { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+  .aspects div { border-top: 3px solid var(--ink); padding-top: 8px; }
+  .ends { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 18px; }
+  .end { background: var(--sheet-deep); padding: 16px 18px; }
+  .end + .end { border-left: 2px solid var(--sheet); }
+  .end h3 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+  .end dl { margin: 0; }
+  .end dt { font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); }
+  .end dd { margin: 0 0 10px; }
+  .imaging { margin-bottom: 16px; }
+  .imaging h3 { margin-bottom: 6px; }
+  .prompt { font-weight: 750; margin-bottom: 4px; }
+
+  /* self-check */
+  table.check { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.check th { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-soft); text-align: center; padding: 0 2px 6px; vertical-align: bottom; line-height: 1.15; width: 62px; }
+  table.check th:first-child, table.check th:nth-child(2) { text-align: left; width: auto; }
+  table.check td { border-top: 1px solid var(--rule); padding: 4px 2px; }
+  table.check td.num { width: 26px; font-weight: 800; }
+  table.check td.o { text-align: center; }
+  .bubble { display: inline-block; width: 24px; height: 24px; border: 1.5px solid var(--ink); border-radius: 50%; font-size: 12px; line-height: 21px; text-align: center; font-weight: 700; }
+
+  .score-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin: 6px 0 18px; }
+  .score-col { display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
+  .score-col .tname { min-height: 52px; font-weight: 850; font-stretch: 115%; font-size: 13px; border-top: 6px solid; padding-top: 6px; }
+  .score-row { display: flex; justify-content: space-between; border-bottom: 1px solid var(--rule); padding: 2px 0; }
+  .score-row b { font-weight: 700; }
+  .score-row.total { border-bottom: 2px solid var(--ink); font-weight: 850; }
+  .color-sq { position: relative; width: 100%; aspect-ratio: 1; border: 1.5px solid var(--ink); background:
+      repeating-linear-gradient(to top, transparent 0 calc(100%/16 - 1px), var(--rule) calc(100%/16 - 1px) calc(100%/16)); }
+  .color-sq span { position: absolute; left: -2px; transform: translate(-100%, 50%); font-size: 11px; color: var(--ink-soft); }
+  .bands { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-bottom: 14px; }
+  .bands div { background: var(--sheet-deep); padding: 10px 12px; font-size: 12.5px; }
+  .bands div + div { border-left: 2px solid var(--sheet); }
+
+  /* love */
+  table.love { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-bottom: 14px; }
+  table.love th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); padding: 0 8px 6px 0; }
+  table.love td { border-top: 1px solid var(--rule); padding: 6px 8px 6px 0; vertical-align: top; }
+  table.love td:first-child { width: 27%; }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: 0; }
+
+  /* week */
+  .day { display: grid; grid-template-columns: 112px 1fr; gap: 14px; border-top: 3px solid var(--ink); padding-top: 8px; margin-bottom: 10px; }
+  .day .lbl { font-weight: 850; font-stretch: 120%; font-size: 15px; line-height: 1.1; }
+  .day .lbl small { display: block; font-weight: 600; font-stretch: 100%; font-size: 11px; color: var(--ink-soft); margin-top: 3px; letter-spacing: .04em; text-transform: uppercase; }
+  .day p { margin-bottom: 4px; }
+
+  /* box */
+  .box-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px 22px; margin: 4px 0 16px; padding: 0 20px; }
+  .box-pair { display: flex; flex-direction: column; gap: 6px; }
+  .box-pair .tname { min-height: 50px; font-weight: 850; font-stretch: 115%; font-size: 12px; border-top: 6px solid; padding-top: 5px; }
+  .qsq { width: 78%; aspect-ratio: 1; border-radius: 50%; background: var(--sheet-deep); display: flex; align-items: center; justify-content: center; font-stretch: 125%; font-weight: 850; font-size: 30px; color: var(--ink-soft); }
+  .qlabel { font-size: 11px; line-height: 1.35; margin-top: -2px; }
+  .offer { background: var(--night); color: var(--sheet); padding: 16px 24px; display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; text-decoration: none; transition: background .15s ease; }
+  .offer:hover { background: var(--night-2); }
+  .offer:focus-visible { outline: 3px solid var(--a); outline-offset: 3px; }
+  .offer .offer-go { display: inline-block; margin-top: 8px; padding: 8px 14px; background: var(--sheet); color: var(--ink); font-weight: 800; font-size: 14px; }
+  .offer:hover .offer-go { background: #fff; }
+  .offer h3 { color: #fff; font-size: 20px; margin-bottom: 6px; }
+  .offer p { margin: 0; font-size: 13px; }
+  .offer .price { font-stretch: 125%; font-weight: 850; font-size: 40px; color: #fff; }
+  .todo { background: #fff3c4; padding: 0 4px; }
+
+  @media print {
+    body { background: none; }
+    .draft-note, .todo { display: none; }
+    .page { margin: 0; page-break-after: always; }
+  }
+  /* clickable self-check */
+  button.bubble { cursor: pointer; padding: 0; background: transparent; color: var(--ink); font-family: inherit;
+    transition: background .15s ease, border-color .15s ease, color .15s ease; }
+  button.bubble:hover { background: var(--sheet-deep); }
+
+  /* page 9 glimpse */
+  .g-status { min-height: 20px; margin-bottom: 4px; }
+  .g-tree { width: 100%; height: 232px; display: block; margin-bottom: 10px; }
+  .g-rows { display: flex; flex-direction: column; }
+  .g-row { display: grid; grid-template-columns: 60px 1fr 250px; gap: 16px; align-items: center; border-top: 1px solid var(--rule); padding: 6px 0; }
+  .g-sqbox { width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; }
+  .g-sq { border-radius: 50%; transition: width .3s ease, height .3s ease; }
+  .g-name { font-stretch: 115%; font-weight: 850; font-size: 15px; }
+  .g-read { font-size: 13px; color: var(--ink-soft); }
+  .g-read b { color: var(--ink); }
+  .g-track { position: relative; height: 22px; background: linear-gradient(to right, var(--sheet-deep) 0 37.5%, var(--rule) 37.5% calc(37.5% + 2px), var(--sheet-deep) calc(37.5% + 2px) 68.75%, var(--rule) 68.75% calc(68.75% + 2px), var(--sheet-deep) calc(68.75% + 2px)); }
+  .g-mark { position: absolute; top: 3px; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; }
+  .g-guess { position: absolute; top: -2px; width: 26px; height: 26px; margin-left: -13px; border: 2.5px solid var(--ink); border-radius: 50%; }
+  .g-ends { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin-top: 3px; }
+  .g-key { display: flex; gap: 20px; justify-content: flex-end; font-size: 11.5px; color: var(--ink-soft); border-top: 1px solid var(--rule); padding-top: 6px; }
+  .g-key i { display: inline-block; vertical-align: -2px; margin-right: 6px; }
+  .g-mark-k { width: 12px; height: 12px; background: var(--ink); border-radius: 50%; }
+  .g-guess-k { width: 14px; height: 14px; border: 2px solid var(--ink); border-radius: 50%; }
+  /* page 10 drag and drop */
+  button.chip { font: inherit; font-size: 12.5px; color: var(--ink); text-align: left; background: transparent; border: 0; padding: 3px 6px;
+    cursor: grab; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+  button.chip:hover { background: var(--sheet-deep); }
+  button.chip.placed { opacity: .35; text-decoration: line-through; }
+  .or { color: var(--ink-soft); }
+  .buckets { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; min-height: 120px; }
+  .bucket { background: var(--sheet-deep); padding: 12px 14px; border: 2.5px dashed transparent; display: flex; flex-direction: column; }
+  .bucket h3 { font-size: 15px; margin: 0; }
+  .bucket .small { margin: 0 0 8px; }
+  .bucket[data-bucket="hard"] { border-top: 5px solid var(--ink); }
+  .bucket[data-bucket="easy"] { border-top: 5px solid var(--rule); }
+  .bucket.over { border-color: var(--ink); border-top-style: solid; }
+  .bucket-items { display: flex; flex-wrap: wrap; gap: 6px; align-content: flex-start; }
+  .bchip { display: inline-flex; align-items: center; gap: 2px; padding: 7px 10px; background: var(--sheet); font-size: 12.5px; font-weight: 700; cursor: grab; touch-action: manipulation; user-select: none; text-align: left; border: 0; font-family: inherit; color: var(--ink); }
+  .drag-ghost { position: fixed; z-index: 10; pointer-events: none; background: var(--sheet); padding: 7px 10px; font-size: 12.5px; font-weight: 700; border: 2px solid var(--ink); }
+  /* page 11: there's more to you */
+  .more-tree { margin: 0 0 8px; }
+  #more-top { width: 100%; height: auto; aspect-ratio: 688 / 176; max-width: 100%; display: block; }
+  .more-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2.035%; }
+  .more-name { font-weight: 800; font-size: 12.5px; text-align: center; line-height: 1.3; min-height: 34px; display: flex; align-items: flex-end; -webkit-hyphens: auto; hyphens: auto; }
+  .more-col { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .more-bar { align-self: stretch; height: 6px; margin-bottom: 4px; }
+  .more-col .qsq { width: 54px; max-width: 100%; font-size: 24px; }
+  .more-col .qlabel { text-align: center; font-weight: 700; -webkit-hyphens: auto; hyphens: auto; overflow-wrap: break-word; max-width: 100%; }
+  #more-fade { width: 100%; height: 64px; display: block; }
+  .more-cap { text-align: center; font-stretch: 112%; font-weight: 750; font-size: 17px; margin: 0; }
+  .phone-key { display: none; }
+
+  /* ---------- phones and narrow windows: one continuous page instead of letter sheets ---------- */
+  @media (max-width: 840px) {
+    body { background: var(--sheet); }
+    .draft-note { margin: 0; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+    .page { width: auto; height: auto; margin: 0; overflow: visible;
+      padding-block: 36px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+      border-bottom: 10px solid var(--night); }
+    .folio { left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); }
+    .folio span:first-child { display: none; }
+    h1, h2 { text-wrap: balance; }
+    h2, .trait-head h2 { font-size: clamp(26px, 7.4vw, 36px); }
+    .cover h1 { font-size: clamp(32px, 9.4vw, 66px); }
+    .cover .ask { font-size: clamp(18px, 5.4vw, 24px); }
+    .abcd .lbl { font-size: 12.5px; font-stretch: 100%; text-align: center; }
+    .abcd .col { min-width: 0; }
+    .cover .foot { margin-top: 24px; }
+    #cover.page { padding-bottom: 190px; }
+    .scene { height: 180px; }
+    .callout { font-size: 18px; padding: 18px; }
+    .trait-head { flex-direction: column; gap: 10px; }
+    .trait-box { width: 100px; height: 100px; }
+    .aspects, .ends { grid-template-columns: minmax(0, 1fr); }
+    .end + .end { border-left: 0; border-top: 2px solid var(--sheet); }
+    .guess input { max-width: none; }
+    .lines { min-height: 160px; }
+    textarea.write { min-height: 180px; }
+    .phone-key { display: block; font-size: 12.5px; font-weight: 700; color: var(--ink-soft); margin: 4px 0 6px; }
+    table.check, table.check tbody { display: block; }
+    table.check thead { display: none; }
+    table.check tr { display: grid; grid-template-columns: 28px repeat(5, minmax(0, 1fr)); row-gap: 6px; border-top: 1px solid var(--rule); padding: 10px 0; }
+    table.check td { border: 0; padding: 0; }
+    table.check td:nth-child(2) { grid-column: 2 / -1; }
+    table.check td.o:nth-child(3) { grid-column: 2; }
+    .bubble { width: 34px; height: 34px; line-height: 31px; font-size: 14px; }
+    .g-row { grid-template-columns: 56px minmax(0, 1fr); row-gap: 8px; }
+    .g-meter { grid-column: 1 / -1; }
+    .g-key { flex-wrap: wrap; justify-content: flex-start; gap: 6px 16px; }
+    table.love, table.love tbody, table.love tr, table.love td { display: block; width: auto !important; }
+    table.love thead { display: none; }
+    table.love tr { border-top: 1px solid var(--rule); padding: 8px 0; }
+    table.love td { border: 0; padding: 0; }
+    .buckets { min-height: 140px; }
+    .bchip { white-space: normal; }
+    .more-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 4px; }
+    .more-col { display: grid; grid-template-columns: minmax(0, 1fr) 92px 92px; column-gap: 8px; row-gap: 4px; align-items: center; justify-items: center; }
+    .more-name { grid-column: 1; grid-row: 1; justify-self: stretch; min-height: 0; font-size: 13px; text-align: left; display: block; -webkit-hyphens: manual; hyphens: manual; }
+    .more-bar { grid-column: 1; grid-row: 2; justify-self: stretch; align-self: start; margin: 0; }
+    .more-col .qsq { grid-row: 1; width: 44px; font-size: 18px; }
+    .more-col .qlabel { grid-row: 2; -webkit-hyphens: manual; hyphens: manual; }
+    .more-col > :nth-child(3), .more-col > :nth-child(4) { grid-column: 2; }
+    .more-col > :nth-child(5), .more-col > :nth-child(6) { grid-column: 3; }
+    #more-fade { display: none; }
+    .more-cap { margin-top: 18px; }
+    .offer { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .offer .price { font-size: 32px; }
+  }
+  /* cover promise */
+  .promise { font-size: 16px; max-width: 520px; margin: 10px 0 0; color: var(--ink-soft); }
+  /* pages that grow with their content */
+  .page.page-grow { height: auto; min-height: 1056px; padding-bottom: 80px; }
+  /* page 9: what the glimpse can't see */
+  .unseen { background: var(--night); color: var(--sheet); padding: 20px 24px; margin: 14px 0 18px; display: flex; flex-direction: column; gap: 10px; }
+  .unseen h3 { color: #fff; font-size: 19px; margin: 0; }
+  .unseen p { margin: 0; font-size: 14px; }
+  .unseen b { color: #fff; }
+  .unseen .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .unseen .side { background: var(--night-2); padding: 12px 14px; border-top: 5px solid var(--side, var(--sheet)); }
+  .unseen .side strong { display: block; color: #fff; font-stretch: 112%; font-size: 15px; margin-bottom: 4px; }
+  .unseen .side span { font-size: 13px; }
+  .unseen .note { font-size: 12.5px; color: #b9bcc6; }
+  .unseen a.go { align-self: flex-start; display: inline-block; padding: 10px 16px; background: var(--sheet); color: var(--ink); font-weight: 800; font-size: 14.5px; text-decoration: none; }
+  .unseen a.go:hover { background: #fff; }
+  .unseen a.go:focus-visible { outline: 3px solid var(--a); outline-offset: 3px; }
+  /* page 9: email form */
+  .keep { margin-top: 18px; padding: 18px 20px; background: var(--sheet-deep); }
+  .keep h3 { font-size: 16px; margin: 0 0 4px; }
+  .keep .small { margin: 0 0 10px; }
+  .keep-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .keep-row input { flex: 1 1 220px; min-width: 0; font: inherit; font-size: 15px; padding: 10px 12px; border: 2px solid var(--ink); border-radius: 0; background: var(--sheet); color: var(--ink); }
+  .keep-row button { font: inherit; font-weight: 800; font-size: 14.5px; padding: 10px 16px; border: 0; border-radius: 0; background: var(--ink); color: var(--sheet); cursor: pointer; }
+  .keep-row button:hover { background: #262949; }
+  .keep-msg { margin: 8px 0 0; font-size: 13px; font-weight: 700; min-height: 1px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  #glimpse textarea.write { flex: none; min-height: 140px; }
+  @media (max-width: 840px) {
+    .unseen { padding: 16px; }
+    .unseen .pair { grid-template-columns: minmax(0, 1fr); }
+    .page.page-grow { min-height: 0; }
+  }
+  .problem { border-left: 6px solid var(--n); padding-left: 16px; }
+  /* page 11: before and after */
+  .after { margin: 6px 0 18px; }
+  .after h3 { font-size: 22px; margin-bottom: 4px; }
+  .ba { display: flex; flex-direction: column; }
+  .ba-row { display: grid; grid-template-columns: 92px minmax(0, 1fr) minmax(0, 1fr); gap: 14px; padding: 8px 0; border-top: 1px solid var(--rule); align-items: start; }
+  .ba-head { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); border-top: 0; padding-bottom: 4px; }
+  .ba-k { font-weight: 800; font-size: 13px; }
+  .ba-b { color: var(--ink-soft); font-size: 13.5px; }
+  .ba-a { font-weight: 700; font-size: 13.5px; border-left: 4px solid var(--c); padding-left: 10px; }
+  @media (max-width: 840px) {
+    .ba-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .ba-head { display: none; }
+    .ba-b::before { content: 'Guessing: '; font-weight: 700; }
+  }
+  /* page 11 offer: outcomes first */
+  .offer-kicker { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #b9bcc6; margin-bottom: 6px; }
+  .offer h3 { font-size: 21px; line-height: 1.2; margin-bottom: 10px; text-wrap: balance; }
+  .offer-list { list-style: none; margin: 0 0 10px; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+  .offer-list li { position: relative; padding-left: 20px; font-size: 14px; color: #fff; }
+  .offer-list li::before { content: ''; position: absolute; left: 0; top: .45em; width: 10px; height: 10px; border-radius: 50%; background: var(--dot); }
+  .offer .offer-fine { font-size: 12.5px; color: #b9bcc6; margin: 0; }
+  .offer .price { align-self: start; }
+  .unseen .side .work { display: block; font-style: normal; font-size: 13px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #3a3d5e; color: #fff; }
+  /* page 11: the path */
+  .path { margin: 4px 0 16px; }
+  .path-kicker { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px; }
+  .path ol { list-style: none; margin: 0; padding: 0; position: relative; }
+  .path ol::before { content: ''; position: absolute; left: 7px; top: 10px; bottom: 10px; width: 2.5px; background: var(--rule); }
+  .path li { position: relative; padding: 4px 0 8px 30px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+  .path li::before { content: ''; position: absolute; left: 0; top: 5px; width: 14px; height: 14px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--sheet); }
+  .path li.now::before { background: var(--ink); }
+  .path li b { font-stretch: 112%; font-size: 15.5px; }
+  .path li:not(.now) b { color: var(--ink-soft); }
+  .path li span { font-size: 13px; color: var(--ink-soft); }
+  .path-cap { font-weight: 700; margin: 4px 0 0; }
+  /* page 11: a note from Patrick */
+  .guide { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 18px; background: var(--sheet-deep); padding: 18px 20px; margin: 4px 0 18px; }
+  .guide img { width: 84px; height: 84px; object-fit: cover; display: block; max-width: 100%; }
+  .guide p { font-size: 14px; margin: 0 0 8px; }
+  .guide .guide-sign { font-stretch: 115%; font-weight: 850; font-size: 16px; margin: 0; }
+  @media (max-width: 840px) { .guide { grid-template-columns: minmax(0, 1fr); gap: 12px; } }
+  .why-now { margin: 6px 0 0; font-size: 14.5px; }
+  /* page 9: the results sit on a night panel, like the website's results */
+  .g-panel { background: radial-gradient(90% 70% at 15% 0%, rgba(58, 129, 205, .18), transparent 60%), var(--night); color: #fff; padding: 22px 24px 16px; margin: 6px 0 4px; }
+  .g-panel .g-status { color: #d5d7e3; }
+  .g-panel .g-row { border-top-color: rgba(255, 255, 255, .14); }
+  .g-panel .g-name { color: #fff; }
+  .g-panel .g-read { color: #b9bfd6; }
+  .g-panel .g-read b { color: #fff; }
+  .g-panel .g-track { background: linear-gradient(to right, rgba(255,255,255,.1) 0 37.5%, rgba(255,255,255,.3) 37.5% calc(37.5% + 2px), rgba(255,255,255,.1) calc(37.5% + 2px) 68.75%, rgba(255,255,255,.3) 68.75% calc(68.75% + 2px), rgba(255,255,255,.1) calc(68.75% + 2px)); }
+  .g-panel .g-guess { border-color: #fff; }
+  .g-panel .g-ends { color: #b9bfd6; }
+  .g-panel .g-key { color: #b9bfd6; border-top-color: rgba(255, 255, 255, .14); }
+  .g-panel .g-mark-k { background: #fff; }
+  .g-panel .g-guess-k { border-color: #fff; }
+  @media (max-width: 840px) { .g-panel { padding: 18px 14px 12px; margin-left: -4px; margin-right: -4px; } }
+  /* page 11: opens on a night band with mountains, closes in the dawn */
+  .page { --padx: 64px; --padt: 56px; --padb: 64px; }
+  .page.page-grow { --padb: 80px; }
+  .band { position: relative; overflow: hidden; color: #fff; margin-left: calc(-1 * var(--padx)); margin-right: calc(-1 * var(--padx)); padding-left: var(--padx); padding-right: var(--padx); }
+  .band > *:not(.scene):not(.folio) { position: relative; z-index: 1; }
+  .band-night { margin-top: calc(-1 * var(--padt)); padding-top: var(--padt); padding-bottom: 200px; margin-bottom: 20px;
+    background: radial-gradient(90% 70% at 15% 0%, rgba(58, 129, 205, .2), transparent 60%), var(--night); }
+  .band-night .kicker, .band-night .verse cite { color: #b9bfd6; }
+  .band-night h2 { color: #fff; }
+  .band-night .verse { border-left-color: #fff; color: #fff; }
+  .band-night .scene { height: 200px; }
+  .band-dawn { margin-top: 22px; margin-bottom: calc(-1 * var(--padb)); padding-top: 34px; padding-bottom: 260px;
+    background-color: #24163a; background-image: linear-gradient(180deg, #0b1226 0%, #24163a 50%, #5b1f38 100%); }
+  .band-dawn .scene { height: 250px; }
+  .band-dawn .path-kicker, .band-dawn .path li span { color: #d5d7e3; }
+  .band-dawn .path ol::before { background: rgba(255, 255, 255, .3); }
+  .band-dawn .path li::before { border-color: #fff; background: transparent; }
+  .band-dawn .path li.now::before { background: #fff; }
+  .band-dawn .path li b { color: #fff; }
+  .band-dawn .path li:not(.now) b { color: #b9bfd6; }
+  .band-dawn .offer { background: rgba(11, 18, 38, .88); }
+  .band-dawn .offer:hover { background: var(--night); }
+  .scene.dawn .l1 polygon { fill: #4a1d3c; }
+  .scene.dawn .l2 polygon { fill: #351837; }
+  .scene.dawn .l3 polygon { fill: #23152f; }
+  .scene.dawn .l4 polygon { fill: #15172b; }
+  #more .folio { color: #d5d7e3; z-index: 2; left: var(--padx); right: var(--padx); }
+  @media (max-width: 840px) {
+    .page { --padx: max(16px, env(safe-area-inset-left, 0px)); --padt: 36px; }
+    .band-night { padding-bottom: 150px; }
+    .band-night .scene { height: 150px; }
+    .band-dawn { padding-bottom: 190px; }
+    .band-dawn .scene { height: 180px; }
+  }
+  /* page 10: each line of love, at both ends, across several aspects */
+  table.love td:first-child b { font-size: 13.5px; font-weight: 800; }
+  .love-note { display: block; font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; line-height: 1.4; }
+  .love-chips { display: flex; flex-direction: column; gap: 2px; }
+  .love-chips button.chip { display: block; width: 100%; padding: 4px 8px; line-height: 1.45; }
+  .chip-k { font-weight: 800; margin-right: 6px; }
+  .chip .dot { vertical-align: 1px; }
+  .bchip-k { font-weight: 500; color: var(--ink-soft); margin-left: 4px; }
+</style>
+
+
+<!-- 1. COVER -->
+<section class="page page-grow cover" id="cover">
+  <div class="kicker">A free workbook from Personality+ by Patrick Knicely</div>
+  <p class="ask">Do you know you were…</p>
+  <h1>Made to Image</h1>
+  <p class="promise">Free. About 15 minutes. You'll leave with a first look at how you're made, and what for.</p>
+
+  <div class="tree" id="tree">
+    <svg class="root" id="root" viewBox="0 0 100 100" role="img" aria-label="Your color wheel, made of the five trait colors"></svg>
+    <div class="stem" style="height:16px"></div>
+    <div class="bar"></div>
+    <div class="abcd">
+      <div class="col"><div class="stem" style="height:12px"></div><div class="lbl">Emotions</div><div class="end">Intense</div>
+        <div class="slider"><input type="range" min="-100" max="100" value="30" data-k="emotions" aria-label="Emotions: steady to intense"></div><div class="end">Steady</div></div>
+      <div class="col"><div class="stem" style="height:12px"></div><div class="lbl">Behavior</div><div class="end">Driven</div>
+        <div class="slider"><input type="range" min="-100" max="100" value="40" data-k="behavior" aria-label="Behavior: easygoing to driven"></div><div class="end">Easygoing</div></div>
+      <div class="col"><div class="stem" style="height:12px"></div><div class="lbl">Thinking</div><div class="end">Exploring</div>
+        <div class="slider"><input type="range" min="-100" max="100" value="60" data-k="thinking" aria-label="Thinking: practical to exploring"></div><div class="end">Practical</div></div>
+      <div class="col"><div class="stem" style="height:12px"></div><div class="lbl">Motivations</div><div class="end">Their good</div>
+        <div class="slider"><input type="range" min="-100" max="100" value="-10" data-k="motivations" aria-label="Motivations: my way to their good"></div><div class="end">My way</div></div>
+    </div>
+    <svg class="threads" id="threads" viewBox="0 0 600 260" role="img" aria-label="Ten colored threads, two for each trait, that rise and fall with the sliders"></svg>
+    <div class="drives"><b>Do you know what drives you?</b><span class="small">Slide the four bars and watch the colors shift. Every setting is a different person.</span></div>
+  </div>
+
+  <div class="foot">
+    <div class="verse">For we are his workmanship, created in Christ Jesus for good works, which God prepared beforehand, that we should walk in them.<cite>EPHESIANS 2:10</cite></div>
+  </div>
+  <svg class="scene" id="cover-scene" viewBox="0 0 1440 480" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false"></svg>
+</section>
+
+<!-- 2. MADE TO IMAGE -->
+<section class="page page-grow">
+  <div class="kicker">1 · The big idea</div>
+  <h2>You were made to image</h2>
+  <p class="lede">In the ancient world, a king who ruled a wide territory had a problem. He couldn't be everywhere. So he set up statues of himself in the far corners of his land. Anyone who saw one knew whose land they were standing on. The statue was the king's image. It didn't do anything. It <em>meant</em> something. That's you. You are the king's image.</p>
+  <p>Genesis 1:26–27 takes that word, <em>image</em>, and uses it for us.</p>
+  <p>The Hebrew can be read as humans being created <em>as</em> God's image, not just <em>in</em> it. The image isn't a part of you: not your mind, your creativity, or your soul. It is what you are. It's a <strong>status</strong>: you are God's representative in the world He made. And it's a <strong>calling</strong>: to tend that world and live in it the way He would.</p>
+  <p>Most of us ask, "What am I here for?" Or, "Am I good enough?"</p>
+  <p class="problem">Those questions don't stay in church. They follow you to work on Monday. You feel made for more, but you don't know how to pivot. You write yourself off as lazy, stubborn or hard to live with, because no one ever gave you words for how you're built. You have the same argument at home for the tenth time. You try harder for God, as if He were a boss to impress. And slowly, without ever deciding to, you settle.</p>
+  <p style="font-weight:800">Ability isn't your problem. Aim is.</p>
+  <p>Start with the second question. You can't earn a status you already have. Michael Heiser, the Old Testament scholar I studied under, put it plainly, writing about grace: "That which cannot be achieved by performance cannot be lost by performance."</p>
+  <p>That settles who you are. It doesn't yet answer what you're for. That's where personality comes in.</p>
+  <p>Look at who God chose to represent Him. Moses was slow of speech. Peter spoke before he thought. Paul argued with everyone. David wrote poetry and also killed a giant. God didn't sand them down into one shape. He sent each of them as they were built, and worked on them along the way.</p>
+  <div class="callout">Your personality is how <em>you</em> get to image Him. Your own adventure.</div>
+  <p>Your personality is the shape you bring to the calling: how you tend to feel, act, think and want. It can be spent well or badly. It's the raw material, and God is the one who shapes it.</p>
+  <div class="verse" style="font-size:14.5px;margin-bottom:12px">But now, O LORD, you are our Father; we are the clay, and you are our potter; we are all the work of your hand.<cite>ISAIAH 64:8</cite></div>
+  <div class="verse" style="font-size:14.5px;margin-bottom:12px">Take away the dross from the silver, and the smith has material for a vessel.<cite>PROVERBS 25:4</cite></div>
+  <p>The rest of this workbook helps you see that shape, then aim it at the thing God cares about most.</p>
+  <p style="font-weight:800;font-size:16px;margin-top:4px">God made you unto good works. Your life is the adventure of finding out what they are.</p>
+  <div class="folio"><span>Made to Image</span><span>2</span></div>
+</section>
+
+<!-- 3. EXTRAVERSION -->
+<section class="page">
+  <div class="kicker">2 · The five ways people differ</div>
+  <p style="margin-bottom:18px">Decades of research keep finding the same thing: most of the ways people differ fall along five broad lines, called the Big Five. Everyone has all five, in different amounts. No amount is the right one. Each end has a gift and a shadow. Read all five, and slide each one to where you think you land. You'll check yourself on page 8.</p>
+  <div class="trait-head">
+    <div class="trait-box"><div class="trait-sq" data-sq="e" style="background:var(--e)"></div></div>
+    <div>
+      <h2>Extraversion</h2>
+      <p>How strongly you respond to the good things in life: reward, people, excitement, the chance of a win.</p>
+      <div class="guess"><span class="guess-q">Where do you think you land?</span><span>Lower</span><input type="range" min="0" max="100" value="50" data-guess="e" aria-label="Your guess for Extraversion, from lower to higher"><span>Higher</span></div>
+    </div>
+  </div>
+  <div class="aspects">
+    <div><h3>Enthusiasm</h3>Warmth, joy and liking to be with people.</div>
+    <div><h3>Assertiveness</h3>Speaking up, taking charge and going after what you want.</div>
+  </div>
+  <div class="ends">
+    <div class="end"><h3>Higher</h3><dl>
+      <dt>Gift</dt><dd>You draw people in and get things moving. Rooms come alive around you.</dd>
+      <dt>Shadow</dt><dd>Impulsive choices, and taking over a conversation without meaning to.</dd></dl></div>
+    <div class="end"><h3>Lower</h3><dl>
+      <dt>Gift</dt><dd>You are steady and self-contained. You listen well and can work alone for long stretches.</dd>
+      <dt>Shadow</dt><dd>Your ideas can go unsaid, and joy you could share stays in.</dd></dl></div>
+  </div>
+  <div class="imaging"><h3>Imaging God with it</h3>
+    <p>God throws feasts (Isaiah 25:6) and speaks with authority. He also met Elijah in a low whisper, not in the wind or the fire (1 Kings 19:12). Both the loud and the quiet can show Him.</p></div>
+  <p class="prompt">Where do you see this in yourself? Lean higher, lower, or somewhere between?</p>
+  <textarea class="write" data-save="see-e" aria-label="Where do you see Extraversion in yourself?" placeholder="Type here…"></textarea>
+  <div class="folio"><span>Made to Image</span><span>3</span></div>
+</section>
+
+<!-- 4. NEUROTICISM -->
+<section class="page">
+  <div class="trait-head">
+    <div class="trait-box"><div class="trait-sq" data-sq="n" style="background:var(--n)"></div></div>
+    <div>
+      <h2>Neuroticism</h2>
+      <p>How strongly you respond to threat, loss and things going wrong. The name sounds like a diagnosis. It isn't one. It's a measure of how loud the alarm is.</p>
+      <div class="guess"><span class="guess-q">Where do you think you land?</span><span>Lower</span><input type="range" min="0" max="100" value="50" data-guess="n" aria-label="Your guess for Neuroticism, from lower to higher"><span>Higher</span></div>
+    </div>
+  </div>
+  <div class="aspects">
+    <div><h3>Withdrawal</h3>Worry, discouragement and pulling back when things feel uncertain.</div>
+    <div><h3>Volatility</h3>Irritability, quick anger and moods that rise fast.</div>
+  </div>
+  <div class="ends">
+    <div class="end"><h3>Higher</h3><dl>
+      <dt>Gift</dt><dd>You notice danger early and take things seriously. That has protected you and the people near you.</dd>
+      <dt>Shadow</dt><dd>Worry and low mood can become overwhelming, and anger can outrun the facts.</dd></dl></div>
+    <div class="end"><h3>Lower</h3><dl>
+      <dt>Gift</dt><dd>You stay calm under pressure. Other people steady themselves on you.</dd>
+      <dt>Shadow</dt><dd>You can miss real danger, or seem unmoved when someone else is hurting.</dd></dl></div>
+  </div>
+  <div class="imaging"><h3>Imaging God with it</h3>
+    <p>Jesus was deeply troubled at Lazarus's tomb and wept (John 11:33–35). He drove the money changers out of the temple. Grief and anger are not sin. "Be angry and do not sin" (Ephesians 4:26) assumes you will be angry. The question is where the alarm is aimed.</p></div>
+  <p class="prompt">Where do you see this in yourself? When stress comes, does it go inward, come out, or roll off?</p>
+  <textarea class="write" data-save="see-n" aria-label="Where do you see Neuroticism in yourself?" placeholder="Type here…"></textarea>
+  <div class="folio"><span>Made to Image</span><span>4</span></div>
+</section>
+
+<!-- 5. AGREEABLENESS -->
+<section class="page">
+  <div class="trait-head">
+    <div class="trait-box"><div class="trait-sq" data-sq="a" style="background:var(--a)"></div></div>
+    <div>
+      <h2>Agreeableness</h2>
+      <p>How much your attention goes to other people's needs and feelings, compared with your own.</p>
+      <div class="guess"><span class="guess-q">Where do you think you land?</span><span>Lower</span><input type="range" min="0" max="100" value="50" data-guess="a" aria-label="Your guess for Agreeableness, from lower to higher"><span>Higher</span></div>
+    </div>
+  </div>
+  <div class="aspects">
+    <div><h3>Compassion</h3>Feeling with others, and caring what happens to them.</div>
+    <div><h3>Politeness</h3>Courtesy, respect for others and not pushing your own way.</div>
+  </div>
+  <div class="ends">
+    <div class="end"><h3>Higher</h3><dl>
+      <dt>Gift</dt><dd>You make people feel cared for. You keep the peace, and you forgive readily.</dd>
+      <dt>Shadow</dt><dd>You can be taken advantage of, and then become resentful. You can end up caring more about other people than they care about themselves.</dd></dl></div>
+    <div class="end"><h3>Lower</h3><dl>
+      <dt>Gift</dt><dd>You hold your ground, bargain well and say the hard thing when it needs saying.</dd>
+      <dt>Shadow</dt><dd>You can come across as harsh, and close relationships can wear thin before you notice.</dd></dl></div>
+  </div>
+  <div class="imaging"><h3>Imaging God with it</h3>
+    <p>God describes Himself as "merciful and gracious, slow to anger" (Exodus 34:6). He also sent the prophet Nathan to look King David in the eye, after David took another man's wife and had her husband killed, and tell him plainly: you have sinned greatly (2 Samuel 12:1–13). Tenderness and confrontation both belong to Him.</p></div>
+  <p class="prompt">Where do you see this in yourself? Who gets your softness, and who gets your edge?</p>
+  <textarea class="write" data-save="see-a" aria-label="Where do you see Agreeableness in yourself?" placeholder="Type here…"></textarea>
+  <div class="folio"><span>Made to Image</span><span>5</span></div>
+</section>
+
+<!-- 6. CONSCIENTIOUSNESS -->
+<section class="page">
+  <div class="trait-head">
+    <div class="trait-box"><div class="trait-sq" data-sq="c" style="background:var(--c)"></div></div>
+    <div>
+      <h2>Conscien&shy;tiousness</h2>
+      <p>How well you steer yourself toward goals that are far off, and how much you want things in order.</p>
+      <div class="guess"><span class="guess-q">Where do you think you land?</span><span>Lower</span><input type="range" min="0" max="100" value="50" data-guess="c" aria-label="Your guess for Conscientiousness, from lower to higher"><span>Higher</span></div>
+    </div>
+  </div>
+  <div class="aspects">
+    <div><h3>Industriousness</h3>Drive, discipline and finishing what you start.</div>
+    <div><h3>Orderliness</h3>Neatness, routine, and doing things the right way.</div>
+  </div>
+  <div class="ends">
+    <div class="end"><h3>Higher</h3><dl>
+      <dt>Gift</dt><dd>You are dependable. You can work long and hard toward something that won't pay off for years.</dd>
+      <dt>Shadow</dt><dd>Harsh self-judgment, rigidity when plans change, controlling others, and burnout.</dd></dl></div>
+    <div class="end"><h3>Lower</h3><dl>
+      <dt>Gift</dt><dd>You are flexible and present. When the plan falls apart, you adapt while others are still upset.</dd>
+      <dt>Shadow</dt><dd>Unfinished things pile up, and so do promises people were counting on.</dd></dl></div>
+  </div>
+  <div class="imaging"><h3>Imaging God with it</h3>
+    <p>God brings order out of chaos (Genesis 1), and He finishes what He starts (Philippians 1:6). Then He rested (Genesis 2:2–3), and He built rest into every week. Jesus went to a wedding and turned water into wine to keep the party going (John 2:1–11). He let Himself be interrupted on the way to heal a dying girl (Mark 5:25–34). He stayed two unplanned days in Samaria, a place many Jews went out of their way to avoid (John 4:40). Order serves people. People don't serve order: "The Sabbath was made for man, not man for the Sabbath" (Mark 2:27).</p></div>
+  <p class="prompt">Where do you see this in yourself? What do you finish, and what do you leave half done?</p>
+  <textarea class="write" data-save="see-c" aria-label="Where do you see Conscientiousness in yourself?" placeholder="Type here…"></textarea>
+  <div class="folio"><span>Made to Image</span><span>6</span></div>
+</section>
+
+<!-- 7. OPENNESS -->
+<section class="page">
+  <div class="trait-head">
+    <div class="trait-box"><div class="trait-sq" data-sq="o" style="background:var(--o)"></div></div>
+    <div>
+      <h2>Openness</h2>
+      <p>How much your mind wants to explore: ideas, imagination, beauty and the new.</p>
+      <div class="guess"><span class="guess-q">Where do you think you land?</span><span>Lower</span><input type="range" min="0" max="100" value="50" data-guess="o" aria-label="Your guess for Openness, from lower to higher"><span>Higher</span></div>
+    </div>
+  </div>
+  <div class="aspects">
+    <div><h3>Interest in Ideas</h3>Curiosity, puzzles, arguments and figuring things out.</div>
+    <div><h3>Aesthetic Openness</h3>Beauty, art, imagination and being moved by them.</div>
+  </div>
+  <div class="ends">
+    <div class="end"><h3>Higher</h3><dl>
+      <dt>Gift</dt><dd>You see possibilities others miss, and you connect things that don't seem to belong together.</dd>
+      <dt>Shadow</dt><dd>Trouble committing to one path, restlessness, and second-guessing your own convictions.</dd></dl></div>
+    <div class="end"><h3>Lower</h3><dl>
+      <dt>Gift</dt><dd>You are practical and grounded. You stay loyal to what works and keep what's worth keeping.</dd>
+      <dt>Shadow</dt><dd>You can close the door on what's new, or dismiss what you don't understand yet.</dd></dl></div>
+  </div>
+  <div class="imaging"><h3>Imaging God with it</h3>
+    <p>God made the world with wisdom and filled it with more beauty than anyone needs (Psalm 104:24). He also says, "Ask for the ancient paths, where the good way is; and walk in it" (Jeremiah 6:16). The explorer and tradition both matter.</p></div>
+  <p class="prompt">Where do you see this in yourself? Do you chase the new, guard the old, or both?</p>
+  <textarea class="write" data-save="see-o" aria-label="Where do you see Openness in yourself?" placeholder="Type here…"></textarea>
+  <div class="folio"><span>Made to Image</span><span>7</span></div>
+</section>
+
+<!-- 8. SELF-CHECK ITEMS -->
+<section class="page">
+  <div class="kicker">3 · A quick self-check</div>
+  <h2>Twenty questions</h2>
+  <p>Describe yourself as you generally are now, not as you wish to be. Compare yourself with people you know. Don't overthink it: your first honest answer is the best one. Click one number for each line.</p>
+  <p class="phone-key">1 = Very inaccurate · 3 = Neither · 5 = Very accurate</p>
+  <table class="check">
+    <thead><tr><th></th><th>I…</th><th>Very inaccurate</th><th>Somewhat inaccurate</th><th>Neither</th><th>Somewhat accurate</th><th>Very accurate</th></tr></thead>
+    <tbody id="items"></tbody>
+  </table>
+  <p class="small" style="margin-top:12px">Items: the Mini-IPIP (Donnellan, Oswald, Baird &amp; Lucas, 2006), from the International Personality Item Pool, ipip.ori.org, which is in the public domain.</p>
+  <div class="folio"><span>Made to Image</span><span>8</span></div>
+</section>
+
+<!-- 9. YOUR GLIMPSE -->
+<section class="page page-grow" id="glimpse">
+  <h2>How God shaped you</h2>
+  <p>We've scored it for you. Remember those colors you were clicking? Here's where they go.</p>
+  <div class="g-panel">
+    <p class="g-status" id="g-status"></p>
+    <svg class="g-tree" id="g-tree" viewBox="0 0 688 232" role="img" aria-label="Your tree: you, your five traits, and ten parts still unknown"></svg>
+    <div class="g-rows" id="g-rows"></div>
+  </div>
+  <p class="prompt" style="margin-top:16px">Any surprises? Which one looks least like you, and why?</p>
+  <textarea class="write" data-save="surprises" aria-label="Any surprises?" placeholder="Type here…"></textarea>
+  <div class="unseen" id="unseen"></div>
+  <div class="folio"><span>Made to Image</span><span>9</span></div>
+</section>
+
+<!-- 10. LOVE -->
+<section class="page page-grow">
+  <div class="kicker">4 · What it's for</div>
+  <h2>We are the branches</h2>
+  <p>If personality is the shape you bring to the calling, where can we start? Jesus answered that directly: love God, and love your neighbor (Matthew 22:37–40).</p>
+  <p>What's important to understand is that the fruit of the Spirit affects different personalities in different ways (Galatians 5:22–23). Each line below will help you explore what it may mean to grow with the Lord.</p>
+  <table class="love">
+    <thead><tr><th>Love is… (1 Cor 13:4–7)</th><th>How it can play out</th></tr></thead>
+    <tbody id="love-rows">
+      <tr><td><b>patient</b></td><td class="love-chips"><button type="button" class="chip" data-chip="0-0" data-line="patient" data-label="Higher Volatility" data-c="n"><span class="dot" style="background:var(--n)"></span><span class="chip-k">Higher Volatility</span>Frustration comes quickly; waiting can feel like losing.</button><button type="button" class="chip" data-chip="0-1" data-line="patient" data-label="Lower Volatility" data-c="n"><span class="dot" style="background:var(--n)"></span><span class="chip-k">Lower Volatility</span>Patience comes naturally, but you can ignore what needs attention.</button></td></tr>
+      <tr><td><b>kind</b><span class="love-note">Paul's word here is rare and may be his own coinage. It reaches for God's loyal love and kindness (<em>hesed</em>), not mere sentiment.</span></td><td class="love-chips"><button type="button" class="chip" data-chip="1-0" data-line="kind" data-label="Higher Agreeableness" data-c="a"><span class="dot" style="background:var(--a)"></span><span class="chip-k">Higher Agreeableness</span>You care for others, but you don't care for yourself.</button><button type="button" class="chip" data-chip="1-1" data-line="kind" data-label="Lower Agreeableness" data-c="a"><span class="dot" style="background:var(--a)"></span><span class="chip-k">Lower Agreeableness</span>Your own needs easily overshadow the needs of others.</button></td></tr>
+      <tr><td><b>does not envy</b><span class="love-note">The Greek word can mean good zeal or envy and jealousy.</span></td><td class="love-chips"><button type="button" class="chip" data-chip="2-0" data-line="does not envy" data-label="Higher Withdrawal" data-c="n"><span class="dot" style="background:var(--n)"></span><span class="chip-k">Higher Withdrawal</span>Worry feeds comparison: what they have, what you lack.</button><button type="button" class="chip" data-chip="2-1" data-line="does not envy" data-label="Higher Enthusiasm" data-c="e"><span class="dot" style="background:var(--e)"></span><span class="chip-k">Higher Enthusiasm</span>The fear of missing out: their good things feel like your loss.</button><button type="button" class="chip" data-chip="2-2" data-line="does not envy" data-label="Lower Enthusiasm" data-c="e"><span class="dot" style="background:var(--e)"></span><span class="chip-k">Lower Enthusiasm</span>Envy rarely grips you, but the same word means zeal, and you may lack the eagerness to go after good things.</button></td></tr>
+      <tr><td><b>does not boast, is not arrogant</b></td><td class="love-chips"><button type="button" class="chip" data-chip="3-0" data-line="does not boast, is not arrogant" data-label="Higher Interest in Ideas" data-c="o"><span class="dot" style="background:var(--o)"></span><span class="chip-k">Higher Interest in Ideas</span>Being the one who knows can turn into looking down on those who don't.</button><button type="button" class="chip" data-chip="3-1" data-line="does not boast, is not arrogant" data-label="Lower Interest in Ideas" data-c="o"><span class="dot" style="background:var(--o)"></span><span class="chip-k">Lower Interest in Ideas</span>You don't need to be the smart one, but you may wave off what you don't understand.</button></td></tr>
+      <tr><td><b>is not rude</b></td><td class="love-chips"><button type="button" class="chip" data-chip="4-0" data-line="is not rude" data-label="Lower Politeness" data-c="a"><span class="dot" style="background:var(--a)"></span><span class="chip-k">Lower Politeness</span>Bluntness can land as rudeness, even when you mean well.</button><button type="button" class="chip" data-chip="4-1" data-line="is not rude" data-label="Higher Politeness" data-c="a"><span class="dot" style="background:var(--a)"></span><span class="chip-k">Higher Politeness</span>Courtesy comes naturally, though you may stay silent when you need to speak.</button><button type="button" class="chip" data-chip="4-2" data-line="is not rude" data-label="Higher Assertiveness" data-c="e"><span class="dot" style="background:var(--e)"></span><span class="chip-k">Higher Assertiveness</span>Pushing to get things done, you can talk right over people.</button></td></tr>
+      <tr><td><b>does not insist on its own way</b></td><td class="love-chips"><button type="button" class="chip" data-chip="5-0" data-line="does not insist on its own way" data-label="Higher Assertiveness" data-c="e"><span class="dot" style="background:var(--e)"></span><span class="chip-k">Higher Assertiveness</span>You take charge by instinct, and others can feel run over.</button><button type="button" class="chip" data-chip="5-1" data-line="does not insist on its own way" data-label="Lower Assertiveness" data-c="e"><span class="dot" style="background:var(--e)"></span><span class="chip-k">Lower Assertiveness</span>You rarely push your way, but your ideas may go unsaid.</button><button type="button" class="chip" data-chip="5-2" data-line="does not insist on its own way" data-label="Higher Enthusiasm" data-c="e"><span class="dot" style="background:var(--e)"></span><span class="chip-k">Higher Enthusiasm</span>Your excitement can carry everyone toward what you want.</button><button type="button" class="chip" data-chip="5-3" data-line="does not insist on its own way" data-label="Higher Orderliness" data-c="c"><span class="dot" style="background:var(--c)"></span><span class="chip-k">Higher Orderliness</span>There's a right way to do it, and it's usually yours.</button><button type="button" class="chip" data-chip="5-4" data-line="does not insist on its own way" data-label="Higher Politeness" data-c="a"><span class="dot" style="background:var(--a)"></span><span class="chip-k">Higher Politeness</span>The proper way feels like the only way, and others should follow it.</button></td></tr>
+      <tr><td><b>is not irritable</b></td><td class="love-chips"><button type="button" class="chip" data-chip="6-0" data-line="is not irritable" data-label="Higher Orderliness" data-c="c"><span class="dot" style="background:var(--c)"></span><span class="chip-k">Higher Orderliness</span>Mess and disruption wear on you fast, and can turn into disgust, at things and at people.</button><button type="button" class="chip" data-chip="6-1" data-line="is not irritable" data-label="Lower Orderliness" data-c="c"><span class="dot" style="background:var(--c)"></span><span class="chip-k">Lower Orderliness</span>Little disorder bothers you, but your mess can wear on others.</button></td></tr>
+      <tr><td><b>is not resentful</b></td><td class="love-chips"><button type="button" class="chip" data-chip="7-0" data-line="is not resentful" data-label="Higher Volatility" data-c="n"><span class="dot" style="background:var(--n)"></span><span class="chip-k">Higher Volatility</span>Anger can linger, and recovery takes longer than people expect.</button><button type="button" class="chip" data-chip="7-1" data-line="is not resentful" data-label="Lower Volatility" data-c="n"><span class="dot" style="background:var(--n)"></span><span class="chip-k">Lower Volatility</span>You're not bothered, but it can come across as not caring.</button></td></tr>
+      <tr><td><b>does not rejoice at wrongdoing</b></td><td class="love-chips"><button type="button" class="chip" data-chip="8-0" data-line="does not rejoice at wrongdoing" data-label="Higher Politeness" data-c="a"><span class="dot" style="background:var(--a)"></span><span class="chip-k">Higher Politeness</span>When people break your rules, part of you thinks they got what they deserved.</button></td></tr>
+      <tr><td><b>rejoices with the truth</b></td><td class="love-chips"><button type="button" class="chip" data-chip="9-0" data-line="rejoices with the truth" data-label="Higher Compassion" data-c="a"><span class="dot" style="background:var(--a)"></span><span class="chip-k">Higher Compassion</span>You'd rather comfort someone than tell them the hard truth.</button><button type="button" class="chip" data-chip="9-1" data-line="rejoices with the truth" data-label="Lower Compassion" data-c="a"><span class="dot" style="background:var(--a)"></span><span class="chip-k">Lower Compassion</span>Hard truths come easily, but be careful not to hurt people's feelings.</button></td></tr>
+      <tr><td><b>bears all things, believes all things</b></td><td class="love-chips"><button type="button" class="chip" data-chip="10-0" data-line="bears all things, believes all things" data-label="Higher Politeness" data-c="a"><span class="dot" style="background:var(--a)"></span><span class="chip-k">Higher Politeness</span>You give people the benefit of the doubt, sometimes past wisdom.</button><button type="button" class="chip" data-chip="10-1" data-line="bears all things, believes all things" data-label="Lower Politeness" data-c="a"><span class="dot" style="background:var(--a)"></span><span class="chip-k">Lower Politeness</span>Trust has to be earned with you, and it comes slowly.</button></td></tr>
+      <tr><td><b>hopes all things</b></td><td class="love-chips"><button type="button" class="chip" data-chip="11-0" data-line="hopes all things" data-label="Higher Aesthetic Openness" data-c="o"><span class="dot" style="background:var(--o)"></span><span class="chip-k">Higher Aesthetic Openness</span>You can imagine who someone could become.</button><button type="button" class="chip" data-chip="11-1" data-line="hopes all things" data-label="Lower Aesthetic Openness" data-c="o"><span class="dot" style="background:var(--o)"></span><span class="chip-k">Lower Aesthetic Openness</span>You see people as they are now. It's hard to picture change, and hoping for what you can't see takes effort.</button></td></tr>
+      <tr><td><b>endures all things</b></td><td class="love-chips"><button type="button" class="chip" data-chip="12-0" data-line="endures all things" data-label="Higher Industriousness" data-c="c"><span class="dot" style="background:var(--c)"></span><span class="chip-k">Higher Industriousness</span>You can endure almost anything, but you may never rest.</button><button type="button" class="chip" data-chip="12-1" data-line="endures all things" data-label="Lower Industriousness" data-c="c"><span class="dot" style="background:var(--c)"></span><span class="chip-k">Lower Industriousness</span>You're easygoing, but you may set down what gets hard.</button><button type="button" class="chip" data-chip="12-2" data-line="endures all things" data-label="Higher Withdrawal" data-c="n"><span class="dot" style="background:var(--n)"></span><span class="chip-k">Higher Withdrawal</span>When things get hard, you pull back. Life starts to look like it can only take, not give.</button><button type="button" class="chip" data-chip="12-3" data-line="endures all things" data-label="Lower Withdrawal" data-c="n"><span class="dot" style="background:var(--n)"></span><span class="chip-k">Lower Withdrawal</span>Setbacks rarely stop you, so pressing on comes easier.</button></td></tr>
+    </tbody>
+  </table>
+  <p class="prompt">Drag any that sound like you into <em>Something I struggle with</em>. Drag the ones that are nothing like you into <em>Something I don't struggle with</em>. <span class="small" style="font-weight:400">(Or tap one to move it.)</span></p>
+  <div class="buckets">
+    <div class="bucket" data-bucket="hard"><h3>Something I struggle with</h3><div class="bucket-items"></div></div>
+    <div class="bucket" data-bucket="easy"><h3>Something I don't struggle with</h3><p class="small">How could you spend one of these on someone this week?</p><div class="bucket-items"></div></div>
+  </div>
+  <div class="folio"><span>Made to Image</span><span>10</span></div>
+</section>
+
+<!-- 11. THERE'S MORE TO YOU -->
+<section class="page page-grow" id="more">
+  <div class="band band-night">
+    <div class="kicker">5 · Still to discover</div>
+    <h2>Discover how God knit you together</h2>
+    <div class="verse" style="font-size:14.5px;margin-bottom:14px">For you formed my inward parts; you knitted me together in my mother's womb. I praise you, for I am fearfully and wonderfully made.<cite>PSALM 139:13–14</cite></div>
+    <p class="lede" style="margin-bottom:6px">The mystery of who we are and what we could do is life's great adventure.</p>
+    <svg class="scene" id="more-night" viewBox="0 0 1440 480" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false"></svg>
+  </div>
+  <p>Here's the mini map you've discovered today. The rest is still waiting.</p>
+  <div class="more-tree">
+    <svg id="more-top" viewBox="0 0 688 176" role="img" aria-label="The top of your tree, colored in: you and your five traits"></svg>
+    <div class="more-grid" lang="en">
+      <div class="more-col"><div class="more-name">Extraversion</div><div class="more-bar" style="background:var(--e)"></div>
+        <div class="qsq">?</div><div class="qlabel">Enthusiasm</div><div class="qsq">?</div><div class="qlabel">Assertiveness</div></div>
+      <div class="more-col"><div class="more-name">Neuroticism</div><div class="more-bar" style="background:var(--n)"></div>
+        <div class="qsq">?</div><div class="qlabel">Withdrawal</div><div class="qsq">?</div><div class="qlabel">Volatility</div></div>
+      <div class="more-col"><div class="more-name">Agreeableness</div><div class="more-bar" style="background:var(--a)"></div>
+        <div class="qsq">?</div><div class="qlabel">Compassion</div><div class="qsq">?</div><div class="qlabel">Politeness</div></div>
+      <div class="more-col"><div class="more-name">Conscien&shy;tiousness</div><div class="more-bar" style="background:var(--c)"></div>
+        <div class="qsq">?</div><div class="qlabel">Industriousness</div><div class="qsq">?</div><div class="qlabel">Orderliness</div></div>
+      <div class="more-col"><div class="more-name">Openness</div><div class="more-bar" style="background:var(--o)"></div>
+        <div class="qsq">?</div><div class="qlabel">Interest in Ideas</div><div class="qsq">?</div><div class="qlabel">Aesthetic Openness</div></div>
+    </div>
+    <svg id="more-fade" viewBox="0 0 688 64" aria-hidden="true"></svg>
+  </div>
+  <div class="after">
+    <h3>Stop guessing. Start aiming.</h3>
+    <p><b>What am I here for?</b> As you understand how you're put together, you can stop guessing at the answer.</p>
+    <div class="ba">
+      <div class="ba-row ba-head"><div></div><div>Guessing</div><div>Knowing</div></div>
+      <div class="ba-row"><div class="ba-k">Yourself</div><div class="ba-b">You can't explain why you react the way you do, so you write it off as a flaw.</div><div class="ba-a">You have words for how you're built. You stop fighting it and start using it.</div></div>
+      <div class="ba-row"><div class="ba-k">Home</div><div class="ba-b">The same argument, for the tenth time.</div><div class="ba-a">You know how God equipped you to love the people closest to you.</div></div>
+      <div class="ba-row"><div class="ba-k">God</div><div class="ba-b">You question whether He really gifted you at all.</div><div class="ba-a">You serve from who you are. It's not a cookie-cutter Christian life.</div></div>
+      <div class="ba-row"><div class="ba-k">Direction</div><div class="ba-b">Slowly, without deciding to, you settle.</div><div class="ba-a">You aim.</div></div>
+      <div class="ba-row"><div class="ba-k">Work</div><div class="ba-b">You feel made for more, but you don't know how to pivot.</div><div class="ba-a">You know your strengths and put them to work, and you become a better imager of God.</div></div>
+    </div>
+    <p class="small" style="margin-top:8px">It won't make life easy. It makes it clear.</p>
+  </div>
+  <div class="verse" style="font-size:14.5px;margin-bottom:10px">The secret things belong to the Lord our God, but the things that are revealed belong to us and to our children forever.<cite>DEUTERONOMY 29:29</cite></div>
+  <p>Some of what God made you for, He'll show you over a lifetime. Some of it you can know now.</p>
+  <div class="guide">
+    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QBARXhpZgAATU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAA8KADAAQAAAABAAAA8AAAAAD/4QmNaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA2LjAuMCI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgcGhvdG9zaG9wOlRyYW5zbWlzc2lvblJlZmVyZW5jZT0icVk4MDZJVV9CcWVKT3BjSzBRX3oiLz4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8P3hwYWNrZXQgZW5kPSJ3Ij8+AP/tAGBQaG90b3Nob3AgMy4wADhCSU0EBAAAAAAAKBwBWgADGyVHHAIAAAIAAhwCZwAUcVk4MDZJVV9CcWVKT3BjSzBRX3o4QklNBCUAAAAAABBgtokAjlFJD0zJaeCvqZWt/+ICHElDQ19QUk9GSUxFAAEBAAACDGxjbXMCEAAAbW50clJHQiBYWVogB9wAAQAZAAMAKQA5YWNzcEFQUEwAAAAAAAAA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" alt="Patrick Knicely" width="84" height="84">
+    <div>
+      <div class="path-kicker">A note from Patrick</div>
+      <p>I'm Patrick Knicely. I built Personality+ to help people understand how God made them and find their place in His Kingdom. It brings together two things I've spent years studying: the science of personality, and the Bible's bigger story, which I studied under Michael Heiser.</p>
+      <p>I'm a licensed teacher and a Licensed Professional Counselor in Virginia, and a personality researcher working with the Big Five Aspects model. I've taught middle and high school, coached wrestling and swimming, and taught other counselors at conferences. I'm not your counselor. I'm someone who has spent years in both worlds, handing you what I've found.</p>
+      <p class="guide-sign">Patrick</p>
+    </div>
+  </div>
+  <div class="band band-dawn">
+    <p style="font-weight:800">You can keep guessing and settling. Or you can find out.</p>
+    <div class="path">
+      <div class="path-kicker">The path</div>
+      <ol>
+        <li class="now"><b>How God made you</b><span>The full test. Start here today.</span></li>
+        <li><b>Your gifts</b></li>
+        <li><b>Where He's leading you</b></li>
+      </ol>
+      <p class="path-cap">The full test is the first step.</p>
+      <p class="why-now">If there's a decision in front of you, a job, a move, a marriage, find out how God made you before you make it.</p>
+    </div>
+    <a class="offer" href="https://discoverpersonalityplus.com/buy?utm_source=made-to-image&amp;utm_medium=freebie&amp;utm_content=ending" target="_blank" rel="noopener" data-track="buy_click" data-where="ending">
+      <div>
+        <div class="offer-kicker">Open the box</div>
+        <h3>Find out how God made you. Then find out what for.</h3>
+        <ul class="offer-list">
+          <li style="--dot:var(--e)">Know exactly where your strengths and blind spots are, across all ten parts of your personality.</li>
+          <li style="--dot:var(--n)">See where you really stand next to other people, and why they don't see things the way you do.</li>
+          <li style="--dot:var(--a)">Understand the person you live with, and why you rub.</li>
+          <li style="--dot:var(--c)">Leave with a clear next step for each part of you, not just a score.</li>
+        </ul>
+        <p class="offer-fine">The full Personality+ test: 100 research-tested questions, ten aspects scored against research norms, a guided walk through your results, a PDF report, and compare with someone you love.</p>
+        <p class="offer-go">Take the full test →</p>
+      </div>
+      <div class="price">$9.99</div>
+    </a>
+    <div class="folio"><span>Made to Image · Sources: Heiser, The Unseen Realm (2015) and What Does God Want? (2018); IPIP; Scripture ESV</span><span>11</span></div>
+    <svg class="scene dawn" id="more-dawn" viewBox="0 0 1440 480" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false"></svg>
+  </div>
+</section>
+
+<script>
+  // Mini-IPIP, in the authors' interleaved order. Wording exactly as on ipip.ori.org/MiniIPIPKey.htm.
+  const items = [
+    ['Am the life of the party.', 'E', 0], ['Sympathize with others’ feelings.', 'A', 0],
+    ['Get chores done right away.', 'C', 0], ['Have frequent mood swings.', 'N', 0],
+    ['Have a vivid imagination.', 'O', 0], ['Don’t talk a lot.', 'E', 1],
+    ['Am not interested in other people’s problems.', 'A', 1], ['Often forget to put things back in their proper place.', 'C', 1],
+    ['Am relaxed most of the time.', 'N', 1], ['Am not interested in abstract ideas.', 'O', 1],
+    ['Talk to a lot of different people at parties.', 'E', 0], ['Feel others’ emotions.', 'A', 0],
+    ['Like order.', 'C', 0], ['Get upset easily.', 'N', 0],
+    ['Have difficulty understanding abstract ideas.', 'O', 1], ['Keep in the background.', 'E', 1],
+    ['Am not really interested in others.', 'A', 1], ['Make a mess of things.', 'C', 1],
+    ['Seldom feel blue.', 'N', 1], ['Do not have a good imagination.', 'O', 1],
+  ];
+  const TRAIT_COLOR = {E: '#ed5362', N: '#9a338e', A: '#3a81cd', C: '#00c9b7', O: '#344b47'};
+  const answers = (() => { try { return JSON.parse(localStorage.getItem('mti:answers')) || {}; } catch (e) { return {}; } })();
+  const tb = document.getElementById('items');
+  items.forEach(([text, trait], i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="num">${i + 1}</td><td>${text}</td>` +
+      [1, 2, 3, 4, 5].map((n) => `<td class="o"><button type="button" class="bubble" data-i="${i}" data-n="${n}" aria-pressed="false" aria-label="${n}">${n}</button></td>`).join('');
+    tb.appendChild(tr);
+  });
+  // The Easter egg: a picked number fills with its trait's color. Nothing on the page says which trait.
+  function paintRow(i) {
+    tb.querySelectorAll(`.bubble[data-i="${i}"]`).forEach((b) => {
+      const on = answers[i] === +b.dataset.n;
+      const c = TRAIT_COLOR[items[i][1]];
+      b.setAttribute('aria-pressed', on);
+      b.style.background = on ? c : '';
+      b.style.borderColor = on ? c : '';
+      b.style.color = on ? (items[i][1] === 'C' ? '#15172b' : '#fff') : '';
+    });
+  }
+  tb.addEventListener('click', (e) => {
+    const b = e.target.closest('.bubble');
+    if (!b) return;
+    answers[+b.dataset.i] = +b.dataset.n;
+    try { localStorage.setItem('mti:answers', JSON.stringify(answers)); } catch (err) {}
+    paintRow(+b.dataset.i);
+    renderGlimpse();
+    renderMore();
+    if (Object.keys(answers).length === items.length && !tb.dataset.done) { tb.dataset.done = '1'; track('self_check_complete'); }
+  });
+  items.forEach((_, i) => paintRow(i));
+  // ---------- Trait pages: the guess slider sizes the trait square; answers are kept in this browser ----------
+  const store = {
+    get(k) { try { return localStorage.getItem('mti:' + k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem('mti:' + k, v); } catch (e) {} },
+  };
+  document.querySelectorAll('input[data-guess]').forEach((inp) => {
+    const k = inp.dataset.guess;
+    const sq = document.querySelector(`[data-sq="${k}"]`);
+    const saved = store.get('guess-' + k);
+    if (saved !== null) inp.value = saved;
+    const size = () => { const px = 30 + 90 * (inp.value / 100); sq.style.width = sq.style.height = px + 'px'; };
+    inp.addEventListener('input', () => { size(); store.set('guess-' + k, inp.value); });
+    size();
+  });
+  document.querySelectorAll('textarea[data-save]').forEach((ta) => {
+    const saved = store.get(ta.dataset.save);
+    if (saved !== null) ta.value = saved;
+    ta.addEventListener('input', () => store.set(ta.dataset.save, ta.value));
+  });
+
+
+  // ---------- Page 10: drag the reasons into "Comes hard" / "Comes easy" (tap also works) ----------
+  (function () {
+    const KEY = 'mti:love-buckets-2';
+    let placed = {};
+    try { placed = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+    const chips = [...document.querySelectorAll('#love-rows .chip')];
+    const byId = Object.fromEntries(chips.map((c) => [c.dataset.chip, c]));
+    const buckets = Object.fromEntries([...document.querySelectorAll('.bucket')].map((b) => [b.dataset.bucket, b]));
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(placed)); } catch (e) {} };
+
+    function render() {
+      Object.values(buckets).forEach((b) => (b.querySelector('.bucket-items').innerHTML = ''));
+      chips.forEach((c) => {
+        const where = placed[c.dataset.chip];
+        c.classList.toggle('placed', !!where);
+        if (!where) return;
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'bchip';
+        b.dataset.chip = c.dataset.chip;
+        b.title = c.textContent;
+        b.innerHTML = `<span class="dot" style="background:var(--${c.dataset.c})"></span>${c.dataset.line} <span class="bchip-k">${c.dataset.label}</span>`;
+        buckets[where].querySelector('.bucket-items').appendChild(b);
+      });
+    }
+    // tap: table → hard → easy → back to the table
+    const cycle = (id) => {
+      const next = {undefined: 'hard', hard: 'easy', easy: undefined}[placed[id]];
+      if (next) placed[id] = next; else delete placed[id];
+      save(); render();
+    };
+
+    let drag = null;
+    document.addEventListener('pointerdown', (e) => {
+      const el = e.target.closest('#love-rows .chip, .bchip');
+      if (!el) return;
+      drag = {id: el.dataset.chip, x: e.clientX, y: e.clientY, moved: false, ghost: null, touch: e.pointerType === 'touch'};
+      if (e.pointerType !== 'touch' && el.setPointerCapture) el.setPointerCapture(e.pointerId);
+    });
+    document.addEventListener('pointermove', (e) => {
+      if (!drag || drag.touch) return;
+      if (!drag.moved && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 6) return;
+      if (!drag.moved) {
+        drag.moved = true;
+        drag.ghost = document.createElement('div');
+        drag.ghost.className = 'drag-ghost';
+        const c = byId[drag.id];
+        drag.ghost.innerHTML = `<span class="dot" style="background:var(--${c.dataset.c})"></span>${c.dataset.line} · ${c.dataset.label}`;
+        document.body.appendChild(drag.ghost);
+      }
+      drag.ghost.style.left = e.clientX + 10 + 'px';
+      drag.ghost.style.top = e.clientY + 10 + 'px';
+      const over = document.elementFromPoint(e.clientX, e.clientY)?.closest('.bucket');
+      Object.values(buckets).forEach((b) => b.classList.toggle('over', b === over));
+    });
+    document.addEventListener('pointercancel', () => {
+      if (drag && drag.ghost) drag.ghost.remove();
+      drag = null;
+      Object.values(buckets).forEach((b) => b.classList.remove('over'));
+    });
+    document.addEventListener('pointerup', (e) => {
+      if (!drag) return;
+      const d = drag; drag = null;
+      Object.values(buckets).forEach((b) => b.classList.remove('over'));
+      if (!d.moved) { cycle(d.id); return; }
+      d.ghost.remove();
+      const over = document.elementFromPoint(e.clientX, e.clientY)?.closest('.bucket');
+      if (over) placed[d.id] = over.dataset.bucket;
+      else if (!e.target.closest || !document.elementFromPoint(e.clientX, e.clientY)?.closest('.bucket')) {
+        // dropped outside a bucket: a chip dragged out of a bucket goes back to the table
+        if (document.elementFromPoint(e.clientX, e.clientY)?.closest('#love-rows')) delete placed[d.id];
+      }
+      save(); render();
+    });
+    // keyboard: Enter or Space on a chip moves it like a tap
+    document.addEventListener('click', (e) => {
+      const el = e.target.closest('#love-rows .chip, .bchip');
+      if (el && e.detail === 0) cycle(el.dataset.chip);
+    });
+    render();
+  })();
+
+
+  // ---------- Page 11: the top of the tree colored from the glimpse; the rest still "?" ----------
+  function renderMore() {
+    const T = ['E', 'N', 'A', 'C', 'O'];
+    const done = Object.keys(answers).length === items.length;
+    const raw = Object.fromEntries(T.map((k) => [k, 0]));
+    items.forEach(([, k, rev], i) => { if (answers[i]) raw[k] += rev ? 6 - answers[i] : answers[i]; });
+    const pct = (k) => (done ? ((raw[k] - 4) / 16) * 100 : 50);
+    const gx = (t) => 63.2 + t * 140.4; // centers of the five grid columns below
+    const rad = (v, m) => m * Math.sqrt(Math.max(10, v) / 100);
+    let h = '<g stroke="#c3c6cc" stroke-width="2.5" fill="none">' +
+      `<line x1="344" y1="92" x2="344" y2="108"/><line x1="${gx(0)}" y1="108" x2="${gx(4)}" y2="108"/>`;
+    T.forEach((_, t) => (h += `<line x1="${gx(t)}" y1="108" x2="${gx(t)}" y2="176"/>`));
+    h += '</g>';
+    const vals = T.map((k) => Math.max(8, pct(k)));
+    const tot = vals.reduce((x, y) => x + y, 0);
+    let ang = -Math.PI / 2;
+    const R = 44, cx = 344, cy = 46;
+    T.forEach((k, t) => {
+      const a0 = ang; ang += (vals[t] / tot) * Math.PI * 2;
+      const large = ang - a0 > Math.PI ? 1 : 0;
+      h += `<path d="M${cx},${cy} L${cx + R * Math.cos(a0)},${cy + R * Math.sin(a0)} A${R},${R} 0 ${large} 1 ${cx + R * Math.cos(ang)},${cy + R * Math.sin(ang)} Z" fill="${TRAIT_COLOR[k]}" stroke="#ebeced" stroke-width="2.5"/>`;
+    });
+    h += `<circle cx="${cx}" cy="${cy}" r="30" fill="#ebeced"/><text x="${cx}" y="${cy + 1}" text-anchor="middle" dominant-baseline="middle" font-family="Archivo, sans-serif" font-weight="850" font-stretch="125%" font-size="19" fill="#15172b">You</text>`;
+    const names = ['Extraversion', 'Neuroticism', 'Agreeableness', 'Conscientiousness', 'Openness'];
+    T.forEach((k, t) => {
+      h += `<circle cx="${gx(t)}" cy="140" r="${rad(pct(k), 28)}" fill="${TRAIT_COLOR[k]}"/>` ;
+    });
+    document.getElementById('more-top').innerHTML = h;
+
+    // below the ten boxes, the tree keeps going and fades out
+    let f = '';
+    T.forEach((_, t) => {
+      [-26, 0, 26].forEach((dx, j) => {
+        const x = gx(t) + dx;
+        f += `<line x1="${gx(t)}" y1="0" x2="${x}" y2="34" stroke="#c3c6cc" stroke-width="2" stroke-dasharray="3 4" opacity="${0.9 - j * 0.15}"/>` +
+          `<circle cx="${x}" cy="44" r="${7 - Math.abs(dx) / 13}" fill="#c3c6cc" opacity="${0.55 - Math.abs(dx) / 120}"/>` +
+          `<circle cx="${x}" cy="60" r="3" fill="#c3c6cc" opacity="${0.3 - Math.abs(dx) / 200}"/>`;
+      });
+    });
+    document.getElementById('more-fade').innerHTML = f;
+  }
+
+  // ---------- Cover: four ABCD sliders move the threads and reshape the color wheel ----------
+  // Illustration only, not scoring. Each slider pushes certain aspects up (or down).
+  // The wheel, threads and mountains are rebuilt from the website's own drawings (Threads.tsx, Scene.tsx).
+  (function () {
+    const COLORS = ['#ed5362', '#9a338e', '#3a81cd', '#00c9b7', '#344b47']; // E N A C O
+    const THREAD = (i) => (i === 4 ? '#6f9189' : COLORS[i]); // Openness ink is too dark on night
+    // aspects in order: E(Enthusiasm, Assertiveness) N(Withdrawal, Volatility) A(Compassion, Politeness)
+    //                   C(Industriousness, Orderliness) O(Interest in Ideas, Aesthetic Openness)
+    const base = [52, 48, 45, 50, 55, 50, 50, 46, 52, 54];
+    const pull = {
+      emotions:    [0.5, 0, 0.7, 0.7, 0.4, 0, 0, 0, 0, 0.2],
+      behavior:    [0, 0.5, 0, 0, 0, 0.2, 0.7, 0.7, 0, 0],
+      thinking:    [0.1, 0, 0, 0, 0, 0, 0, -0.2, 0.8, 0.7],
+      motivations: [0, -0.5, 0, 0, 0.6, 0.6, 0, 0, 0, 0],
+    };
+    const motion = !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const inputs = [...document.querySelectorAll('#tree input')];
+    const NS = 'http://www.w3.org/2000/svg';
+    const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+
+    // --- the color wheel: five arcs that draw themselves in ---
+    const root = document.getElementById('root');
+    const R = 40, C = 2 * Math.PI * R;
+    const arcs = COLORS.map((c) => el('circle', {class: 'wheel-arc', cx: 50, cy: 50, r: R, fill: 'none', stroke: c, 'stroke-width': 16, 'stroke-dasharray': `0 ${C}`}, root));
+    el('text', {x: 50, y: 51, 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-family': 'Archivo, sans-serif',
+      'font-weight': 850, 'font-size': 19, 'font-stretch': '125%', fill: '#ffffff'}, root).textContent = 'You';
+    let wheelReady = false;
+    function drawWheel(tr) {
+      const total = tr.reduce((x, y) => x + Math.max(4, y), 0);
+      let a = -90;
+      tr.forEach((v, i) => {
+        const deg = (Math.max(4, v) / total) * 360;
+        const len = (deg / 360) * C;
+        arcs[i].style.transform = `rotate(${a}deg)`;
+        if (wheelReady || !motion) arcs[i].style.strokeDasharray = `${Math.max(0, len - 1.2)} ${C}`;
+        else arcs[i].dataset.dash = `${Math.max(0, len - 1.2)} ${C}`;
+        a += deg;
+      });
+    }
+
+    // --- the threads: ten threads, two per trait, woven through five knots ---
+    const svg = document.getElementById('threads');
+    const W = 600, H = 260, KNOT_X = [60, 180, 300, 420, 540], GAP = 10, STEP = 6;
+    const SWELL = [-32, 38, -24, 32, -19];
+    const knotY = (score, i) => Math.max(22, Math.min(H - 22, 130 + SWELL[i] - (Math.max(0, Math.min(100, score)) - 50) * 1.3));
+    const centerY = (x, ys) => {
+      const xs = [-60, ...KNOT_X, W + 60], pts = [ys[0], ...ys, ys[ys.length - 1]];
+      let j = 0; while (j < xs.length - 2 && x > xs[j + 1]) j++;
+      const u = (x - xs[j]) / (xs[j + 1] - xs[j]);
+      const p0 = pts[Math.max(0, j - 1)], p1 = pts[j], p2 = pts[j + 1], p3 = pts[Math.min(pts.length - 1, j + 2)];
+      const u2 = u * u, u3 = u2 * u;
+      return 0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u2 + (-p0 + 3 * p1 - 3 * p2 + p3) * u3);
+    };
+    const fan = (x) => {
+      const xs = [-60, ...KNOT_X, W + 60];
+      let j = 0; while (j < xs.length - 2 && x > xs[j + 1]) j++;
+      const u = (x - xs[j]) / (xs[j + 1] - xs[j]);
+      return Math.sin(Math.PI * u) * (j % 2 === 0 ? 1 : -1);
+    };
+    const threadPath = (k, ys, t) => {
+      const off = (k - 4.5) * GAP;
+      let d = '';
+      for (let x = -20; x <= W + 20; x += STEP) {
+        const drift = t ? 6 * Math.sin(x / 85 + t * 0.9 + k * 0.22) : 0;
+        const y = centerY(x, ys) + off * fan(x) + drift * Math.abs(fan(x));
+        d += `${d ? 'L' : 'M'}${x} ${y.toFixed(1)}`;
+      }
+      return d;
+    };
+    const g = el('g', {fill: 'none', 'stroke-linecap': 'round'}, svg);
+    const paths = Array.from({length: 10}, (_, k) => el('path', {stroke: THREAD(Math.floor(k / 2)), 'stroke-width': 2.2, opacity: k % 2 ? 0.75 : 1}, g));
+    const knots = KNOT_X.map((x, i) => el('circle', {class: 'knot', r: 9, fill: THREAD(i), cx: 0, cy: 0}, svg));
+    let target = [50, 50, 50, 50, 50].map(knotY), shown = [...target];
+    const drawThreads = (t) => {
+      knots.forEach((c, i) => c.setAttribute('transform', `translate(${KNOT_X[i]} ${shown[i].toFixed(1)})`));
+      paths.forEach((p, k) => p.setAttribute('d', threadPath(k, shown, t)));
+    };
+
+    function update() {
+      const s = Object.fromEntries(inputs.map((i) => [i.dataset.k, i.value / 100]));
+      const asp = base.map((b, i) => Math.max(4, Math.min(98, b + 46 * Object.keys(pull).reduce((sum, k) => sum + pull[k][i] * s[k], 0))));
+      const tr = [0, 1, 2, 3, 4].map((t) => (asp[2 * t] + asp[2 * t + 1]) / 2);
+      drawWheel(tr);
+      target = tr.map((v, i) => knotY(v, i));
+      if (!motion) { shown = [...target]; drawThreads(0); }
+    }
+    inputs.forEach((i) => i.addEventListener('input', update));
+    update();
+    shown = [...target];
+    drawThreads(0);
+
+    if (motion) {
+      let frame = 0, visible = true;
+      const start = performance.now();
+      const tick = (now) => {
+        shown = shown.map((y, i) => y + (target[i] - y) * 0.12);
+        drawThreads((now - start) / 1000);
+        frame = visible ? requestAnimationFrame(tick) : 0;
+      };
+      frame = requestAnimationFrame(tick);
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible && !frame) frame = requestAnimationFrame(tick); }).observe(svg);
+      }
+      // the wheel draws itself in, one color after another
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        arcs.forEach((a, i) => { a.style.transitionDelay = `${0.15 + i * 0.16}s`; a.style.strokeDasharray = a.dataset.dash; });
+        wheelReady = true;
+        setTimeout(() => arcs.forEach((a) => (a.style.transitionDelay = '0s')), 1800);
+      }));
+    }
+
+    // --- the mountains and the red sun ---
+    const scene = document.getElementById('cover-scene');
+    const RIDGES = [
+      '0,300 120,240 230,270 360,180 470,230 600,150 720,210 860,120 980,200 1100,160 1240,230 1440,170 1440,480 0,480',
+      '0,360 150,290 280,330 420,250 560,320 700,260 820,300 960,230 1100,310 1260,250 1440,300 1440,480 0,480',
+      '0,410 180,350 340,390 500,330 640,380 800,340 940,400 1120,350 1300,390 1440,360 1440,480 0,480',
+      '0,450 200,420 420,440 620,410 860,445 1080,415 1300,440 1440,425 1440,480 0,480',
+    ];
+    const widen = (pts) => {
+      const p = pts.split(' ');
+      const first = p[0].split(',')[1], lastTop = p[p.length - 3].split(',')[1];
+      return [`-120,${first}`, ...p.slice(0, -2), `1560,${lastTop}`, '1560,480', '-120,480'].join(' ');
+    };
+    const sun = el('g', {class: 'sun'}, scene);
+    el('circle', {cx: 1035, cy: 175, r: 78}, sun);
+    RIDGES.map(widen).forEach((pts, i) => {
+      const lyr = el('g', {class: `lyr l${i + 1}`}, scene);
+      el('polygon', {points: pts}, lyr);
+      if (i < 3) el('rect', {class: 'fog', x: -120, y: 300 + i * 50, width: 1680, height: 40}, lyr);
+    });
+    requestAnimationFrame(() => requestAnimationFrame(() => scene.classList.add('in')));
+  })();
+
+
+
+  // ---------- Page 11: mountains at the top (night) and the close (dawn); they rise when scrolled into view ----------
+  (function () {
+    const NS = 'http://www.w3.org/2000/svg';
+    const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+    const RIDGES = [
+      '0,300 120,240 230,270 360,180 470,230 600,150 720,210 860,120 980,200 1100,160 1240,230 1440,170 1440,480 0,480',
+      '0,360 150,290 280,330 420,250 560,320 700,260 820,300 960,230 1100,310 1260,250 1440,300 1440,480 0,480',
+      '0,410 180,350 340,390 500,330 640,380 800,340 940,400 1120,350 1300,390 1440,360 1440,480 0,480',
+      '0,450 200,420 420,440 620,410 860,445 1080,415 1300,440 1440,425 1440,480 0,480',
+    ];
+    const widen = (pts) => {
+      const p = pts.split(' ');
+      const first = p[0].split(',')[1], lastTop = p[p.length - 3].split(',')[1];
+      return [`-120,${first}`, ...p.slice(0, -2), `1560,${lastTop}`, '1560,480', '-120,480'].join(' ');
+    };
+    const build = (svg, sun) => {
+      if (sun) el('circle', {cx: sun[0], cy: sun[1], r: 78}, el('g', {class: 'sun'}, svg));
+      RIDGES.map(widen).forEach((pts, i) => {
+        const lyr = el('g', {class: `lyr l${i + 1}`}, svg);
+        el('polygon', {points: pts}, lyr);
+        if (i < 3) el('rect', {class: 'fog', x: -120, y: 300 + i * 50, width: 1680, height: 40}, lyr);
+      });
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { svg.classList.add('in'); io.disconnect(); } }, {threshold: 0.2});
+        io.observe(svg);
+      } else svg.classList.add('in');
+    };
+    build(document.getElementById('more-night'), [420, 190]);
+    build(document.getElementById('more-dawn'), [1000, 210]);
+  })();
+
+  // ---------- Drop-off tracking hooks ----------
+  // Nothing is sent anywhere yet. When the workbook moves to the website, point window.mtiTrack at the
+  // site's analytics tool and these events start counting: who opens it, how far they get, and who clicks to buy.
+  // When the workbook sits on the website (in a frame under the site header), the site is its host:
+  // tracking goes to the site's tracker, and buy links open in the same tab instead of a new one.
+  const host = (() => { try { return window.frameElement && window.frameElement.dataset.site === 'pp' ? window.parent : null; } catch (e) { return null; } })();
+  const track = (event, data) => {
+    try {
+      const sink = window.mtiTrack || (host && host.mtiTrack);
+      if (sink) sink(event, data || {}); else console.info('[track]', event, data || '');
+    } catch (e) {}
+  };
+  if (host) {
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a[href^="https://discoverpersonalityplus.com/"]');
+      if (!a) return;
+      e.preventDefault();
+      host.location.href = a.getAttribute('href').replace('https://discoverpersonalityplus.com', '');
+    });
+  }
+  track('open');
+  let touched = false;
+  document.addEventListener('input', () => { if (!touched) { touched = true; track('first_interaction'); } }, true);
+  document.addEventListener('click', (e) => {
+    if (!touched && e.target.closest('button, input')) { touched = true; track('first_interaction'); }
+    const a = e.target.closest('[data-track]');
+    if (a) track(a.dataset.track, {where: a.dataset.where});
+  }, true);
+  if ('IntersectionObserver' in window) {
+    const seen = new Set();
+    const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+      if (!en.isIntersecting) return;
+      const n = [...document.querySelectorAll('.page')].indexOf(en.target) + 1;
+      if (!seen.has(n)) { seen.add(n); track('reached_page', {page: n}); }
+    }), {threshold: 0, rootMargin: '0px 0px -50% 0px'}); // a page counts once its top reaches the middle of the screen
+    document.querySelectorAll('.page').forEach((pg) => io.observe(pg));
+  }
+
+
+  // ---------- Page 9: score the self-check and draw the glimpse ----------
+  function renderGlimpse() {
+    // on the night panel, Openness ink is too dark, so it uses the same lighter tint as the threads
+    const NC = Object.assign({}, TRAIT_COLOR, {O: '#6f9189'});
+    const T = [['E', 'Extraversion'], ['N', 'Neuroticism'], ['A', 'Agreeableness'], ['C', 'Conscientiousness'], ['O', 'Openness']];
+    const done = Object.keys(answers).length;
+    const complete = done === items.length;
+    // raw totals 4–20 (reverse-keyed items flipped), then 0–100 for drawing
+    const raw = Object.fromEntries(T.map(([k]) => [k, 0]));
+    items.forEach(([, k, rev], i) => { if (answers[i]) raw[k] += rev ? 6 - answers[i] : answers[i]; });
+    const pct = (k) => ((raw[k] - 4) / 16) * 100;
+    const band = (v) => (v < 37.5 ? 'lower' : v < 68.75 ? 'in the middle' : 'higher'); // 4–9, 10–14, 15–20
+    const guessBand = (v) => (v < 34 ? 'lower' : v <= 66 ? 'in the middle' : 'higher');
+
+
+    // two sides of one trait: the trait nearest the middle, the two ways it can split, and the gift of each
+    const SPLITS = {
+      E: ['Enthusiasm', 'Assertiveness', ['Warm, but not out front', 'You light up around people and good things, but you would rather not be the one in charge.', 'Your warmth and joy draw people in and make them feel welcome.'], ['Out front, but not bubbly', 'You take charge and make things happen, but you don\u2019t run on big, visible excitement.', 'You are decisive and steady; you can lead without needing the room to be fun.']],
+      N: ['Withdrawal', 'Volatility', ['Stress that goes inward', 'When stress comes, you pull inward: worry, second-guessing and holding back, more than anger.', 'You think before you react, and you notice risks early.'], ['Stress that comes out', 'When stress comes, it comes out: frustration rises fast, though you don\u2019t dwell in worry.', 'You face problems head-on, and you will defend yourself and the people you love.']],
+      A: ['Compassion', 'Politeness', ['A big heart with a blunt edge', 'You care deeply about people, but you don\u2019t soften your words or bow to rules for their own sake.', 'You show up when people are hurting, and you will tell them the hard truth they need.'], ['Courteous, but not easily moved', 'You are respectful and follow the rules, but other people\u2019s pain moves you less than most.', 'You treat people fairly, keep the peace and honor those in charge.']],
+      C: ['Industriousness', 'Orderliness', ['Hard work in a messy room', 'You work hard and push toward goals, but order and routine don\u2019t come naturally.', 'You get things done, and you finish what you start.'], ['Organized, but slow to launch', 'You like things planned, neat and done right, but steady drive is harder to find.', 'You bring structure, and you notice when things are out of place.']],
+      O: ['Interest in Ideas', 'Aesthetic Openness', ['A thinker more than a feeler', 'You love ideas, arguments and figuring things out, but art and imagination draw you less.', 'You reason clearly and enjoy hard problems; understanding is its own reward to you.'], ['A feeler more than a thinker', 'Beauty, imagination and feeling move you deeply, but abstract debate draws you less.', 'You notice patterns, beauty and emotion that others miss.']],
+    };
+    const pick = complete ? T.map(([k]) => k).sort((x, y) => Math.abs(raw[x] - 12) - Math.abs(raw[y] - 12))[0] : 'A';
+    const pName = T.find(([k]) => k === pick)[1];
+    const [as1, as2, sideA, sideB] = SPLITS[pick];
+    const lead = complete
+      ? `God made every trait with two sides, and they don\u2019t always match. Your <b>${pName}</b> came out <b>${band(pct(pick))}</b>. Its two sides are ${as1} and ${as2}, and two people with your score can be equipped very differently:`
+      : `God made every trait with two sides, and they don\u2019t always match. Two people with the same ${pName} score can be equipped very differently:`;
+    document.getElementById('unseen').innerHTML =
+      `<h3>Two sides of every trait</h3><p>${lead}</p>
+      <div class="pair">
+        <div class="side" style="--side:${NC[pick]}"><strong>${sideA[0]}</strong><span>${sideA[1]}</span><em class="work"><b>The gift:</b> ${sideA[2]}</em></div>
+        <div class="side" style="--side:${NC[pick]}"><strong>${sideB[0]}</strong><span>${sideB[1]}</span><em class="work"><b>The gift:</b> ${sideB[2]}</em></div>
+      </div>
+      <p>These two gifts work differently. If you don\u2019t know which gifts you carry, you can spend years never reaching what God equipped you for.</p><p>If you want to keep discovering how God put you together, understand your gifts and see where you can grow, the full test will walk you through it.</p>
+      <a class="go" href="https://discoverpersonalityplus.com/buy?utm_source=made-to-image&utm_medium=freebie&utm_content=glimpse" target="_blank" rel="noopener" data-track="buy_click" data-where="glimpse">Discover your gifts · $9.99</a>`;
+    document.getElementById('g-status').innerHTML = complete ? ''
+      : `<b>Answer all 20 on page 8 to rediscover who you are.</b> ${done} of 20 answered.`;
+
+    // tree: You wheel → five traits → ten parts still unknown
+    const svg = document.getElementById('g-tree');
+    const gx = (t) => 68.8 + t * 137.6;
+    const rad = (v, m) => m * Math.sqrt(Math.max(8, v) / 100);
+    let h = '<g stroke="rgba(255,255,255,.25)" stroke-width="2.5" fill="none">' +
+      `<line x1="344" y1="62" x2="344" y2="84"/><line x1="${gx(0)}" y1="84" x2="${gx(4)}" y2="84"/>`;
+    T.forEach((_, t) => {
+      h += `<polyline points="${gx(t)},84 ${gx(t)},120"/><polyline points="${gx(t)},120 ${gx(t)},170 ${gx(t) - 34},170 ${gx(t) - 34},200"/>` +
+        `<polyline points="${gx(t)},170 ${gx(t) + 34},170 ${gx(t) + 34},200"/>`;
+    });
+    h += '</g>';
+    // wheel
+    const vals = T.map(([k]) => (complete ? Math.max(8, pct(k)) : 20));
+    const tot = vals.reduce((x, y) => x + y, 0);
+    let ang = -Math.PI / 2;
+    const R = 46, cx = 344, cy = 46;
+    T.forEach(([k], t) => {
+      const a0 = ang; ang += (vals[t] / tot) * Math.PI * 2;
+      const large = ang - a0 > Math.PI ? 1 : 0;
+      const fill = complete ? NC[k] : '#2a3a63';
+      h += `<path d="M${cx},${cy} L${cx + R * Math.cos(a0)},${cy + R * Math.sin(a0)} A${R},${R} 0 ${large} 1 ${cx + R * Math.cos(ang)},${cy + R * Math.sin(ang)} Z" fill="${fill}" stroke="#0b1226" stroke-width="2.5"/>`;
+    });
+    h += `<circle cx="${cx}" cy="${cy}" r="31" fill="#0b1226"/><text x="${cx}" y="${cy + 1}" text-anchor="middle" dominant-baseline="middle" font-family="Archivo, sans-serif" font-weight="850" font-stretch="125%" font-size="20" fill="#ffffff">You</text>`;
+    T.forEach(([k], t) => {
+      const r = complete ? rad(pct(k), 30) : 16;
+      h += `<circle cx="${gx(t)}" cy="120" r="${r}" fill="${complete ? NC[k] : '#2a3a63'}"/>`;
+      [-34, 34].forEach((dx) => {
+        h += `<circle cx="${gx(t) + dx}" cy="206" r="17" fill="#1e2c51"/><text x="${gx(t) + dx}" y="207" text-anchor="middle" dominant-baseline="middle" font-family="Archivo, sans-serif" font-weight="850" font-size="15" fill="#b9bfd6">?</text>`;
+      });
+    });
+    svg.innerHTML = h;
+
+    // one row per trait: square, name and read, meter with score and guess
+    document.getElementById('g-rows').innerHTML = T.map(([k, name]) => {
+      const g = document.querySelector(`input[data-guess="${k.toLowerCase()}"]`);
+      const gv = g ? +g.value : 50;
+      const v = pct(k);
+      const size = complete ? 18 + 0.34 * v : 30;
+      const read = complete
+        ? `Your answers lean <b>${band(v)}</b>. You guessed <b>${guessBand(gv)}</b>.`
+        : 'Waiting on your answers.';
+      return `<div class="g-row">
+        <div class="g-sqbox"><div class="g-sq" style="width:${size}px;height:${size}px;background:${complete ? NC[k] : '#2a3a63'}"></div></div>
+        <div><div class="g-name">${name}</div><div class="g-read">${read}</div></div>
+        <div class="g-meter"><div class="g-track">
+          <span class="g-guess" style="left:calc(7px + (100% - 14px) * ${gv / 100})" title="Your guess"></span>
+          ${complete ? `<span class="g-mark" style="left:calc(8px + (100% - 16px) * ${v / 100});background:${NC[k]}" title="Your answers"></span>` : ''}
+        </div><div class="g-ends"><span>Lower</span><span>Middle</span><span>Higher</span></div></div>
+      </div>`;
+    }).join('') +
+      '<div class="g-key"><span><i class="g-mark-k"></i>Your answers</span><span><i class="g-guess-k"></i>Your guess from pages 3–7</span></div>';
+  }
+  document.querySelectorAll('input[data-guess]').forEach((inp) => inp.addEventListener('input', renderGlimpse));
+  renderGlimpse();
+  renderMore();
+</script>
+

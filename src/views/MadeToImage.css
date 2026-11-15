@@ -1,0 +1,22 @@
+/* ---------- the free workbook (/made-to-image): one framed page under the header ---------- */
+
+.pp-freebie {
+  background: #0b1226;
+}
+
+.pp-freebie__frame {
+  display: block;
+  width: 100%;
+  height: calc(100vh - var(--pp-header-h));
+  height: calc(100dvh - var(--pp-header-h));
+  border: 0;
+}
+
+.pp-freebie__loading {
+  min-height: calc(100vh - var(--pp-header-h));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d5d7e3;
+  font-weight: 700;
+}
