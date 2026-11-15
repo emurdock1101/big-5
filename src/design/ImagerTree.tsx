@@ -54,14 +54,21 @@ const useNarrow = () => {
 
 const clip = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1).trimEnd()}…` : s);
 const leafR = (rank: number) => Math.max(11, 24 - rank * 1.6);
-const traitColor = (id: string) => TRAITS.find((t) => t.aspects.includes(itemById(id)!.aspect))!.color;
+// The tree sits on the night panel, where Openness ink (#344B47) disappears; use its lighter thread tint.
+const traitColor = (id: string) => {
+  const c = TRAITS.find((t) => t.aspects.includes(itemById(id)!.aspect))!.color;
+  return c === '#344B47' ? '#6F9189' : c;
+};
 
 /** The results color wheel ("You"): a ring of the five trait colors, each slice sized by its score. */
 const MeWheel: React.FC<{x: number; y: number; r: number; scores: number[]}> = ({x, y, r, scores}) => {
   const band = Math.max(10, r * 0.4);
   const rr = r - band / 2;
   const C = 2 * Math.PI * rr;
-  const slices = slicesOf({colors: TRAITS.map((t) => t.color), weights: scores} as TreeNode);
+  const slices = slicesOf({
+    colors: TRAITS.map((t) => (t.color === '#344B47' ? '#6F9189' : t.color)),
+    weights: scores,
+  } as TreeNode);
   return (
     <g>
       <circle cx={x} cy={y} r={r} fill='#0b1226' />
@@ -158,14 +165,21 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
         <path
           d={`M ${me.x} ${me.y + me.r} C ${me.x} ${hub.y - 30}, ${hub.x} ${me.y + me.r + 20}, ${hub.x} ${hub.y - 16}`}
           fill='none'
-          stroke='var(--pp-ink)'
+          stroke='var(--tree-line)'
           strokeWidth={3}
         />
-        <rect x={hub.x - (narrow ? 44 : 62)} y={hub.y - 16} width={narrow ? 88 : 124} height={32} fill={color} />
+        <rect
+          x={hub.x - (narrow ? 44 : 62)}
+          y={hub.y - 16}
+          width={narrow ? 88 : 124}
+          height={32}
+          rx={16}
+          fill={color}
+        />
         <text x={hub.x} y={hub.y + 6} textAnchor='middle' className='pp-tree-hub'>
           {title}
         </text>
-        <line x1={hub.x} y1={hub.y + 16} x2={hub.x} y2={lastY} stroke='var(--pp-ink)' strokeWidth={2} />
+        <line x1={hub.x} y1={hub.y + 16} x2={hub.x} y2={lastY} stroke='var(--tree-line)' strokeWidth={2} />
         {seed || ids.length === 0
           ? Array.from({length: seed ? ghosts : 1}).map((_, i) => {
               const y = top + i * step;
@@ -176,8 +190,8 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
                     cx={hub.x}
                     cy={y}
                     r={14}
-                    fill='var(--pp-sheet)'
-                    stroke='var(--pp-ink-soft)'
+                    fill='var(--tree-bg)'
+                    stroke='var(--tree-twig)'
                     strokeDasharray='4 4'
                     strokeWidth={2}
                   />
@@ -218,14 +232,14 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
                           y1={y + Math.sin(a) * r}
                           x2={ox}
                           y2={oy}
-                          stroke='var(--pp-ink-soft)'
+                          stroke='var(--tree-twig)'
                           strokeWidth={1.5}
                         />
                         <circle
                           cx={ox}
                           cy={oy}
                           r={5}
-                          fill={done ? traitColor(id) : 'var(--pp-sheet)'}
+                          fill={done ? traitColor(id) : 'var(--tree-bg)'}
                           stroke={traitColor(id)}
                           strokeWidth={2}>
                           <title>
@@ -235,7 +249,7 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
                       </g>
                     );
                   })}
-                  <circle cx={x} cy={y} r={r} fill={traitColor(id)} stroke='var(--pp-ink)' strokeWidth={on ? 4 : 0} />
+                  <circle cx={x} cy={y} r={r} fill={traitColor(id)} stroke='var(--tree-on)' strokeWidth={on ? 4 : 0} />
                   <text x={x} y={y + 5} textAnchor='middle' className='pp-tree-rank'>
                     {i + 1}
                   </text>
@@ -356,7 +370,7 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
               y1={imager.y + imager.h / 2}
               x2={me.x}
               y2={me.y - me.r}
-              stroke='var(--pp-ink)'
+              stroke='var(--tree-line)'
               strokeWidth={3}
             />
             {branch('gift', gList, gHub, gTop)}
@@ -370,7 +384,8 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
                 y={imager.y - imager.h / 2}
                 width={imager.w}
                 height={imager.h}
-                fill='var(--pp-ink)'
+                rx={imager.h / 2}
+                fill='var(--tree-imager)'
               />
               <text x={imager.x} y={imager.y + 8} textAnchor='middle' className='pp-tree-imager'>
                 Imager of God
