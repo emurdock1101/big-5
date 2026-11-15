@@ -4250,3 +4250,18 @@ p {
   max-width: 28em;
   text-overflow: ellipsis;
 }
+
+/* Gift Finder: the save status in the band */
+.pp-gf-status {
+  font-size: 15px;
+  font-weight: 700;
+  color: #b9bfd6;
+}
+
+.pp-gf-saved.is-error {
+  color: #ffb3bb;
+}
+
+.pp-gf-saved .pp-textlink {
+  color: #fff;
+}

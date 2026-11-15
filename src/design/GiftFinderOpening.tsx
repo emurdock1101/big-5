@@ -255,7 +255,6 @@ export const Unique: React.FC<{
   setAnswer: (k: string, v: string) => void;
 }> = ({p, answers, setAnswer}) => {
   const [big, setBig] = useState<string>('a');
-  const [fit, setFit] = useState<Record<string, Fit>>({});
   const cur = UNIQUE.abcd.find((x) => x.key === big)!;
   return (
     <div className='pp-gf-flow'>
@@ -301,7 +300,7 @@ export const Unique: React.FC<{
       <ol className='pp-gf-scen'>
         {SCENARIOS.map((s, i) => {
           const lines = predict(s, p);
-          const f = fit[s.id];
+          const f = answers[`fit-${s.id}`] as Fit | undefined;
           return (
             <li key={s.id}>
               <p className='pp-gf-scen__n'>Scenario {i + 1}</p>
@@ -337,11 +336,7 @@ export const Unique: React.FC<{
                     ['no', 'Not really'],
                   ] as [Fit, string][]
                 ).map(([k, label]) => (
-                  <button
-                    key={k}
-                    type='button'
-                    aria-pressed={f === k}
-                    onClick={() => setFit((s0) => ({...s0, [s.id]: k}))}>
+                  <button key={k} type='button' aria-pressed={f === k} onClick={() => setAnswer(`fit-${s.id}`, k)}>
                     {label}
                   </button>
                 ))}

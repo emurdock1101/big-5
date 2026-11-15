@@ -86,7 +86,12 @@ const RAW: Record<Aspect, Lists> = {
       ],
     },
     blind: {
-      high: ['Make myself the center of attention', 'Try to outdo others', 'Demand to be the center of interest', 'Drown out conversations'],
+      high: [
+        'Make myself the center of attention',
+        'Try to outdo others',
+        'Demand to be the center of interest',
+        'Drown out conversations',
+      ],
       low: [
         'Wait for others to lead the way',
         'Hold back my opinions',
@@ -178,10 +183,7 @@ const RAW: Record<Aspect, Lists> = {
         'Make people feel at ease',
         'Am never too busy to help a friend',
       ],
-      low: [
-        'Am not easily fooled by others',
-        'Remain on guard to keep from being tricked or manipulated',
-      ],
+      low: ['Am not easily fooled by others', 'Remain on guard to keep from being tricked or manipulated'],
     },
     blind: {
       high: [
@@ -225,7 +227,13 @@ const RAW: Record<Aspect, Lists> = {
         'Am nice to people I should be angry at',
         'Change myself to suit others',
       ],
-      low: ['Insult people', 'Seek conflict', 'Love a good fight', 'Believe that I am better than others', 'Take advantage of others'],
+      low: [
+        'Insult people',
+        'Seek conflict',
+        'Love a good fight',
+        'Believe that I am better than others',
+        'Take advantage of others',
+      ],
     },
   },
   [Aspect.Industriousness]: {
@@ -273,7 +281,12 @@ const RAW: Record<Aspect, Lists> = {
         'Make plans and stick to them',
         'Am always prepared',
       ],
-      low: ['Am not bothered by disorder', 'Am not bothered by messy people', 'Can change course, if necessary', 'Prefer variety to routine'],
+      low: [
+        'Am not bothered by disorder',
+        'Am not bothered by messy people',
+        'Can change course, if necessary',
+        'Prefer variety to routine',
+      ],
     },
     blind: {
       high: [
@@ -335,14 +348,14 @@ const RAW: Record<Aspect, Lists> = {
         'Need a creative outlet',
         'Have a vivid imagination',
       ],
-      low: [
-        'Believe in the importance of tradition',
-        'Keep old traditions',
-        'Am told that I am down to earth',
-      ],
+      low: ['Believe in the importance of tradition', 'Keep old traditions', 'Am told that I am down to earth'],
     },
     blind: {
-      high: ['Sometimes get lost in my daydreams', 'Spend much of the day fantasizing or daydreaming', 'Feel like my imagination can run wild'],
+      high: [
+        'Sometimes get lost in my daydreams',
+        'Spend much of the day fantasizing or daydreaming',
+        'Feel like my imagination can run wild',
+      ],
       low: [
         'Rarely notice the emotional aspects of paintings and pictures',
         'Don’t like the idea of change',
@@ -353,11 +366,7 @@ const RAW: Record<Aspect, Lists> = {
 };
 
 /** Compare wording without caring about straight vs curly quotes. */
-export const sameWords = (s: string) =>
-  s
-    .trim()
-    .replace(/[’']/g, "'")
-    .replace(/[“”"]/g, '"');
+export const sameWords = (s: string) => s.trim().replace(/[’']/g, "'").replace(/[“”"]/g, '"');
 const TEST_TEXTS = new Set(questionData.map((q) => sameWords(q.text)));
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z]+/g, '-');
 
@@ -494,13 +503,88 @@ export const PROMPTS: Record<
 };
 
 /** What a person writes about one gift or blind spot. */
-export type Entry = {story: string; a: string; b: string; c: string; d: string; better: string; forward: string; serve: string};
+export type Entry = {
+  story: string;
+  a: string;
+  b: string;
+  c: string;
+  d: string;
+  better: string;
+  forward: string;
+  serve: string;
+};
 export const EMPTY_ENTRY: Entry = {story: '', a: '', b: '', c: '', d: '', better: '', forward: '', serve: ''};
 
 /** The four parts of the writing, in order. A part counts as written once any of its boxes has words. */
 export const PARTS: PartKey[] = ['story', 'better', 'forward', 'serve'];
 export const partDone = (e: Entry | undefined, part: PartKey) =>
-  !!e &&
-  (part === 'story'
-    ? [e.story, e.a, e.b, e.c, e.d].some((x) => x.trim())
-    : !!e[part].trim());
+  !!e && (part === 'story' ? [e.story, e.a, e.b, e.c, e.d].some((x) => x.trim()) : !!e[part].trim());
+
+/** Everything a person has done in the Gift Finder, saved so they can stop and come back. */
+export interface GiftFinderSave {
+  v: 1;
+  step: number;
+  picked: Record<GiftKind, string[]>;
+  keep: Record<GiftKind, number>;
+  writeAt: Record<GiftKind, number>;
+  entries: Record<string, Entry>;
+  /** Reflection, ABCD, scenario and "putting it together" answers, by key. */
+  answers: Record<string, string>;
+  updated?: string;
+}
+
+export const emptySave = (): GiftFinderSave => ({
+  v: 1,
+  step: 0,
+  picked: {gift: [], blind: []},
+  keep: {gift: 7, blind: 7},
+  writeAt: {gift: 0, blind: 0},
+  entries: {},
+  answers: {},
+});
+
+/**
+ * Read a saved file defensively: unknown items (if the lists change later) are dropped,
+ * missing parts fall back to empty, and nothing in an old file can break the page.
+ */
+export const cleanSave = (raw: unknown): GiftFinderSave => {
+  const e = emptySave();
+  if (!raw || typeof raw !== 'object') return e;
+  const r = raw as Partial<GiftFinderSave>;
+  const ids = (x: unknown) => (Array.isArray(x) ? x.filter((id) => typeof id === 'string' && itemById(id)) : []);
+  const num = (x: unknown, d: number) => (typeof x === 'number' && Number.isFinite(x) ? x : d);
+  const text = (x: unknown) => (typeof x === 'string' ? x : '');
+  const entries: Record<string, Entry> = {};
+  if (r.entries && typeof r.entries === 'object') {
+    Object.entries(r.entries).forEach(([id, v]) => {
+      if (!itemById(id) || !v || typeof v !== 'object') return;
+      const o = v as Partial<Entry>;
+      entries[id] = {
+        story: text(o.story),
+        a: text(o.a),
+        b: text(o.b),
+        c: text(o.c),
+        d: text(o.d),
+        better: text(o.better),
+        forward: text(o.forward),
+        serve: text(o.serve),
+      };
+    });
+  }
+  const answers: Record<string, string> = {};
+  if (r.answers && typeof r.answers === 'object') {
+    Object.entries(r.answers).forEach(([k, v]) => {
+      if (typeof v === 'string') answers[k] = v;
+    });
+  }
+  return {
+    v: 1,
+    step: Math.max(0, Math.round(num(r.step, 0))),
+    picked: {gift: ids(r.picked?.gift), blind: ids(r.picked?.blind)},
+    keep: {gift: num(r.keep?.gift, 7), blind: num(r.keep?.blind, 7)},
+    writeAt: {gift: num(r.writeAt?.gift, 0), blind: num(r.writeAt?.blind, 0)},
+    entries,
+    answers,
+    updated: typeof r.updated === 'string' ? r.updated : undefined,
+  };
+};

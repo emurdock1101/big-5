@@ -4,6 +4,8 @@ import {Aspect} from '../constants/schema';
 import {
   EMPTY_ENTRY,
   Entry,
+  emptySave,
+  GiftFinderSave,
   fitsScore,
   GIFT_ITEMS,
   GiftItem,
@@ -18,14 +20,22 @@ import ImagerTree from './ImagerTree';
 import Scene from './Scene';
 
 /**
- * The Gift Finder walk. Sample version: everything lives in this page's memory.
- * Nothing is saved or sent anywhere.
+ * The Gift Finder walk. The page that hosts it decides where progress is kept: the real page
+ * saves privately to the person's account; the preview keeps it in the browser tab.
  */
 
 interface GiftFinderProps {
   percentiles: Record<string, number>;
   name?: string;
   sample?: boolean;
+  /** Where to start (a saved file); empty when new. */
+  initial?: GiftFinderSave;
+  /** Called after every change with the whole state, for saving. */
+  onChange?: (state: GiftFinderSave) => void;
+  /** Shown in the band, e.g. "Saved". */
+  status?: React.ReactNode;
+  /** The line under each writing page about saving. */
+  saveNote?: string;
 }
 
 type Group = 'you' | 'imager' | 'gift' | 'blind' | 'tree';
@@ -309,7 +319,8 @@ const Writer: React.FC<{
   p: (a: string) => number;
   entries: Record<string, Entry>;
   setEntry: (id: string, e: Entry) => void;
-}> = ({kind, ids, at: rawAt, setAt, p, entries, setEntry}) => {
+  saveNote?: string;
+}> = ({kind, ids, at: rawAt, setAt, p, entries, setEntry, saveNote}) => {
   const headRef = useRef<HTMLHeadingElement>(null);
   const n = NOUN[kind];
   const pr = PROMPTS[kind];
@@ -383,10 +394,7 @@ const Writer: React.FC<{
           <TextBox label={pr.serve.title} hint={pr.serve.ask} value={e.serve} onChange={set('serve')} rows={3} />
         </fieldset>
 
-        <p className='pp-small pp-gf-save'>
-          Sample only: what you type stays on this page until you reload it. The real version will save privately to
-          your account as you type, so you can stop and come back.
-        </p>
+        {saveNote && <p className='pp-small pp-gf-save'>{saveNote}</p>}
 
         <div className='pp-gf-sheet__nav'>
           <button
@@ -409,21 +417,26 @@ const Writer: React.FC<{
 
 /* ---------- putting it together ---------- */
 
-const Together: React.FC<{gifts: string[]; blinds: string[]; entries: Record<string, Entry>}> = ({
-  gifts,
-  blinds,
-  entries,
-}) => {
-  const [g, setG] = useState<string[]>(gifts.slice(0, 3));
-  const [b, setB] = useState<string[]>(blinds.slice(0, 2));
-  const [use, setUse] = useState<string>(gifts[0] ?? '');
-  const [who, setWho] = useState<string>('');
-
-  useEffect(() => {
-    setG((s) => (s.length ? s.filter((x) => gifts.includes(x)) : gifts.slice(0, 3)));
-    setB((s) => (s.length ? s.filter((x) => blinds.includes(x)) : blinds.slice(0, 2)));
-    setUse((u) => (gifts.includes(u) ? u : (gifts[0] ?? '')));
-  }, [gifts, blinds]);
+const Together: React.FC<{
+  gifts: string[];
+  blinds: string[];
+  entries: Record<string, Entry>;
+  answers: Record<string, string>;
+  setAnswer: (k: string, v: string) => void;
+}> = ({gifts, blinds, entries, answers, setAnswer}) => {
+  // Choices are kept with the other answers so they are saved; until chosen, the top ranked ones show.
+  const listOf = (key: string, from: string[], n: number) => {
+    const saved = answers[key];
+    return saved === undefined ? from.slice(0, n) : saved.split(',').filter((x) => from.includes(x));
+  };
+  const g = listOf('together-gifts', gifts, 3);
+  const b = listOf('together-blinds', blinds, 2);
+  const setG = (v: string[]) => setAnswer('together-gifts', v.join(','));
+  const setB = (v: string[]) => setAnswer('together-blinds', v.join(','));
+  const use = gifts.includes(answers['together-use']) ? answers['together-use'] : (gifts[0] ?? '');
+  const setUse = (v: string) => setAnswer('together-use', v);
+  const who = answers['together-who'] ?? '';
+  const setWho = (v: string) => setAnswer('together-who', v);
 
   const toggle = (list: string[], set: (v: string[]) => void, id: string, max: number) =>
     set(list.includes(id) ? list.filter((x) => x !== id) : list.length >= max ? list : [...list, id]);
@@ -533,13 +546,25 @@ const Together: React.FC<{gifts: string[]; blinds: string[]; entries: Record<str
 
 /* ---------- the walk ---------- */
 
-const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
-  const [step, setStep] = useState(0);
-  const [picked, setPicked] = useState<Record<GiftKind, string[]>>({gift: [], blind: []});
-  const [keep, setKeep] = useState<Record<GiftKind, number>>({gift: 7, blind: 7});
-  const [writeAt, setWriteAt] = useState<Record<GiftKind, number>>({gift: 0, blind: 0});
-  const [entries, setEntries] = useState<Record<string, Entry>>({});
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample, initial, onChange, status, saveNote}) => {
+  const [start] = useState(() => initial ?? emptySave());
+  const [step, setStep] = useState(Math.min(start.step, STEPS.length - 1));
+  const [picked, setPicked] = useState<Record<GiftKind, string[]>>(start.picked);
+  const [keep, setKeep] = useState<Record<GiftKind, number>>(start.keep);
+  const [writeAt, setWriteAt] = useState<Record<GiftKind, number>>(start.writeAt);
+  const [entries, setEntries] = useState<Record<string, Entry>>(start.entries);
+  const [answers, setAnswers] = useState<Record<string, string>>(start.answers);
+  const loaded = useRef(true);
+
+  // Hand every change to the host page for saving (not the first render: nothing has changed yet).
+  useEffect(() => {
+    if (loaded.current) {
+      loaded.current = false;
+      return;
+    }
+    onChange?.({v: 1, step, picked, keep, writeAt, entries, answers});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, picked, keep, writeAt, entries, answers]);
   const [review, setReview] = useState(false);
   const headRef = useRef<HTMLHeadingElement>(null);
   const first = useRef(true);
@@ -648,6 +673,7 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
         p={p}
         entries={entries}
         setEntry={(id, e) => setEntries((s) => ({...s, [id]: e}))}
+        saveNote={saveNote}
       />
     );
   } else {
@@ -663,7 +689,7 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
           entries={entries}
           onWrite={openWriter}
         />
-        <Together gifts={top('gift')} blinds={top('blind')} entries={entries} />
+        <Together gifts={top('gift')} blinds={top('blind')} entries={entries} answers={answers} setAnswer={setAnswer} />
         <div>
           <button type='button' className='pp-btn' disabled>
             Download as PDF (coming)
@@ -681,6 +707,7 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
         <div className='pp-wrap'>
           <div className='pp-walk__top'>
             <p className='pp-display pp-h2'>Gift Finder</p>
+            {status && <div className='pp-gf-status'>{status}</div>}
             {sample && (
               <div className='pp-gf-sampletools'>
                 <span className='pp-sample-tag'>Sample scores and draft wording, for preview</span>

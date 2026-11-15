@@ -47,6 +47,7 @@ const TestPreview = lazy(() => import('./views/TestPreview'));
 const Compare = lazy(() => import('./views/Compare'));
 const ComparePreview = lazy(() => import('./views/ComparePreview'));
 const GiftFinderPreview = lazy(() => import('./views/GiftFinderPreview'));
+const GiftFinderPage = lazy(() => import('./views/GiftFinderPage'));
 const MadeToImage = lazy(() => import('./views/MadeToImage'));
 
 Amplify.configure(awsconfig);
@@ -221,6 +222,8 @@ function App() {
             <Route path='/made-to-image' element={<MadeToImage />} />
             <Route path='/buy' element={<ProtectedRoute type={'loggedOut'} component={<CinePage><BuyTest /></CinePage>} />} />
 
+            {/* The Gift Finder add-on. Stage 1: admins only, for testing; payment comes later. */}
+            <Route path='/gift-finder' element={<ProtectedRoute type={'admin'} component={<CinePage><GiftFinderPage /></CinePage>} />} />
             <Route path='/admin' element={<ProtectedRoute type={'admin'} component={<CinePage><AdminView /></CinePage>} />} />
             <Route
               path='/admin/user/:email/:subId'
