@@ -4057,3 +4057,109 @@ p {
     min-height: 110px;
   }
 }
+
+/* ---------- Gift Finder: circles, not squares, for the small markers ----------
+   Cards, tabs and writing boxes keep their straight edges for easy reading. */
+
+.pp-gf-tile__box,
+.pp-gf-keep__btn,
+.pp-gf-row__arrows button,
+.pp-tree__tools button:not(.pp-tree__whole) {
+  border-radius: 50%;
+}
+
+.pp-gf-row__arrows button {
+  width: 40px;
+  height: 40px;
+}
+
+/* rank numbers sit in a filled circle in the item's trait color */
+.pp-gf-row__num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--pp-step);
+  color: #fff;
+  font-size: 16px;
+}
+
+.pp-gf-row.is-out .pp-gf-row__num {
+  background: none;
+}
+
+/* numbered markers (writing queue, reflection list) */
+.pp-gf-queue__n,
+.pp-gf-accordion__n {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 2px solid currentColor;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.pp-gf-scores__chev {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 2px solid currentColor;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* the ABCD letters in circles, stacked above their names so narrow tiles don't clip */
+.pp-gf-abcdgrid button {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: start;
+  align-content: start;
+  gap: 8px;
+}
+
+.pp-gf-abcdgrid__letter {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 3px solid currentColor;
+  font-size: 30px;
+}
+
+/* small choice buttons and counters become pills */
+.pp-gf-fit button,
+.pp-gf-chips button,
+.pp-gf-total,
+.pp-tree__tools .pp-tree__whole {
+  border-radius: 999px;
+}
+
+.pp-gf-chips button {
+  border-left-width: 2px;
+  border-color: var(--pp-step);
+}
+
+@media (max-width: 640px) {
+  .pp-gf-row__arrows button {
+    width: 34px;
+    height: 34px;
+  }
+  .pp-gf-row {
+    grid-template-columns: 30px 26px minmax(0, 1fr) auto;
+  }
+  .pp-gf-row__num {
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
+  }
+  .pp-gf-abcdgrid__letter {
+    width: 44px;
+    height: 44px;
+    font-size: 24px;
+  }
+}
