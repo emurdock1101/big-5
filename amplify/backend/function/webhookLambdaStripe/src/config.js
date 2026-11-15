@@ -17,7 +17,7 @@ module.exports = {
     },
     test: {
       assessment: ['prod_Mi8T3OqROL6R3p'],
-      giftFinder: [],
+      giftFinder: ['prod_VdMttZQByhp0OX'],
     },
   },
 };
