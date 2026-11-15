@@ -3,8 +3,12 @@ backend:
   phases:
     build:
       commands:
-        - '# Execute Amplify CLI with the helper script'
-        - amplifyPush --simple
+        # The build machine starts on Node 16, but the Amplify CLI it installs needs a newer Node and
+        # used to crash here without failing the build, so backend changes never deployed (Nov 2026).
+        # Switch to Node 22, install the CLI there, then deploy. If the deploy fails, the build fails
+        # and AWS rolls the backend back; the live site is left as it was.
+        # One line, so the Node switch is still in effect when the deploy runs.
+        - nvm install 22 && nvm use 22 && node --version && npm install -g @aws-amplify/cli@14.6.0 && amplify --version && amplifyPush --simple
 frontend:
   phases:
     preBuild:

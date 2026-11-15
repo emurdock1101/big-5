@@ -3,20 +3,12 @@
     "stripeRestApi": {
       "dependsOn": [
         {
-          "attributes": ["Name", "Arn"],
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
           "category": "function",
           "resourceName": "webhookLambdaStripe"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "API Gateway"
-    },
-    "adminApi": {
-      "dependsOn": [
-        {
-          "attributes": ["Name", "Arn"],
-          "category": "function",
-          "resourceName": "adminResultsLambda"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -29,15 +21,24 @@
       "dependsOn": [],
       "frontendAuthConfig": {
         "mfaConfiguration": "OFF",
-        "mfaTypes": ["SMS"],
+        "mfaTypes": [
+          "SMS"
+        ],
         "passwordProtectionSettings": {
           "passwordPolicyCharacters": [],
           "passwordPolicyMinLength": 8
         },
-        "signupAttributes": ["EMAIL"],
+        "signupAttributes": [
+          "EMAIL"
+        ],
         "socialProviders": [],
-        "usernameAttributes": ["EMAIL", "PHONE_NUMBER"],
-        "verificationMechanisms": ["EMAIL"]
+        "usernameAttributes": [
+          "EMAIL",
+          "PHONE_NUMBER"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
@@ -48,21 +49,11 @@
       "build": true,
       "dependsOn": [
         {
-          "attributes": ["UserPoolId"],
+          "attributes": [
+            "UserPoolId"
+          ],
           "category": "auth",
           "resourceName": "big5amplifye0115051"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "adminResultsLambda": {
-      "build": true,
-      "dependsOn": [
-        {
-          "attributes": ["BucketName"],
-          "category": "storage",
-          "resourceName": "testResultStorage"
         }
       ],
       "providerPlugin": "awscloudformation",
