@@ -13,7 +13,7 @@ module.exports = {
   products: {
     live: {
       assessment: ['prod_Mi7RMFm1TFNwal'],
-      giftFinder: [],
+      giftFinder: ['prod_VdSR932D03hXwM'],
     },
     test: {
       assessment: ['prod_Mi8T3OqROL6R3p'],
