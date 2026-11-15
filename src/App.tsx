@@ -47,6 +47,7 @@ const TestPreview = lazy(() => import('./views/TestPreview'));
 const Compare = lazy(() => import('./views/Compare'));
 const ComparePreview = lazy(() => import('./views/ComparePreview'));
 const GiftFinderPreview = lazy(() => import('./views/GiftFinderPreview'));
+const MadeToImage = lazy(() => import('./views/MadeToImage'));
 
 Amplify.configure(awsconfig);
 
@@ -147,7 +148,7 @@ function App() {
   };
 
   // Public pages render straight away; only account pages wait for the sign-in check.
-  const publicPaths = ['/', '/results-preview', '/test-preview', '/compare-preview', '/gift-finder-preview', '/home-flow-preview', '/about', '/faqs', '/contact', '/buy', '/privacy', '/error', '/checkouterror'];
+  const publicPaths = ['/', '/made-to-image', '/results-preview', '/test-preview', '/compare-preview', '/gift-finder-preview', '/home-flow-preview', '/about', '/faqs', '/contact', '/buy', '/privacy', '/error', '/checkouterror'];
   if (loading && !publicPaths.includes(window.location.pathname)) {
     return <React.Fragment />;
   }
@@ -217,6 +218,7 @@ function App() {
                     </CinePage>
                   } />}
             />
+            <Route path='/made-to-image' element={<MadeToImage />} />
             <Route path='/buy' element={<ProtectedRoute type={'loggedOut'} component={<CinePage><BuyTest /></CinePage>} />} />
 
             <Route path='/admin' element={<ProtectedRoute type={'admin'} component={<CinePage><AdminView /></CinePage>} />} />
