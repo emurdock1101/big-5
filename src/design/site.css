@@ -341,7 +341,7 @@ p {
   white-space: nowrap;
 }
 
-@media (max-width: 1140px) {
+@media (max-width: 1300px) {
   .pp-nav {
     display: none;
   }

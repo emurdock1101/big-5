@@ -42,6 +42,9 @@ const Footer: React.FC = () => (
               <Link to='/#report'>Sample report</Link>
             </li>
             <li>
+              <Link to='/made-to-image'>Free workbook: Made to Image</Link>
+            </li>
+            <li>
               <Link to='/buy'>Buy the test</Link>
             </li>
             <li>

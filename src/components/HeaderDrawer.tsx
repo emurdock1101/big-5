@@ -15,6 +15,7 @@ interface HeaderDrawerProps {
 }
 
 const NAV = [
+  {to: '/made-to-image', label: 'Start here: free'},
   {to: '/#how', label: 'How it works'},
   {to: '/#traits', label: 'The five traits'},
   {to: '/#report', label: 'Sample report'},
