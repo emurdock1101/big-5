@@ -714,3 +714,28 @@
 .pp-cinepage .pp-pagehead .pp-small {
   color: #b9bfd6;
 }
+
+/* ---------- Gift Finder (dev preview): the same night band as results ---------- */
+
+.pp-walk__band .pp-gf-steps button {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.pp-walk__band .pp-gf-steps button:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.pp-walk__band .pp-gf-steps button[aria-current='step'] {
+  background: var(--pp-sheet);
+  color: var(--pp-ink);
+}
+
+/* ink-colored step tops (bridge and tree) would vanish on the night sky */
+.pp-walk__band .pp-gf-steps button[style*='--pp-ink'] {
+  border-top-color: rgba(255, 255, 255, 0.75);
+}
+
+.pp-walk__band .pp-gf-reviewtoggle input {
+  accent-color: var(--pp-sheet);
+}

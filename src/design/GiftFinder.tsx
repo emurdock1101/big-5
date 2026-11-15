@@ -15,6 +15,7 @@ import {
 import {IMAGER, UNIQUE, VERSES} from '../constants/giftFinderPages';
 import {Anew, Discovering, ord, Scores, TextBox, Unique} from './GiftFinderOpening';
 import ImagerTree from './ImagerTree';
+import Scene from './Scene';
 
 /**
  * The Gift Finder walk. Sample version: everything lives in this page's memory.
@@ -614,37 +615,43 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample}) => {
   }
 
   return (
-    <div className='pp pp-walk pp-gf'>
-      <div className='pp-wrap'>
-        <div className='pp-walk__top'>
-          <p className='pp-display pp-h3'>Gift Finder</p>
-          {sample && (
-            <div className='pp-gf-sampletools'>
-              <span className='pp-sample-tag'>Sample scores and draft wording, for preview</span>
-              <label className='pp-gf-reviewtoggle'>
-                <input type='checkbox' checked={review} onChange={(e) => setReview(e.target.checked)} /> Show where each item
-                comes from
-              </label>
-            </div>
-          )}
+    <div className='pp pp-walk pp-walk--cine pp-gf'>
+      {/* the opening band: night sky, red sun and mountains behind the title and steps (as on results) */}
+      <header className='pp-walk__band'>
+        <Scene kind='ridges' className='pp-scene--walk' sun={TRAITS[0].color} sunX={1110} sunY={175} sunFront />
+        <div className='pp-wrap'>
+          <div className='pp-walk__top'>
+            <p className='pp-display pp-h2'>Gift Finder</p>
+            {sample && (
+              <div className='pp-gf-sampletools'>
+                <span className='pp-sample-tag'>Sample scores and draft wording, for preview</span>
+                <label className='pp-gf-reviewtoggle'>
+                  <input type='checkbox' checked={review} onChange={(e) => setReview(e.target.checked)} /> Show where each
+                  item comes from
+                </label>
+              </div>
+            )}
+          </div>
+          <nav className='pp-gf-steps' aria-label='Gift Finder sections'>
+            <ol>
+              {STEPS.map((s, i) => (
+                <li key={s.label}>
+                  <button
+                    type='button'
+                    aria-current={step === i ? 'step' : undefined}
+                    style={{'--pp-step': GROUP_COLOR[s.group]} as React.CSSProperties}
+                    onClick={() => go(i)}>
+                    {s.label}
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </nav>
         </div>
-        <nav className='pp-gf-steps' aria-label='Gift Finder sections'>
-          <ol>
-            {STEPS.map((s, i) => (
-              <li key={s.label}>
-                <button
-                  type='button'
-                  aria-current={step === i ? 'step' : undefined}
-                  style={{'--pp-step': GROUP_COLOR[s.group]} as React.CSSProperties}
-                  onClick={() => go(i)}>
-                  {s.label}
-                </button>
-              </li>
-            ))}
-          </ol>
-        </nav>
+      </header>
 
-        <div className='pp-gf-stage'>
+      <div className='pp-wrap'>
+        <div key={step} className='pp-gf-stage pp-walk__swap'>
           <header className='pp-gf-head'>
             <h1 ref={headRef} tabIndex={-1} className='pp-display pp-h2'>
               {title}
