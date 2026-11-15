@@ -3,6 +3,7 @@ import {TRAITS} from './traits';
 import {Entry, GiftKind, itemById, PARTS, partDone, PartKey, PROMPTS} from '../constants/giftFinder';
 import {IMAGER} from '../constants/giftFinderPages';
 import {ord} from './GiftFinderOpening';
+import {slicesOf, TreeNode} from './tree';
 
 /**
  * The Imager tree: Imager of God at the top, then "me", then two branches (gifts and blind spots).
@@ -55,22 +56,31 @@ const clip = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1).trim
 const leafR = (rank: number) => Math.max(11, 24 - rank * 1.6);
 const traitColor = (id: string) => TRAITS.find((t) => t.aspects.includes(itemById(id)!.aspect))!.color;
 
-/** A pie of the five trait colors, each slice sized by the score. */
-const MePie: React.FC<{x: number; y: number; r: number; scores: number[]}> = ({x, y, r, scores}) => {
-  const w = scores.map((s) => 0.35 + s / 100);
-  const tot = w.reduce((a, b) => a + b, 0);
-  let a0 = -Math.PI / 2;
+/** The results color wheel ("You"): a ring of the five trait colors, each slice sized by its score. */
+const MeWheel: React.FC<{x: number; y: number; r: number; scores: number[]}> = ({x, y, r, scores}) => {
+  const band = Math.max(10, r * 0.4);
+  const rr = r - band / 2;
+  const C = 2 * Math.PI * rr;
+  const slices = slicesOf({colors: TRAITS.map((t) => t.color), weights: scores} as TreeNode);
   return (
     <g>
-      {TRAITS.map((t, i) => {
-        const a1 = a0 + (w[i] / tot) * Math.PI * 2;
-        const d = `M ${x} ${y} L ${x + r * Math.cos(a0)} ${y + r * Math.sin(a0)} A ${r} ${r} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${
-          x + r * Math.cos(a1)
-        } ${y + r * Math.sin(a1)} Z`;
-        a0 = a1;
-        return <path key={t.ocean} d={d} fill={t.color} />;
+      <circle cx={x} cy={y} r={r} fill='#0b1226' />
+      {slices.map((s) => {
+        const len = ((s.a1 - s.a0) / (Math.PI * 2)) * C;
+        return (
+          <circle
+            key={s.color}
+            cx={x}
+            cy={y}
+            r={rr}
+            fill='none'
+            stroke={s.color}
+            strokeWidth={band}
+            strokeDasharray={`${Math.max(0, len - 1.5)} ${C}`}
+            transform={`rotate(${(s.a0 * 180) / Math.PI} ${x} ${y})`}
+          />
+        );
       })}
-      <circle cx={x} cy={y} r={r} fill='none' stroke='var(--pp-ink)' strokeWidth={2} />
     </g>
   );
 };
@@ -162,7 +172,15 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
               const side = labelSide(kind);
               return (
                 <g key={i}>
-                  <circle cx={hub.x} cy={y} r={14} fill='var(--pp-sheet)' stroke='var(--pp-ink-soft)' strokeDasharray='4 4' strokeWidth={2} />
+                  <circle
+                    cx={hub.x}
+                    cy={y}
+                    r={14}
+                    fill='var(--pp-sheet)'
+                    stroke='var(--pp-ink-soft)'
+                    strokeDasharray='4 4'
+                    strokeWidth={2}
+                  />
                   {i === 0 && (
                     <text
                       x={side === 'left' ? hub.x - 28 : hub.x + 28}
@@ -283,14 +301,17 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
       panel = (
         <>
           <p className='pp-gf-group' style={{margin: 0}}>
-            {sel.kind === 'gift' ? 'Gift' : 'Blind spot'} {sel.idx + 1} · from your {item.aspect} ({ord(p(item.aspect))})
+            {sel.kind === 'gift' ? 'Gift' : 'Blind spot'} {sel.idx + 1} · from your {item.aspect} ({ord(p(item.aspect))}
+            )
           </p>
           <h3 className='pp-display pp-h3'>{item.text}</h3>
           <dl className='pp-tree-parts'>
             {PARTS.map((part) => {
               const text =
                 part === 'story'
-                  ? [e?.story, ...pr.abcd.map((q) => (e?.[q.key] ? `${q.label}: ${e[q.key]}` : ''))].filter(Boolean).join('\n')
+                  ? [e?.story, ...pr.abcd.map((q) => (e?.[q.key] ? `${q.label}: ${e[q.key]}` : ''))]
+                      .filter(Boolean)
+                      .join('\n')
                   : e?.[part];
               return (
                 <div key={part} className={partDone(e, part) ? 'is-done' : undefined}>
@@ -313,7 +334,11 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
   return (
     <div className='pp-tree'>
       <div className='pp-tree__tools'>
-        <button type='button' aria-label='Zoom out' disabled={zoom <= 1} onClick={() => (zoom - 0.4 <= 1 ? reset() : setZoom(zoom - 0.4))}>
+        <button
+          type='button'
+          aria-label='Zoom out'
+          disabled={zoom <= 1}
+          onClick={() => (zoom - 0.4 <= 1 ? reset() : setZoom(zoom - 0.4))}>
           −
         </button>
         <button type='button' aria-label='Zoom in' disabled={zoom >= 2.6} onClick={() => setZoom(zoom + 0.4)}>
@@ -326,17 +351,36 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
       <div className='pp-tree__frame' onClick={reset}>
         <svg viewBox={`0 0 ${W} ${H}`} role='group' aria-label='Your imager tree'>
           <g className='pp-tree__zoom' style={{transform}}>
-            <line x1={imager.x} y1={imager.y + imager.h / 2} x2={me.x} y2={me.y - me.r} stroke='var(--pp-ink)' strokeWidth={3} />
+            <line
+              x1={imager.x}
+              y1={imager.y + imager.h / 2}
+              x2={me.x}
+              y2={me.y - me.r}
+              stroke='var(--pp-ink)'
+              strokeWidth={3}
+            />
             {branch('gift', gList, gHub, gTop)}
             {branch('blind', bList, bHub, bTop)}
-            <g className={`pp-tree-node${sel?.type === 'imager' ? ' is-on' : ''}`} aria-label='Imager of God' {...keyed(() => choose({type: 'imager'}, imager.x, imager.y + 40))}>
-              <rect x={imager.x - imager.w / 2} y={imager.y - imager.h / 2} width={imager.w} height={imager.h} fill='var(--pp-ink)' />
+            <g
+              className={`pp-tree-node${sel?.type === 'imager' ? ' is-on' : ''}`}
+              aria-label='Imager of God'
+              {...keyed(() => choose({type: 'imager'}, imager.x, imager.y + 40))}>
+              <rect
+                x={imager.x - imager.w / 2}
+                y={imager.y - imager.h / 2}
+                width={imager.w}
+                height={imager.h}
+                fill='var(--pp-ink)'
+              />
               <text x={imager.x} y={imager.y + 8} textAnchor='middle' className='pp-tree-imager'>
                 Imager of God
               </text>
             </g>
-            <g className={`pp-tree-node${sel?.type === 'me' ? ' is-on' : ''}`} aria-label={`${name ?? 'Me'}: your five traits`} {...keyed(() => choose({type: 'me'}, me.x, me.y))}>
-              <MePie x={me.x} y={me.y} r={me.r} scores={scores} />
+            <g
+              className={`pp-tree-node${sel?.type === 'me' ? ' is-on' : ''}`}
+              aria-label={`${name ?? 'Me'}: your five traits`}
+              {...keyed(() => choose({type: 'me'}, me.x, me.y))}>
+              <MeWheel x={me.x} y={me.y} r={me.r} scores={scores} />
               <text x={me.x + me.r + 12} y={me.y + 6} className='pp-tree-me-label'>
                 {name ?? 'Me'}
               </text>
