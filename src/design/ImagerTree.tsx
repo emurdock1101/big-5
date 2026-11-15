@@ -21,6 +21,8 @@ interface Props {
   onWrite?: (kind: GiftKind, index: number) => void;
   /** The first look: only the top of the tree, with empty branches. */
   seed?: boolean;
+  /** Preview only: show draft labels. */
+  sample?: boolean;
 }
 
 type Sel = {type: 'imager'} | {type: 'me'} | {type: 'item'; kind: GiftKind; idx: number} | null;
@@ -92,7 +94,7 @@ const MeWheel: React.FC<{x: number; y: number; r: number; scores: number[]}> = (
   );
 };
 
-const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, seed}) => {
+const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, seed, sample}) => {
   const narrow = useNarrow();
   const [sel, setSel] = useState<Sel>(null);
   const [zoom, setZoom] = useState(1);
@@ -278,7 +280,7 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
     panel = (
       <>
         <p className='pp-gf-group' style={{margin: 0}}>
-          Imager of God {IMAGER.draft && <span className='pp-gf-draft'>Draft · Patrick to write</span>}
+          Imager of God {sample && IMAGER.draft && <span className='pp-gf-draft'>Draft · Patrick to write</span>}
         </p>
         {IMAGER.paragraphs.slice(1).map((t) => (
           <p key={t} style={{margin: 0}}>

@@ -423,7 +423,9 @@ const Together: React.FC<{
   entries: Record<string, Entry>;
   answers: Record<string, string>;
   setAnswer: (k: string, v: string) => void;
-}> = ({gifts, blinds, entries, answers, setAnswer}) => {
+  /** Preview only: show the empty verse slot as a reminder. Real buyers see nothing until verses exist. */
+  sample?: boolean;
+}> = ({gifts, blinds, entries, answers, setAnswer, sample}) => {
   // Choices are kept with the other answers so they are saved; until chosen, the top ranked ones show.
   const listOf = (key: string, from: string[], n: number) => {
     const saved = answers[key];
@@ -533,12 +535,14 @@ const Together: React.FC<{
           ))}
         </div>
       ) : (
-        <div className='pp-gf-verse pp-gf-verse--slot'>
-          <p>
-            <span className='pp-gf-draft'>Patrick to choose</span> Verses matched to these gifts will show here, from a
-            short list Patrick picks for each trait.
-          </p>
-        </div>
+        sample && (
+          <div className='pp-gf-verse pp-gf-verse--slot'>
+            <p>
+              <span className='pp-gf-draft'>Patrick to choose</span> Verses matched to these gifts will show here, from
+              a short list Patrick picks for each trait.
+            </p>
+          </div>
+        )
       )}
     </section>
   );
@@ -614,13 +618,13 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample, initi
         <Scene kind='ridges' className='pp-scene--gfroom' sun={TRAITS[0].color} sunX={1180} sunY={150} sunFront />
         <div className='pp-gf-imager'>
           <div className='pp-gf-prose'>
-            {IMAGER.draft && <span className='pp-gf-draft'>Draft · Patrick to write this page</span>}
+            {sample && IMAGER.draft && <span className='pp-gf-draft'>Draft · Patrick to write this page</span>}
             {IMAGER.paragraphs.map((t) => (
               <p key={t}>{t}</p>
             ))}
             <p className='pp-small'>{IMAGER.verse}</p>
           </div>
-          <ImagerTree name={name} p={p} gifts={[]} blinds={[]} entries={entries} seed />
+          <ImagerTree name={name} p={p} gifts={[]} blinds={[]} entries={entries} seed sample={sample} />
         </div>
       </section>
     );
@@ -688,8 +692,16 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample, initi
           blinds={top('blind')}
           entries={entries}
           onWrite={openWriter}
+          sample={sample}
         />
-        <Together gifts={top('gift')} blinds={top('blind')} entries={entries} answers={answers} setAnswer={setAnswer} />
+        <Together
+          gifts={top('gift')}
+          blinds={top('blind')}
+          entries={entries}
+          answers={answers}
+          setAnswer={setAnswer}
+          sample={sample}
+        />
         <div>
           <button type='button' className='pp-btn' disabled>
             Download as PDF (coming)
