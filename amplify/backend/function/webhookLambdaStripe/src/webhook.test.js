@@ -190,3 +190,18 @@ test('the app loads with its real wiring (no AWS calls at load time)', () => {
   const app = require('./app');
   assert.strictEqual(typeof app, 'function');
 });
+
+test('keys are sorted into live and test by how they start, not by their names', () => {
+  const {pickKeys} = require('./webhook');
+  // What Patrick found: the original stripe_key holds a test key.
+  assert.deepStrictEqual(pickKeys({stripe_key: 'sk_test_orig', stripe_live_key: 'rk_live_new'}), {
+    liveKey: 'rk_live_new',
+    testKey: 'sk_test_orig',
+  });
+  // A dedicated test key wins over the original one.
+  assert.strictEqual(pickKeys({stripe_key: 'sk_test_orig', stripe_test_key: 'sk_test_sandbox'}).testKey, 'sk_test_sandbox');
+  // A test key stored under the live name is never used for live.
+  assert.strictEqual(pickKeys({stripe_live_key: 'sk_test_oops'}).liveKey, undefined);
+  // Stray spaces from pasting don't matter.
+  assert.strictEqual(pickKeys({stripe_live_key: '  rk_live_x \n'}).liveKey, 'rk_live_x');
+});

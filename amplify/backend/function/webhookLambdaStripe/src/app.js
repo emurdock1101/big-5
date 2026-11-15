@@ -10,8 +10,10 @@ Amplify Params - DO NOT EDIT */
  *
  * Secrets (AWS Systems Manager > Parameter Store), all under the same path as the original
  * `stripe_key` (/amplify/{appId}/{env}/AMPLIFY_webhookLambdaStripe_):
- *   stripe_key                   live secret key (already there)
+ *   stripe_key                   the original key (it holds a test key)
+ *   stripe_live_key              live key: a restricted key that can read Checkout Sessions
  *   stripe_test_key              test-mode secret key
+ * Keys are told apart by how they start (sk_/rk_ live or test), so names can't mix them up.
  *   stripe_webhook_secret        live webhook signing secret (whsec_...)
  *   stripe_test_webhook_secret   test-mode webhook signing secret
  */
@@ -20,7 +22,7 @@ const bodyParser = require('body-parser');
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware');
 const aws = require('aws-sdk');
 const Stripe = require('stripe');
-const {handleWebhook} = require('./webhook');
+const {handleWebhook, pickKeys} = require('./webhook');
 
 const UserPoolId = process.env.AUTH_BIG5AMPLIFYE0115051_USERPOOLID || 'us-east-1_QlzfM0BUX';
 // The original secret's full path; the others sit beside it.
@@ -29,14 +31,13 @@ const SECRET_PREFIX = (process.env.stripe_key || '').replace(/stripe_key$/, '');
 let cachedSecrets = null;
 async function secrets() {
   if (cachedSecrets) return cachedSecrets;
-  const names = ['stripe_key', 'stripe_test_key', 'stripe_webhook_secret', 'stripe_test_webhook_secret'];
+  const names = ['stripe_key', 'stripe_live_key', 'stripe_test_key', 'stripe_webhook_secret', 'stripe_test_webhook_secret'];
   const {Parameters} = await new aws.SSM()
     .getParameters({Names: names.map((n) => SECRET_PREFIX + n), WithDecryption: true})
     .promise();
-  const value = (n) => (Parameters.find((p) => p.Name === SECRET_PREFIX + n) || {}).Value;
+  const value = (n) => ((Parameters.find((p) => p.Name === SECRET_PREFIX + n) || {}).Value || '').trim();
   const found = {
-    liveKey: value('stripe_key'),
-    testKey: value('stripe_test_key'),
+    ...pickKeys({stripe_live_key: value('stripe_live_key'), stripe_test_key: value('stripe_test_key'), stripe_key: value('stripe_key')}),
     liveWebhookSecret: value('stripe_webhook_secret'),
     testWebhookSecret: value('stripe_test_webhook_secret'),
   };

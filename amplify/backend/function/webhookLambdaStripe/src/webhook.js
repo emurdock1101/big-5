@@ -124,4 +124,18 @@ async function handleWebhook(req, deps) {
   return reply(200, `Ignored event type ${event.type}.`);
 }
 
-module.exports = {handleWebhook, processSession};
+/**
+ * Sort the stored Stripe secret keys into live and test by how they start, whatever they are
+ * called. (The original `stripe_key` turned out to hold a test key.) Preferred names come first.
+ * @param {{stripe_live_key?: string, stripe_test_key?: string, stripe_key?: string}} v
+ */
+function pickKeys(v) {
+  const clean = (x) => (typeof x === 'string' ? x.trim() : '');
+  const isLive = (k) => /^(sk|rk)_live_/.test(k);
+  const isTest = (k) => /^(sk|rk)_test_/.test(k);
+  const liveKey = [v.stripe_live_key, v.stripe_key].map(clean).find(isLive);
+  const testKey = [v.stripe_test_key, v.stripe_key].map(clean).find(isTest);
+  return {liveKey, testKey};
+}
+
+module.exports = {handleWebhook, processSession, pickKeys};
