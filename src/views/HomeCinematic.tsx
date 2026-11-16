@@ -68,6 +68,16 @@ const Note: React.FC<{color?: string; arrow?: 'up' | 'down' | 'none'; className?
   </span>
 );
 
+/*
+ * A quiet nod to The Unseen Realm: Psalm 82:1 in Hebrew, out of focus behind the room that names
+ * Michael Heiser, the way the book's jacket blurs the lettering stamped on the cloth underneath.
+ * Resting on his name takes the jacket off. Decorative only; hidden from screen readers.
+ */
+const UNSEEN = ['אלהים נצב', 'בעדת־אל', 'בקרב אלהים', 'ישפט'];
+const UNSEEN_FONT =
+  'https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700&display=swap' +
+  `&text=${encodeURIComponent('אלהיםנצבעדתקרשפט־')}`;
+
 /** A trait-color square that sits on the seam between two rooms, on the quest line. */
 const Waypoint: React.FC<{color: string}> = ({color}) => (
   <span className='pp-waypoint' data-reveal='waypoint' style={{background: color}} aria-hidden='true' />
@@ -98,6 +108,34 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
     link.href = 'https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap';
     document.head.appendChild(link);
   }, []);
+
+  // The hidden verse: only the letters it needs, so the file is tiny.
+  const [unveiled, setUnveiled] = useState(false);
+  const refrost = useRef<number>();
+  useEffect(() => {
+    if (!cine) return;
+    const id = 'pp-unseen-font';
+    if (!document.getElementById(id)) {
+      const link = document.createElement('link');
+      link.id = id;
+      link.rel = 'stylesheet';
+      link.href = UNSEEN_FONT;
+      document.head.appendChild(link);
+    }
+    return () => window.clearTimeout(refrost.current);
+  }, [cine]);
+
+  // A mouse clears the verse while it rests on the name; a tap clears it for a few seconds.
+  const unveil = {
+    onPointerEnter: (e: React.PointerEvent) => e.pointerType === 'mouse' && setUnveiled(true),
+    onPointerLeave: (e: React.PointerEvent) => e.pointerType === 'mouse' && setUnveiled(false),
+    onPointerDown: (e: React.PointerEvent) => {
+      if (e.pointerType === 'mouse') return;
+      window.clearTimeout(refrost.current);
+      setUnveiled(true);
+      refrost.current = window.setTimeout(() => setUnveiled(false), 7000);
+    },
+  };
 
   // Scroll reveals: each [data-reveal] element is marked once it enters the view.
   useEffect(() => {
@@ -565,6 +603,13 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
             </h2>
           </div>
           <div className='pp-trust pp-flow__trust'>
+            {cine && (
+              <p className='pp-unseen' lang='he' dir='rtl' aria-hidden='true' data-clear={unveiled}>
+                {UNSEEN.map((line) => (
+                  <span key={line}>{line}</span>
+                ))}
+              </p>
+            )}
             <div className='pp-person'>
               <div className='pp-flow__portrait' data-reveal='portrait'>
                 <img src={patrick} alt='Patrick Knicely' loading='lazy' />
@@ -573,7 +618,8 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
                 <h3 className='pp-display pp-h3'>Patrick Knicely</h3>
                 <p style={{margin: 0}}>
                   Licensed Professional Counselor (LPC) in Virginia and licensed teacher. Personality researcher working
-                  with the Big Five Aspects model, trained in biblical scholarship under Michael S. Heiser.
+                  with the Big Five Aspects model, trained in biblical scholarship under{' '}
+                  {cine ? <span {...unveil}>Michael S. Heiser</span> : 'Michael S. Heiser'}.
                 </p>
                 <p style={{margin: 0}}>
                   A former middle and high school teacher, wrestling and swimming coach, and conference teacher for other

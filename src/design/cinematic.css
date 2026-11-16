@@ -772,3 +772,68 @@
   }
 }
 
+
+/* ---------- the unseen realm ----------
+   Psalm 82:1 in Hebrew, out of focus in the dark of the room that names Michael Heiser: a nod to
+   the book's jacket, which blurs the blue lettering stamped on the cloth beneath it. Resting on his
+   name brings it into focus. Kept faint on purpose; it should read as a blue haze, not as text.
+   It sits only in empty dark: above the right column on wide screens, beside the portrait on phones. */
+
+.pp-flow--cinematic .pp-flow__trust {
+  position: relative;
+}
+
+.pp-unseen {
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  bottom: calc(100% + 14px);
+  margin: 0;
+  display: grid;
+  justify-items: start;
+  font-family: 'Frank Ruhl Libre', 'SBL Hebrew', 'Times New Roman', 'Arial Hebrew', serif;
+  font-weight: 700;
+  font-size: clamp(28px, 3.6vw, 48px);
+  line-height: 1.02;
+  white-space: nowrap;
+  color: #3aa0e6;
+  opacity: 0.17;
+  filter: blur(0.13em);
+  pointer-events: none;
+  user-select: none;
+  transition: filter 1.8s ease, opacity 1.8s ease;
+}
+
+/* staggered like the stamped lines on the cloth */
+.pp-unseen span:nth-child(1) {
+  margin-inline-start: 1.1em;
+}
+.pp-unseen span:nth-child(3) {
+  margin-inline-start: 0.3em;
+}
+.pp-unseen span:nth-child(4) {
+  margin-inline-start: 2.6em;
+}
+
+.pp-unseen[data-clear='true'] {
+  opacity: 0.55;
+  filter: blur(0);
+}
+
+/* phones: the portrait stands alone on its row, so the verse takes the dark beside it */
+@media (max-width: 480px) {
+  .pp-unseen {
+    bottom: auto;
+    top: calc((200px - 4.08em) / 2);
+    font-size: clamp(20px, 6.4vw, 28px);
+  }
+  .pp-unseen span:nth-child(n) {
+    margin-inline-start: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-unseen {
+    transition: none;
+  }
+}
