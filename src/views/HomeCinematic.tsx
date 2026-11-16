@@ -8,6 +8,7 @@ import Stars from '../design/Stars';
 import {BOOKING_LABEL, BOOKING_URL, PRICE, TRAITS} from '../design/traits';
 import {interpretations} from '../constants/interpretations';
 import patrick from '../images/patrick.jpeg';
+import dore from '../images/dore-zechariah-chariots.jpg';
 import '../design/flow.css';
 
 /*
@@ -619,6 +620,21 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
       {/* ---------- Patrick (a cinematic room) ---------- */}
       <section id='about' className='pp-section pp-field pp-room pp-room--black'>
         <Waypoint color={C} />
+        {/* Gustave Doré, "Zechariah's Vision of Four Chariots" (1866), the plate on The Unseen Realm's
+            endpapers. Public domain; scan from Wikimedia Commons. A ghost in the corner, like the
+            engraving on the book's back cover. It lifts a little while the hidden verse is in focus. */}
+        {cine && (
+          <img
+            className='pp-plateghost'
+            src={dore}
+            width={800}
+            height={1006}
+            alt=''
+            aria-hidden='true'
+            loading='lazy'
+            data-clear={unveiled}
+          />
+        )}
         <div className='pp-wrap'>
           <div className='pp-section-head'>
             <h2 className='pp-display pp-h2 pp-flow__h2xl' data-reveal='wipe'>

@@ -843,6 +843,45 @@
   }
 }
 
+/* ---------- the engraving: Doré's four chariots, ghosted into the corner of the same room ----------
+   Light lines on the dark ground, the way the plate is printed on the book's black endpapers.
+   Strongest in the bottom corner, gone before it reaches the top of the reading column. */
+
+.pp-plateghost {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: min(46%, 560px);
+  height: auto;
+  max-height: 94%;
+  object-fit: cover;
+  object-position: right bottom;
+  mix-blend-mode: screen;
+  opacity: 0.26;
+  pointer-events: none;
+  user-select: none;
+  -webkit-mask-image: radial-gradient(120% 110% at 100% 100%, #000 30%, transparent 78%);
+  mask-image: radial-gradient(120% 110% at 100% 100%, #000 30%, transparent 78%);
+  transition: opacity 1.8s ease;
+}
+
+.pp-plateghost[data-clear='true'] {
+  opacity: 0.5;
+}
+
+@media (max-width: 860px) {
+  .pp-plateghost {
+    width: min(82%, 420px);
+    max-height: 60%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-plateghost {
+    transition: none;
+  }
+}
+
 /* ---------- the moving band: each card opens its trait in the explorer ---------- */
 
 button.pp-flow__card {
