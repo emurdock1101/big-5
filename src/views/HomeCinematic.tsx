@@ -4,9 +4,11 @@ import ColorPlate from '../design/ColorPlate';
 import Strip from '../design/Strip';
 import Threads, {ColorWheel} from '../design/Threads';
 import Scene from '../design/Scene';
+import Stars from '../design/Stars';
 import {BOOKING_LABEL, BOOKING_URL, PRICE, TRAITS} from '../design/traits';
 import {interpretations} from '../constants/interpretations';
 import patrick from '../images/patrick.jpeg';
+import dore from '../images/dore-zechariah-chariots.jpg';
 import '../design/flow.css';
 
 /*
@@ -68,6 +70,16 @@ const Note: React.FC<{color?: string; arrow?: 'up' | 'down' | 'none'; className?
   </span>
 );
 
+/*
+ * A quiet nod to The Unseen Realm: Psalm 82:1 in Hebrew, out of focus behind the room that names
+ * Michael Heiser, the way the book's jacket blurs the lettering stamped on the cloth underneath.
+ * Resting on his name takes the jacket off. Decorative only; hidden from screen readers.
+ */
+const UNSEEN = ['אלהים נצב', 'בעדת־אל', 'בקרב אלהים', 'ישפט'];
+const UNSEEN_FONT =
+  'https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700&display=swap' +
+  `&text=${encodeURIComponent('אלהיםנצבעדתקרשפט־')}`;
+
 /** A trait-color square that sits on the seam between two rooms, on the quest line. */
 const Waypoint: React.FC<{color: string}> = ({color}) => (
   <span className='pp-waypoint' data-reveal='waypoint' style={{background: color}} aria-hidden='true' />
@@ -98,6 +110,34 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
     link.href = 'https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap';
     document.head.appendChild(link);
   }, []);
+
+  // The hidden verse: only the letters it needs, so the file is tiny.
+  const [unveiled, setUnveiled] = useState(false);
+  const refrost = useRef<number>();
+  useEffect(() => {
+    if (!cine) return;
+    const id = 'pp-unseen-font';
+    if (!document.getElementById(id)) {
+      const link = document.createElement('link');
+      link.id = id;
+      link.rel = 'stylesheet';
+      link.href = UNSEEN_FONT;
+      document.head.appendChild(link);
+    }
+    return () => window.clearTimeout(refrost.current);
+  }, [cine]);
+
+  // A mouse clears the verse while it rests on the name; a tap clears it for a few seconds.
+  const unveil = {
+    onPointerEnter: (e: React.PointerEvent) => e.pointerType === 'mouse' && setUnveiled(true),
+    onPointerLeave: (e: React.PointerEvent) => e.pointerType === 'mouse' && setUnveiled(false),
+    onPointerDown: (e: React.PointerEvent) => {
+      if (e.pointerType === 'mouse') return;
+      window.clearTimeout(refrost.current);
+      setUnveiled(true);
+      refrost.current = window.setTimeout(() => setUnveiled(false), 7000);
+    },
+  };
 
   // Scroll reveals: each [data-reveal] element is marked once it enters the view.
   useEffect(() => {
@@ -133,8 +173,16 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
     const el = root.current;
     if (!el || !motion) return;
     let frame = 0;
+    const suns = Array.from(el.querySelectorAll<SVGSVGElement>('.pp-scene[data-rise]'));
     const update = () => {
       frame = 0;
+      // Each rising sun climbs as its scene travels up the screen.
+      suns.forEach((scene) => {
+        const [from, to] = (scene.dataset.rise ?? '0,0').split(',').map(Number);
+        const seen = (window.innerHeight - scene.getBoundingClientRect().top) / (window.innerHeight * 0.9);
+        const p = Math.min(1, Math.max(0, seen));
+        scene.style.setProperty('--pp-rise', (from + (to - from) * p).toFixed(1));
+      });
       const r = el.getBoundingClientRect();
       const line = Math.min(1, Math.max(0, (window.innerHeight * 0.6 - r.top) / r.height));
       const page = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - window.innerHeight)));
@@ -208,6 +256,14 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
     tabRefs.current[next]?.focus();
   };
 
+  // A card in the moving band opens its trait in the explorer below and brings it into view.
+  const openTrait = (i: number) => {
+    setOpen(i);
+    document
+      .querySelector('.pp-explorer')
+      ?.scrollIntoView({behavior: motion ? 'smooth' : 'auto', block: 'center'});
+  };
+
   const t = TRAITS[open];
 
   return (
@@ -223,7 +279,8 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
 
       {/* ---------- first viewport: the sampler ---------- */}
       <section className={`pp-hero${cine ? ' pp-room pp-room--night pp-field' : ''}`}>
-        {cine && <Scene kind='ridges' className='pp-scene--hero' sun={E} sunX={640} sunY={95} />}
+        {cine && <Stars count={26} className='pp-stars--hero' />}
+        {cine && <Scene kind='ridges' className='pp-scene--hero' sun={E} sunX={640} sunY={95} rise={[40, -62]} />}
         <div className='pp-wrap pp-hero__grid pp-hero__grid--sampler'>
           <div className='pp-hero__copy'>
             <p className='pp-verse' data-reveal='rise'>
@@ -307,21 +364,25 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
         </div>
       </section>
 
-      {/* ---------- a moving band of the five traits (decorative; the names are all below) ---------- */}
+      {/* ---------- a moving band of the five traits. Hidden from screen readers and the keyboard, which
+          have the explorer's own tabs below; with a mouse or a finger, a card opens its trait there. ---------- */}
       <div className='pp-flow__band' aria-hidden='true'>
         <div className='pp-flow__track'>
           {[0, 1].map((copy) =>
-            TRAITS.map((tr) => (
-              <span
+            TRAITS.map((tr, i) => (
+              <button
                 key={`${copy}-${tr.ocean}`}
+                type='button'
+                tabIndex={-1}
                 className='pp-flow__card'
+                onClick={() => openTrait(i)}
                 style={{background: tr.color, '--pp-card': tr.color} as React.CSSProperties}>
                 {cine && <Scene kind='ridges' className='pp-scene--card' sun={tr.color} sunX={1000} sunY={170} />}
                 <span className='pp-flow__cardname'>{tr.ocean}</span>
                 <span className='pp-flow__cardaspects'>
                   {tr.aspects[0]} · {tr.aspects[1]}
                 </span>
-              </span>
+              </button>
             ))
           )}
         </div>
@@ -331,7 +392,7 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
       <section id='why' className={`pp-section pp-field pp-room ${cine ? 'pp-room--black' : 'pp-room--night'}`}>
         <Waypoint color={E} />
         {cine ? (
-          <Scene kind='waves' className='pp-scene--sea' />
+          <Scene kind='waves' className='pp-scene--sea' engraved />
         ) : (
           <div className='pp-room__squares' aria-hidden='true'>
             <span />
@@ -443,6 +504,7 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
       {/* ---------- how it works (a solid trait-color room) ---------- */}
       <section id='how' className={`pp-section pp-room ${cine ? 'pp-room--night pp-field' : 'pp-room--teal'}`}>
         <Waypoint color={A} />
+        {cine && <Stars count={44} seed={32} />}
         <div className='pp-wrap'>
           <div className='pp-section-head'>
             <h2 className='pp-display pp-h2 pp-flow__h2xl' data-reveal='wipe'>
@@ -558,6 +620,21 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
       {/* ---------- Patrick (a cinematic room) ---------- */}
       <section id='about' className='pp-section pp-field pp-room pp-room--black'>
         <Waypoint color={C} />
+        {/* Gustave Doré, "Zechariah's Vision of Four Chariots" (1866), the plate on The Unseen Realm's
+            endpapers. Public domain; scan from Wikimedia Commons. A ghost in the corner, like the
+            engraving on the book's back cover. It lifts a little while the hidden verse is in focus. */}
+        {cine && (
+          <img
+            className='pp-plateghost'
+            src={dore}
+            width={800}
+            height={1006}
+            alt=''
+            aria-hidden='true'
+            loading='lazy'
+            data-clear={unveiled}
+          />
+        )}
         <div className='pp-wrap'>
           <div className='pp-section-head'>
             <h2 className='pp-display pp-h2 pp-flow__h2xl' data-reveal='wipe'>
@@ -565,6 +642,13 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
             </h2>
           </div>
           <div className='pp-trust pp-flow__trust'>
+            {cine && (
+              <p className='pp-unseen' lang='he' dir='rtl' aria-hidden='true' data-clear={unveiled}>
+                {UNSEEN.map((line) => (
+                  <span key={line}>{line}</span>
+                ))}
+              </p>
+            )}
             <div className='pp-person'>
               <div className='pp-flow__portrait' data-reveal='portrait'>
                 <img src={patrick} alt='Patrick Knicely' loading='lazy' />
@@ -573,7 +657,8 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
                 <h3 className='pp-display pp-h3'>Patrick Knicely</h3>
                 <p style={{margin: 0}}>
                   Licensed Professional Counselor (LPC) in Virginia and licensed teacher. Personality researcher working
-                  with the Big Five Aspects model, trained in biblical scholarship under Michael S. Heiser.
+                  with the Big Five Aspects model, trained in biblical scholarship under{' '}
+                  {cine ? <span {...unveil}>Michael S. Heiser</span> : 'Michael S. Heiser'}.
                 </p>
                 <p style={{margin: 0}}>
                   A former middle and high school teacher, wrestling and swimming coach, and conference teacher for other
@@ -619,7 +704,9 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
       {/* ---------- close (a solid trait-color room) ---------- */}
       <section className={`pp-section pp-room ${cine ? 'pp-room--dawn pp-field' : 'pp-room--red'}`}>
         <Waypoint color={N} />
-        {cine && <Scene kind='ridges' className='pp-scene--dawn' sun={E} sunX={720} sunY={130} />}
+        {cine && (
+          <Scene kind='ridges' className='pp-scene--dawn' sun={E} sunX={720} sunY={130} engraved rise={[110, -70]} />
+        )}
         <div className='pp-wrap pp-close'>
           <div style={{display: 'grid', gap: 20}}>
             <div data-reveal='bars'>

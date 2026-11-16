@@ -202,9 +202,14 @@
 .pp-scene--card .pp-scene__fog {
   display: none;
 }
+/* each card's sun is a lighter tint of its own trait color */
 .pp-scene--card .pp-scene__sun circle {
-  fill: #fff;
-  opacity: 0.85;
+  fill: currentColor;
+}
+@supports (fill: color-mix(in srgb, red 50%, white)) {
+  .pp-scene--card .pp-scene__sun circle {
+    fill: color-mix(in srgb, currentColor 78%, #fff);
+  }
 }
 
 /* dawn: warmer planes, a red square sun */
@@ -772,3 +777,237 @@
   }
 }
 
+
+/* ---------- the unseen realm ----------
+   Psalm 82:1 in Hebrew, out of focus in the dark of the room that names Michael Heiser: a nod to
+   the book's jacket, which blurs the blue lettering stamped on the cloth beneath it. Resting on his
+   name brings it into focus. Kept faint on purpose; it should read as a blue haze, not as text.
+   It sits only in empty dark: above the right column on wide screens, beside the portrait on phones. */
+
+.pp-flow--cinematic .pp-flow__trust {
+  position: relative;
+}
+
+.pp-unseen {
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  bottom: calc(100% + 14px);
+  margin: 0;
+  display: grid;
+  justify-items: start;
+  font-family: 'Frank Ruhl Libre', 'SBL Hebrew', 'Times New Roman', 'Arial Hebrew', serif;
+  font-weight: 700;
+  font-size: clamp(28px, 3.6vw, 48px);
+  line-height: 1.02;
+  white-space: nowrap;
+  color: #3aa0e6;
+  opacity: 0.17;
+  filter: blur(0.13em);
+  pointer-events: none;
+  user-select: none;
+  transition: filter 1.8s ease, opacity 1.8s ease;
+}
+
+/* staggered like the stamped lines on the cloth */
+.pp-unseen span:nth-child(1) {
+  margin-inline-start: 1.1em;
+}
+.pp-unseen span:nth-child(3) {
+  margin-inline-start: 0.3em;
+}
+.pp-unseen span:nth-child(4) {
+  margin-inline-start: 2.6em;
+}
+
+.pp-unseen[data-clear='true'] {
+  opacity: 0.55;
+  filter: blur(0);
+}
+
+/* phones: the portrait stands alone on its row, so the verse takes the dark beside it */
+@media (max-width: 480px) {
+  .pp-unseen {
+    bottom: auto;
+    top: calc((200px - 4.08em) / 2);
+    font-size: clamp(20px, 6.4vw, 28px);
+  }
+  .pp-unseen span:nth-child(n) {
+    margin-inline-start: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-unseen {
+    transition: none;
+  }
+}
+
+/* ---------- the engraving: Doré's four chariots, ghosted into the corner of the same room ----------
+   Light lines on the dark ground, the way the plate is printed on the book's black endpapers.
+   Strongest in the bottom corner, gone before it reaches the top of the reading column. */
+
+.pp-plateghost {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: min(46%, 560px);
+  height: auto;
+  max-height: 94%;
+  object-fit: cover;
+  object-position: right bottom;
+  mix-blend-mode: screen;
+  opacity: 0.26;
+  pointer-events: none;
+  user-select: none;
+  -webkit-mask-image: radial-gradient(120% 110% at 100% 100%, #000 30%, transparent 78%);
+  mask-image: radial-gradient(120% 110% at 100% 100%, #000 30%, transparent 78%);
+  transition: opacity 1.8s ease;
+}
+
+.pp-plateghost[data-clear='true'] {
+  opacity: 0.5;
+}
+
+@media (max-width: 860px) {
+  .pp-plateghost {
+    width: min(82%, 420px);
+    max-height: 60%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-plateghost {
+    transition: none;
+  }
+}
+
+/* ---------- the moving band: each card opens its trait in the explorer ---------- */
+
+button.pp-flow__card {
+  appearance: none;
+  border: 0;
+  margin: 0;
+  font: inherit;
+  text-align: left;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: filter 0.25s var(--pp-ease);
+}
+
+button.pp-flow__card:hover {
+  filter: brightness(1.14);
+}
+
+/* ---------- stars: a drawn night sky behind the dark rooms ---------- */
+
+.pp-stars {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: #fff;
+  pointer-events: none;
+}
+
+/* the hero's stars stop where its mountains begin */
+.pp-stars--hero {
+  height: calc(100% - clamp(150px, 22vw, 330px));
+  opacity: 0.85;
+}
+
+.pp-stars__twinkle {
+  animation: pp-twinkle 5s ease-in-out infinite alternate;
+}
+
+@keyframes pp-twinkle {
+  to {
+    opacity: 0.08;
+  }
+}
+
+.pp-flow:not(.pp-flow--motion) .pp-stars__twinkle {
+  animation: none;
+}
+
+/* ---------- engraving: contour hairlines under each skyline and crest ---------- */
+
+.pp-scene__hatch {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1;
+}
+
+.pp-scene__hatch > * {
+  vector-effect: non-scaling-stroke;
+}
+
+/* the lines travel with their own plane */
+.pp-scene--ridges .pp-scene__l .pp-scene__hatch {
+  animation: pp-ridge 16s ease-in-out infinite alternate;
+}
+.pp-scene--ridges .pp-scene__l1 .pp-scene__hatch {
+  animation-duration: 21s;
+}
+.pp-scene--ridges .pp-scene__l2 .pp-scene__hatch {
+  animation-duration: 15s;
+  animation-direction: alternate-reverse;
+}
+.pp-scene--ridges .pp-scene__l3 .pp-scene__hatch {
+  animation-duration: 11s;
+}
+.pp-scene--ridges .pp-scene__l4 .pp-scene__hatch {
+  animation: none;
+}
+
+.pp-scene--waves .pp-scene__hatch {
+  animation: pp-wave 22s linear infinite;
+}
+.pp-scene--waves .pp-scene__l1 .pp-scene__hatch {
+  animation-duration: 34s;
+}
+.pp-scene--waves .pp-scene__l2 .pp-scene__hatch {
+  animation-duration: 26s;
+  animation-direction: reverse;
+}
+.pp-scene--waves .pp-scene__l3 .pp-scene__hatch {
+  animation-duration: 19s;
+}
+.pp-scene--waves .pp-scene__l4 .pp-scene__hatch {
+  animation-duration: 14s;
+  animation-direction: reverse;
+}
+
+.pp-flow:not(.pp-flow--motion) .pp-scene__hatch {
+  animation: none;
+}
+
+/* ---------- the sun climbs as its scene travels up the screen (set from the scroll) ---------- */
+
+.pp-scene__rise {
+  transform: translateY(calc(var(--pp-rise, 0) * 1px));
+  transition: transform 0.35s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-stars__twinkle,
+  .pp-scene__hatch {
+    animation: none;
+  }
+  .pp-scene__rise {
+    transition: none;
+  }
+}
+
+/* ---------- laptop-height screens: keep all five sliders in the first view ---------- */
+
+@media (min-width: 861px) and (max-height: 900px) {
+  .pp-flow--cinematic .pp-hero {
+    padding-top: clamp(28px, 6vh, 77px);
+  }
+  .pp-flow--cinematic .pp-flow__threadswrap {
+    width: 100%;
+    max-width: clamp(260px, calc((100vh - 500px) * 1.25), 560px);
+    margin-inline: auto;
+  }
+}

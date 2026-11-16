@@ -9,7 +9,7 @@ const ErrorPage: React.FC = () => (
   <div className='pp'>
     <div className='pp-wrap pp-lost'>
       <div className='pp-lost__plate' aria-hidden='true'>
-        <Threads scores={[50, 50, 50, 50, 50]} label='' motion={!still} />
+        <Threads scores={[50, 50, 50, 50, 50]} label='' motion={!still} loose />
       </div>
       <div className='pp-lost__copy'>
         <h1 className='pp-display pp-h1'>This page isn’t here.</h1>

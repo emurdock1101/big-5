@@ -54,12 +54,20 @@ const fan = (x: number) => {
   return Math.sin(Math.PI * u) * (j % 2 === 0 ? 1 : -1);
 };
 
-const threadPath = (k: number, ys: number[], t: number) => {
+const threadPath = (k: number, ys: number[], t: number, loose = false) => {
   const offset = (k - 4.5) * GAP;
   let d = '';
   for (let x = -20; x <= W + 20; x += STEP) {
-    const drift = t ? 7 * Math.sin(x / 85 + t * 0.9 + k * 0.22) : 0;
-    const y = centerY(x, ys) + offset * fan(x) + drift * Math.abs(fan(x));
+    let y: number;
+    if (loose) {
+      // Untied: with no knots to gather them, each thread wanders on its own and the ends fray apart.
+      const far = (x + 20) / (W + 40);
+      const wander = Math.sin(x / (70 + k * 11) + k * 1.9 + t * (0.35 + k * 0.04));
+      y = centerY(x, ys) + offset * (0.7 + 1.1 * far) + wander * (8 + 22 * far);
+    } else {
+      const drift = t ? 7 * Math.sin(x / 85 + t * 0.9 + k * 0.22) : 0;
+      y = centerY(x, ys) + offset * fan(x) + drift * Math.abs(fan(x));
+    }
     d += `${d ? 'L' : 'M'}${x} ${y.toFixed(1)}`;
   }
   return d;
@@ -76,6 +84,8 @@ interface ThreadsProps {
   swell?: boolean;
   /** When set, each trait's knot and threads become a button that opens that trait. */
   onPick?: (index: number) => void;
+  /** Untied: no knots, and the threads drift apart (the 404 page). */
+  loose?: boolean;
 }
 
 const ordinal = (n: number) => {
@@ -85,7 +95,7 @@ const ordinal = (n: number) => {
   return v + (s[(m - 20) % 10] || s[m] || s[0]);
 };
 
-const Threads: React.FC<ThreadsProps> = ({scores, focus = null, label, motion, swell = true, onPick}) => {
+const Threads: React.FC<ThreadsProps> = ({scores, focus = null, label, motion, swell = true, onPick, loose = false}) => {
   const svg = useRef<SVGSVGElement>(null);
   const paths = useRef<(SVGPathElement | null)[]>([]);
   const knots = useRef<(SVGGElement | null)[]>([]);
@@ -99,7 +109,7 @@ const Threads: React.FC<ThreadsProps> = ({scores, focus = null, label, motion, s
       shown.current.forEach((y, i) => {
         knots.current[i]?.setAttribute('transform', `translate(${KNOT_X[i]} ${y.toFixed(1)})`);
       });
-      paths.current.forEach((p, k) => p?.setAttribute('d', threadPath(k, shown.current, t)));
+      paths.current.forEach((p, k) => p?.setAttribute('d', threadPath(k, shown.current, t, loose)));
       hits.current.forEach((p, i) => p?.setAttribute('d', threadPath(2 * i + 0.5, shown.current, t)));
     };
 
@@ -133,16 +143,16 @@ const Threads: React.FC<ThreadsProps> = ({scores, focus = null, label, motion, s
       if (frame) cancelAnimationFrame(frame);
       io?.disconnect();
     };
-  }, [motion]);
+  }, [motion, loose]);
 
   // Without motion, redraw whenever the sliders move.
   useEffect(() => {
     if (motion) return;
     shown.current = scores.map((v, i) => knotY(v, i, swell));
-    paths.current.forEach((p, k) => p?.setAttribute('d', threadPath(k, shown.current, 0)));
+    paths.current.forEach((p, k) => p?.setAttribute('d', threadPath(k, shown.current, 0, loose)));
     hits.current.forEach((p, i) => p?.setAttribute('d', threadPath(2 * i + 0.5, shown.current, 0)));
     knots.current.forEach((c, i) => c?.setAttribute('transform', `translate(${KNOT_X[i]} ${shown.current[i].toFixed(1)})`));
-  }, [scores, motion, swell]);
+  }, [scores, motion, swell, loose]);
 
   const pick = (i: number) => (onPick ? () => onPick(i) : undefined);
   const onKey = (i: number) => (e: React.KeyboardEvent) => {
@@ -167,7 +177,7 @@ const Threads: React.FC<ThreadsProps> = ({scores, focus = null, label, motion, s
               key={k}
               ref={(el) => (paths.current[k] = el)}
               className='pp-threads__thread'
-              d={threadPath(k, shown.current, 0)}
+              d={threadPath(k, shown.current, 0, loose)}
               stroke={threadColor(trait)}
               strokeWidth={on ? 4 : 2.2}
               opacity={focus !== null && !on ? 0.35 : k % 2 ? 0.75 : 1}
@@ -188,7 +198,8 @@ const Threads: React.FC<ThreadsProps> = ({scores, focus = null, label, motion, s
           ))}
         </g>
       )}
-      {KNOT_X.map((x, i) => (
+      {!loose &&
+        KNOT_X.map((x, i) => (
         <g
           key={i}
           ref={(el) => (knots.current[i] = el)}
