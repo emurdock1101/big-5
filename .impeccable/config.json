@@ -8,6 +8,12 @@
         "value": "permanent marker",
         "createdAt": "2026-11-14T00:11:21.847Z",
         "reason": "site-brief.md 'Next project' (agreed direction #2): hand-lettered margin notes; sample only, add to DESIGN.md if Patrick approves"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "frank ruhl libre",
+        "createdAt": "2026-11-16T23:28:39.604Z",
+        "reason": "user confirmed: Patrick said to keep the hidden Hebrew verse as built (Nov 16, 2026); Archivo has no Hebrew letters"
       }
     ]
   }
