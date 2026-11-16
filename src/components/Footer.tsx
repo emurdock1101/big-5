@@ -11,6 +11,30 @@ const XIcon: React.FC = () => (
   </svg>
 );
 
+/** Every page ends on a small dawn: three low ranges and a sun just clearing them. Decorative. */
+const FootDawn: React.FC = () => (
+  <svg
+    className='pp-footer__dawn'
+    viewBox='0 0 1440 120'
+    preserveAspectRatio='xMidYMax slice'
+    aria-hidden='true'
+    focusable='false'>
+    <circle cx={990} cy={54} r={28} fill='#ED5362' />
+    <polygon
+      fill='#4a1d3c'
+      points='0,70 110,48 220,66 350,30 470,58 600,24 730,56 860,18 990,60 1110,40 1250,64 1440,36 1440,120 0,120'
+    />
+    <polygon
+      fill='#351837'
+      points='0,88 150,66 290,84 430,56 570,82 700,62 830,80 960,52 1100,84 1260,62 1440,80 1440,120 0,120'
+    />
+    <polygon
+      fill='#23152f'
+      points='0,104 190,86 350,100 510,80 650,98 810,84 950,104 1130,86 1300,100 1440,90 1440,120 0,120'
+    />
+  </svg>
+);
+
 const Footer: React.FC = () => (
   <footer className='pp pp-footer'>
     <div className='pp-wrap'>
@@ -77,6 +101,7 @@ const Footer: React.FC = () => (
         <Link to='/privacy'>Privacy</Link>
       </div>
     </div>
+    <FootDawn />
   </footer>
 );
 

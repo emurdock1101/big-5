@@ -29,6 +29,24 @@ const wavePath = (y: number, amp: number, len: number) => {
   return `${d} V520 H-720 Z`;
 };
 
+// The crest line alone (no fill), for the engraved contour lines under each swell.
+const crestPath = (y: number, amp: number, len: number) => {
+  let d = `M-720 ${y}`;
+  for (let x = -720; x < 2160; x += len)
+    d += ` q${len * 0.35} 0 ${len / 2} ${-amp} q${len * 0.12} ${amp} ${len / 2} ${amp}`;
+  return d;
+};
+
+/** A ridge's skyline without its two bottom corners. */
+const skyline = (pts: string) => pts.split(' ').slice(0, -2).join(' ');
+
+// Engraving: hairlines that repeat each skyline or crest downward and fade out, like the
+// line-work in a nineteenth-century plate. How many lines each plane carries, far to near.
+const RIDGE_LINES = [9, 8, 7, 6];
+const WAVE_LINES = [8, 10, 11, 9];
+const LINE_GAP = 9;
+const fade = (k: number, n: number) => (0.3 * (1 - k / (n + 1))).toFixed(3);
+
 const WAVES = [
   {y: 150, amp: 22, len: 240},
   {y: 220, amp: 38, len: 360},
@@ -48,6 +66,10 @@ const Scene: React.FC<{
   sunY?: number;
   /** Set the sun in front of the farthest range, for short bands where that range fills the sky. */
   sunFront?: boolean;
+  /** Add engraved contour hairlines under each skyline or crest. */
+  engraved?: boolean;
+  /** Let the sun climb as the page scrolls: its offset when the scene first shows, and when it leaves. */
+  rise?: [number, number];
 }> = ({
   kind,
   className,
@@ -55,19 +77,24 @@ const Scene: React.FC<{
   sunX = 960,
   sunY = 70,
   sunFront = false,
+  engraved = false,
+  rise,
 }) => {
   const sunDisc = sun && (
-    <g className='pp-scene__sun' style={{color: sun}}>
-      <circle cx={sunX + 75} cy={sunY + 75} r={78} fill='currentColor' />
+    <g className='pp-scene__rise'>
+      <g className='pp-scene__sun' style={{color: sun}}>
+        <circle cx={sunX + 75} cy={sunY + 75} r={78} fill='currentColor' />
+      </g>
     </g>
   );
   return (
   <svg
-    className={`pp-scene pp-scene--${kind}${className ? ' ' + className : ''}`}
+    className={`pp-scene pp-scene--${kind}${engraved ? ' pp-scene--engraved' : ''}${className ? ' ' + className : ''}`}
     viewBox='0 0 1440 480'
     preserveAspectRatio='xMidYMax slice'
     aria-hidden='true'
     focusable='false'
+    data-rise={rise ? rise.join(',') : undefined}
     data-reveal='scene'>
     {!sunFront && sunDisc}
     {kind === 'ridges'
@@ -75,6 +102,18 @@ const Scene: React.FC<{
           <React.Fragment key={i}>
             <g className={`pp-scene__l pp-scene__l${i + 1}`}>
               <polygon points={pts} />
+              {engraved && (
+                <g className='pp-scene__hatch'>
+                  {Array.from({length: RIDGE_LINES[i]}, (_, k) => (
+                    <polyline
+                      key={k}
+                      points={skyline(pts)}
+                      transform={`translate(0 ${(k + 1) * LINE_GAP})`}
+                      opacity={fade(k, RIDGE_LINES[i])}
+                    />
+                  ))}
+                </g>
+              )}
               {i < 3 && <rect className='pp-scene__fog' x={-120} y={300 + i * 50} width={1680} height={40} />}
             </g>
             {sunFront && i === 0 && sunDisc}
@@ -87,6 +126,18 @@ const Scene: React.FC<{
               d={wavePath(w.y, w.amp, w.len)}
               style={{'--len': `${w.len}px`} as React.CSSProperties}
             />
+            {engraved && (
+              <g className='pp-scene__hatch' style={{'--len': `${w.len}px`} as React.CSSProperties}>
+                {Array.from({length: WAVE_LINES[i]}, (_, k) => (
+                  <path
+                    key={k}
+                    d={crestPath(w.y, w.amp, w.len)}
+                    transform={`translate(0 ${(k + 1) * LINE_GAP})`}
+                    opacity={fade(k, WAVE_LINES[i])}
+                  />
+                ))}
+              </g>
+            )}
           </g>
         ))}
   </svg>

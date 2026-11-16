@@ -863,7 +863,16 @@ p {
 .pp-footer {
   background: var(--pp-ink);
   color: var(--pp-sheet);
-  padding: 64px 0 40px;
+  padding: 64px 0 0;
+}
+
+/* every page ends on a small dawn: low ranges and a sun, drawn in Footer.tsx */
+.pp-footer__dawn {
+  display: block;
+  width: 100%;
+  height: clamp(56px, 7vw, 100px);
+  margin-top: 28px;
+  background: radial-gradient(46% 130% at 69% 100%, rgba(237, 83, 98, 0.24), transparent 70%);
 }
 
 .pp-footer__grid {
@@ -1156,7 +1165,7 @@ p {
 /* leave room for the phone action bar under the footer */
 @media (max-width: 760px) {
   .pp-footer {
-    padding-bottom: calc(40px + 88px + env(safe-area-inset-bottom));
+    padding-bottom: calc(88px + env(safe-area-inset-bottom));
   }
 }
 

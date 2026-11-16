@@ -4,6 +4,7 @@ import ColorPlate from '../design/ColorPlate';
 import Strip from '../design/Strip';
 import Threads, {ColorWheel} from '../design/Threads';
 import Scene from '../design/Scene';
+import Stars from '../design/Stars';
 import {BOOKING_LABEL, BOOKING_URL, PRICE, TRAITS} from '../design/traits';
 import {interpretations} from '../constants/interpretations';
 import patrick from '../images/patrick.jpeg';
@@ -171,8 +172,16 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
     const el = root.current;
     if (!el || !motion) return;
     let frame = 0;
+    const suns = Array.from(el.querySelectorAll<SVGSVGElement>('.pp-scene[data-rise]'));
     const update = () => {
       frame = 0;
+      // Each rising sun climbs as its scene travels up the screen.
+      suns.forEach((scene) => {
+        const [from, to] = (scene.dataset.rise ?? '0,0').split(',').map(Number);
+        const seen = (window.innerHeight - scene.getBoundingClientRect().top) / (window.innerHeight * 0.9);
+        const p = Math.min(1, Math.max(0, seen));
+        scene.style.setProperty('--pp-rise', (from + (to - from) * p).toFixed(1));
+      });
       const r = el.getBoundingClientRect();
       const line = Math.min(1, Math.max(0, (window.innerHeight * 0.6 - r.top) / r.height));
       const page = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - window.innerHeight)));
@@ -246,6 +255,14 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
     tabRefs.current[next]?.focus();
   };
 
+  // A card in the moving band opens its trait in the explorer below and brings it into view.
+  const openTrait = (i: number) => {
+    setOpen(i);
+    document
+      .querySelector('.pp-explorer')
+      ?.scrollIntoView({behavior: motion ? 'smooth' : 'auto', block: 'center'});
+  };
+
   const t = TRAITS[open];
 
   return (
@@ -261,7 +278,8 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
 
       {/* ---------- first viewport: the sampler ---------- */}
       <section className={`pp-hero${cine ? ' pp-room pp-room--night pp-field' : ''}`}>
-        {cine && <Scene kind='ridges' className='pp-scene--hero' sun={E} sunX={640} sunY={95} />}
+        {cine && <Stars count={26} className='pp-stars--hero' />}
+        {cine && <Scene kind='ridges' className='pp-scene--hero' sun={E} sunX={640} sunY={95} rise={[40, -62]} />}
         <div className='pp-wrap pp-hero__grid pp-hero__grid--sampler'>
           <div className='pp-hero__copy'>
             <p className='pp-verse' data-reveal='rise'>
@@ -345,21 +363,25 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
         </div>
       </section>
 
-      {/* ---------- a moving band of the five traits (decorative; the names are all below) ---------- */}
+      {/* ---------- a moving band of the five traits. Hidden from screen readers and the keyboard, which
+          have the explorer's own tabs below; with a mouse or a finger, a card opens its trait there. ---------- */}
       <div className='pp-flow__band' aria-hidden='true'>
         <div className='pp-flow__track'>
           {[0, 1].map((copy) =>
-            TRAITS.map((tr) => (
-              <span
+            TRAITS.map((tr, i) => (
+              <button
                 key={`${copy}-${tr.ocean}`}
+                type='button'
+                tabIndex={-1}
                 className='pp-flow__card'
+                onClick={() => openTrait(i)}
                 style={{background: tr.color, '--pp-card': tr.color} as React.CSSProperties}>
                 {cine && <Scene kind='ridges' className='pp-scene--card' sun={tr.color} sunX={1000} sunY={170} />}
                 <span className='pp-flow__cardname'>{tr.ocean}</span>
                 <span className='pp-flow__cardaspects'>
                   {tr.aspects[0]} · {tr.aspects[1]}
                 </span>
-              </span>
+              </button>
             ))
           )}
         </div>
@@ -369,7 +391,7 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
       <section id='why' className={`pp-section pp-field pp-room ${cine ? 'pp-room--black' : 'pp-room--night'}`}>
         <Waypoint color={E} />
         {cine ? (
-          <Scene kind='waves' className='pp-scene--sea' />
+          <Scene kind='waves' className='pp-scene--sea' engraved />
         ) : (
           <div className='pp-room__squares' aria-hidden='true'>
             <span />
@@ -481,6 +503,7 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
       {/* ---------- how it works (a solid trait-color room) ---------- */}
       <section id='how' className={`pp-section pp-room ${cine ? 'pp-room--night pp-field' : 'pp-room--teal'}`}>
         <Waypoint color={A} />
+        {cine && <Stars count={44} seed={32} />}
         <div className='pp-wrap'>
           <div className='pp-section-head'>
             <h2 className='pp-display pp-h2 pp-flow__h2xl' data-reveal='wipe'>
@@ -665,7 +688,9 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
       {/* ---------- close (a solid trait-color room) ---------- */}
       <section className={`pp-section pp-room ${cine ? 'pp-room--dawn pp-field' : 'pp-room--red'}`}>
         <Waypoint color={N} />
-        {cine && <Scene kind='ridges' className='pp-scene--dawn' sun={E} sunX={720} sunY={130} />}
+        {cine && (
+          <Scene kind='ridges' className='pp-scene--dawn' sun={E} sunX={720} sunY={130} engraved rise={[110, -70]} />
+        )}
         <div className='pp-wrap pp-close'>
           <div style={{display: 'grid', gap: 20}}>
             <div data-reveal='bars'>
