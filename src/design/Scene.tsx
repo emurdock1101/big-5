@@ -68,7 +68,10 @@ const Scene: React.FC<{
   sunFront?: boolean;
   /** Add engraved contour hairlines under each skyline or crest. */
   engraved?: boolean;
-  /** Let the sun climb as the page scrolls: its offset when the scene first shows, and when it leaves. */
+  /**
+   * Let the sun climb as the page scrolls: its offset when the scene first shows, and when it leaves.
+   * End at 0 (its drawn place) or lower: a sun that climbs higher slides behind the words above the scene.
+   */
   rise?: [number, number];
 }> = ({
   kind,

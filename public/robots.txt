@@ -1,3 +1,15 @@
-# https://www.robotstxt.org/robotstxt.html
+# Personality+
+# Account pages are personal, so search engines are asked to skip them.
 User-agent: *
-Disallow:
+Disallow: /admin
+Disallow: /results
+Disallow: /test
+Disallow: /submit
+Disallow: /signup
+Disallow: /reset
+Disallow: /gift-finder
+Disallow: /compare/
+Disallow: /checkouterror
+
+# A plain-text sitemap (the hosting serves .txt files as they are; .xml gets swallowed by the app).
+Sitemap: https://www.discoverpersonalityplus.com/sitemap.txt

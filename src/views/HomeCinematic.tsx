@@ -280,7 +280,7 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
       {/* ---------- first viewport: the sampler ---------- */}
       <section className={`pp-hero${cine ? ' pp-room pp-room--night pp-field' : ''}`}>
         {cine && <Stars count={26} className='pp-stars--hero' />}
-        {cine && <Scene kind='ridges' className='pp-scene--hero' sun={E} sunX={640} sunY={95} rise={[40, -62]} />}
+        {cine && <Scene kind='ridges' className='pp-scene--hero' sun={E} sunX={640} sunY={95} engraved rise={[70, 8]} />}
         <div className='pp-wrap pp-hero__grid pp-hero__grid--sampler'>
           <div className='pp-hero__copy'>
             <p className='pp-verse' data-reveal='rise'>
@@ -705,7 +705,7 @@ const HomeCinematic: React.FC<HomeProps> = (props: HomeProps) => {
       <section className={`pp-section pp-room ${cine ? 'pp-room--dawn pp-field' : 'pp-room--red'}`}>
         <Waypoint color={N} />
         {cine && (
-          <Scene kind='ridges' className='pp-scene--dawn' sun={E} sunX={720} sunY={130} engraved rise={[110, -70]} />
+          <Scene kind='ridges' className='pp-scene--dawn' sun={E} sunX={720} sunY={130} engraved rise={[110, 0]} />
         )}
         <div className='pp-wrap pp-close'>
           <div style={{display: 'grid', gap: 20}}>
