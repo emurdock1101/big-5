@@ -4274,3 +4274,297 @@ p {
 .pp-gf-saved .pp-textlink {
   color: #fff;
 }
+
+/* ================= Gift Finder: life touches (Nov 16, 2026) ================= */
+
+/* --- the journey in the band: the sun climbs and the sky warms from night to dawn, step by step --- */
+
+.pp-gf .pp-walk__band::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #0b1226 0%, #24163a 50%, #5b1f38 100%);
+  opacity: var(--gf-dawn, 0);
+  transition: opacity 1.6s var(--pp-ease);
+  pointer-events: none;
+}
+
+.pp-gf .pp-walk__band .pp-scene__rise {
+  transition: transform 1.6s var(--pp-ease);
+}
+
+@supports (fill: color-mix(in srgb, red 50%, white)) {
+  .pp-gf .pp-walk__band .pp-scene__l polygon {
+    transition: fill 1.6s var(--pp-ease);
+  }
+  .pp-gf .pp-walk__band .pp-scene__l1 polygon {
+    fill: color-mix(in srgb, #4a1d3c calc(var(--gf-dawn, 0) * 100%), #2a3a63);
+  }
+  .pp-gf .pp-walk__band .pp-scene__l2 polygon {
+    fill: color-mix(in srgb, #351837 calc(var(--gf-dawn, 0) * 100%), #1e2c51);
+  }
+  .pp-gf .pp-walk__band .pp-scene__l3 polygon {
+    fill: color-mix(in srgb, #23152f calc(var(--gf-dawn, 0) * 100%), #172240);
+  }
+}
+
+/* --- a star for each thing written: they gather in the band's sky, above the mountains --- */
+
+.pp-stars--band {
+  height: calc(100% - clamp(110px, 16vw, 220px));
+}
+
+.pp-stars__new {
+  animation: pp-star-in 1.6s ease-out backwards;
+}
+
+@keyframes pp-star-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* --- phones: after the first step the twelve tabs fold into one line --- */
+
+.pp-walk__band .pp-gf-steps button.pp-gf-steps__sum {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .pp-walk__band .pp-gf-steps button.pp-gf-steps__sum {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2px 12px;
+    align-items: center;
+    margin-top: 16px;
+    padding: 10px 12px 14px;
+    border-top: 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .pp-gf-steps__sum b {
+    grid-column: 1;
+    font-size: 16px;
+    font-weight: 800;
+  }
+  .pp-gf-steps__chev {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    font-size: 18px;
+    line-height: 1;
+  }
+  .pp-gf-steps__line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.18);
+  }
+  .pp-gf-steps__line > span {
+    display: block;
+    height: 100%;
+    background: var(--pp-e);
+    transition: width 0.6s var(--pp-ease);
+  }
+  .pp-gf-steps.is-folded ol {
+    display: none;
+  }
+  .pp-gf-steps:not(.is-folded) .pp-gf-steps__sum + ol {
+    margin-top: 6px;
+  }
+}
+
+/* --- phones: the ABCD names wrap instead of pushing past the edge --- */
+
+.pp-gf-abcdgrid__name {
+  min-width: 0;
+  max-width: 100%;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pp-gf-abcdgrid__name small {
+  overflow-wrap: anywhere;
+}
+
+/* --- small screens: every item to write about stays in view (numbers in a row, no sideways scroll) --- */
+
+@media (max-width: 900px) {
+  .pp-gf-queue ol {
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+    overflow-x: visible;
+    padding-bottom: 0;
+    gap: 6px;
+  }
+  .pp-gf-queue button {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    min-height: 48px;
+    padding: 8px 4px;
+    border-left: 0;
+    border-top: 6px solid var(--pp-step);
+  }
+  .pp-gf-queue__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* --- wide screens: the person's threads keep the empty side of the reading steps company --- */
+
+.pp-gf-beside {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+}
+
+.pp-gf-beside > .pp-gf-threadpanel {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .pp-gf-beside {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+  }
+  .pp-gf-beside > .pp-gf-threadpanel {
+    display: grid;
+  }
+}
+
+/* --- a marker stroke under what you pick, and under the one you rank first --- */
+
+.pp-gf-mark {
+  justify-self: start;
+  padding: 0 0 0.12em;
+  background-image: linear-gradient(var(--pp-step), var(--pp-step));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 0.2em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 0.45s var(--pp-ease);
+}
+
+.pp-gf-tile[aria-pressed='true'] .pp-gf-mark,
+.pp-gf-mark.is-on {
+  background-size: 100% 0.2em;
+}
+
+/* --- the tree grows in when you arrive: trunk, branches, then leaves; written dots pulse once --- */
+
+.pp-tree-draw {
+  animation: pp-tree-draw 0.9s var(--pp-ease) backwards;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes pp-tree-draw {
+  from {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+.pp-tree-pop {
+  animation: pp-tree-pop 0.55s var(--pp-ease) backwards;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes pp-tree-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.pp-tree-dot.is-done {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pp-tree-pulse 1.2s ease-out 1.6s backwards;
+}
+
+@keyframes pp-tree-pulse {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* --- the hidden words under "Imager of God" (Genesis 1:26), in focus only while that root is open --- */
+
+.pp-tree-unseen {
+  opacity: 0.22;
+  filter: blur(2.6px);
+  pointer-events: none;
+  transition: filter 1.6s ease, opacity 1.6s ease;
+}
+
+.pp-tree-unseen text {
+  fill: #3aa0e6;
+  font-family: 'Frank Ruhl Libre', 'SBL Hebrew', 'Times New Roman', 'Arial Hebrew', serif;
+  font-weight: 700;
+}
+
+.pp-tree-unseen.is-clear {
+  opacity: 0.85;
+  filter: blur(0);
+}
+
+/* --- the buy page's sample tree: a picture, not a tool --- */
+
+.pp-buy--gf {
+  padding-bottom: clamp(32px, 5vw, 64px);
+}
+
+.pp-gf-buytree {
+  margin: 0 0 clamp(72px, 10vw, 140px);
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.pp-gf-buytree .pp-tree {
+  width: 100%;
+}
+
+.pp-tree--still {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-gf .pp-walk__band::before,
+  .pp-gf .pp-walk__band .pp-scene__rise,
+  .pp-gf .pp-walk__band .pp-scene__l polygon,
+  .pp-gf-mark,
+  .pp-tree-unseen {
+    transition: none;
+  }
+  .pp-stars__new,
+  .pp-tree-draw,
+  .pp-tree-pop,
+  .pp-tree-dot.is-done {
+    animation: none;
+  }
+}

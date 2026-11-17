@@ -12,12 +12,15 @@ import {
   GiftKind,
   itemById,
   motivationFor,
+  PARTS,
+  partDone,
   PROMPTS,
 } from '../constants/giftFinder';
 import {IMAGER, UNIQUE, VERSES} from '../constants/giftFinderPages';
 import {Anew, Discovering, ord, Scores, TextBox, Unique} from './GiftFinderOpening';
 import ImagerTree from './ImagerTree';
 import Scene from './Scene';
+import Stars from './Stars';
 
 /**
  * The Gift Finder walk. The page that hosts it decides where progress is kept: the real page
@@ -107,7 +110,9 @@ const Picker: React.FC<{
           <span className='pp-gf-tile__box' aria-hidden='true'>
             {on ? '✓' : ''}
           </span>
-          <span>{x.text}</span>
+          <span>
+            <span className='pp-gf-mark'>{x.text}</span>
+          </span>
         </button>
         {review && (
           <div className={`pp-gf-review${x.ask ? ' has-ask' : ''}`}>
@@ -278,7 +283,7 @@ const Ranker: React.FC<{
                 </span>
                 <span className='pp-gf-row__num'>{i < kept ? i + 1 : ''}</span>
                 <span className='pp-gf-row__text'>
-                  {x.text}
+                  <span className={`pp-gf-mark${i === 0 ? ' is-on' : ''}`}>{x.text}</span>
                   <span className='pp-gf-row__tag'>{x.aspect}</span>
                 </span>
                 <span className='pp-gf-row__arrows'>
@@ -354,7 +359,7 @@ const Writer: React.FC<{
                 style={{'--pp-step': traitOf(itemById(i)!.aspect).color} as React.CSSProperties}
                 onClick={() => goTo(k)}>
                 <span className='pp-gf-queue__n'>{done(i) ? '✓' : k + 1}</span>
-                <span>{itemById(i)!.text}</span>
+                <span className='pp-gf-queue__text'>{itemById(i)!.text}</span>
               </button>
             </li>
           ))}
@@ -467,6 +472,7 @@ const Together: React.FC<{
         sunX={1060}
         sunY={210}
         sunFront
+        engraved
       />
       <h2 className='pp-display pp-h3'>Putting it together</h2>
       <p className='pp-small' style={{margin: 0}}>
@@ -570,6 +576,7 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample, initi
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, picked, keep, writeAt, entries, answers]);
   const [review, setReview] = useState(false);
+  const [stepsOpen, setStepsOpen] = useState(false);
   const headRef = useRef<HTMLHeadingElement>(null);
   const first = useRef(true);
 
@@ -585,7 +592,10 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample, initi
     headRef.current?.focus();
   }, [step]);
 
-  const go = (i: number) => setStep(Math.max(0, Math.min(STEPS.length - 1, i)));
+  const go = (i: number) => {
+    setStep(Math.max(0, Math.min(STEPS.length - 1, i)));
+    setStepsOpen(false);
+  };
   const toggle = (kind: GiftKind) => (id: string) =>
     setPicked((s) => ({...s, [kind]: s[kind].includes(id) ? s[kind].filter((x) => x !== id) : [...s[kind], id]}));
   const top = (kind: GiftKind) => picked[kind].slice(0, Math.min(keep[kind], picked[kind].length));
@@ -595,6 +605,12 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample, initi
   };
 
   const cur = STEPS[step];
+  // The journey shows in the band: the sun climbs and the sky warms from night to dawn, step by step,
+  // and every piece of writing lights one star.
+  const far = step / (STEPS.length - 1);
+  const written =
+    Object.entries(answers).filter(([k, v]) => !/^(fit-|together-)/.test(k) && v.trim()).length +
+    Object.values(entries).reduce((n, e) => n + PARTS.filter((part) => partDone(e, part)).length, 0);
   let title = cur.label;
   let lede: React.ReactNode = null;
   let body: React.ReactNode = null;
@@ -602,7 +618,7 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample, initi
   if (step === 0) {
     title = 'Discovering personality';
     lede = `${name ? `${name}, this` : 'This'} is your guide to self-understanding.`;
-    body = <Discovering />;
+    body = <Discovering p={p} />;
   } else if (step === 1) {
     title = 'Understanding your scores';
     body = <Scores p={p} name={name} />;
@@ -615,7 +631,15 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample, initi
     // A night room: the move from personality to imager is a threshold, like the site's dark openings.
     body = (
       <section className='pp-gf-room pp-gf-room--night'>
-        <Scene kind='ridges' className='pp-scene--gfroom' sun={TRAITS[0].color} sunX={1180} sunY={150} sunFront />
+        <Scene
+          kind='ridges'
+          className='pp-scene--gfroom'
+          sun={TRAITS[0].color}
+          sunX={1180}
+          sunY={150}
+          sunFront
+          engraved
+        />
         <div className='pp-gf-imager'>
           <div className='pp-gf-prose'>
             {sample && IMAGER.draft && <span className='pp-gf-draft'>Draft · Patrick to write this page</span>}
@@ -714,7 +738,10 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample, initi
   return (
     <div className='pp pp-walk pp-walk--cine pp-gf'>
       {/* the opening band: night sky, red sun and mountains behind the title and steps (as on results) */}
-      <header className='pp-walk__band'>
+      <header
+        className='pp-walk__band'
+        style={{'--pp-rise': Math.round(80 * (1 - far)), '--gf-dawn': Math.pow(far, 1.6).toFixed(3)} as React.CSSProperties}>
+        <Stars count={Math.min(written, 120)} seed={12} className='pp-stars--band' appear />
         <Scene kind='ridges' className='pp-scene--walk' sun={TRAITS[0].color} sunX={1110} sunY={175} sunFront />
         <div className='pp-wrap'>
           <div className='pp-walk__top'>
@@ -730,7 +757,28 @@ const GiftFinder: React.FC<GiftFinderProps> = ({percentiles, name, sample, initi
               </div>
             )}
           </div>
-          <nav className='pp-gf-steps' aria-label='Gift Finder sections'>
+          <nav
+            className={`pp-gf-steps${step > 0 && !stepsOpen ? ' is-folded' : ''}`}
+            aria-label='Gift Finder sections'>
+            {/* phones: after the first step the twelve tabs fold into one line; tap it for the full list */}
+            {step > 0 && (
+              <button
+                type='button'
+                className='pp-gf-steps__sum'
+                aria-expanded={stepsOpen}
+                onClick={() => setStepsOpen(!stepsOpen)}>
+                <span>
+                  Step {step + 1} of {STEPS.length}
+                </span>
+                <b>{cur.label}</b>
+                <span className='pp-gf-steps__chev' aria-hidden='true'>
+                  {stepsOpen ? '−' : '+'}
+                </span>
+                <span className='pp-gf-steps__line' aria-hidden='true'>
+                  <span style={{width: `${((step + 1) / STEPS.length) * 100}%`}} />
+                </span>
+              </button>
+            )}
             <ol>
               {STEPS.map((s, i) => (
                 <li key={s.label}>
