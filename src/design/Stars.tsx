@@ -15,7 +15,12 @@ const seeded = (seed: number) => () => {
   return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 };
 
-const Stars: React.FC<{count: number; seed?: number; className?: string}> = ({count, seed = 82, className}) => {
+const Stars: React.FC<{count: number; seed?: number; className?: string; /** New stars fade in as they are added. */ appear?: boolean}> = ({
+  count,
+  seed = 82,
+  className,
+  appear,
+}) => {
   const rand = seeded(seed);
   const stars = Array.from({length: count}, () => ({
     x: 2 + rand() * 96,
@@ -31,7 +36,7 @@ const Stars: React.FC<{count: number; seed?: number; className?: string}> = ({co
       {stars.map((s, i) => (
         <circle
           key={i}
-          className={s.twinkle ? 'pp-stars__twinkle' : undefined}
+          className={s.twinkle ? 'pp-stars__twinkle' : appear ? 'pp-stars__new' : undefined}
           cx={`${s.x.toFixed(2)}%`}
           cy={`${s.y.toFixed(2)}%`}
           r={s.r.toFixed(2)}

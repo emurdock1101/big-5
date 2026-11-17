@@ -23,6 +23,8 @@ interface Props {
   seed?: boolean;
   /** Preview only: show draft labels. */
   sample?: boolean;
+  /** A picture only (the buy page's sample): no zoom, no tapping, no detail panel. */
+  still?: boolean;
 }
 
 type Sel = {type: 'imager'} | {type: 'me'} | {type: 'item'; kind: GiftKind; idx: number} | null;
@@ -53,6 +55,16 @@ const useNarrow = () => {
   }, []);
   return narrow;
 };
+
+/*
+ * A quiet nod, like the homepage's hidden Psalm 82:1: "in our image, according to our likeness"
+ * (Genesis 1:26) in Hebrew, out of focus on either side of the trunk under "Imager of God".
+ * Tapping that root brings it into focus. Decorative; hidden from screen readers.
+ */
+const IMAGE_WORDS = ['בצלמנו', 'כדמותנו'];
+const IMAGE_FONT =
+  'https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700&display=swap' +
+  `&text=${encodeURIComponent('בצלמנוכדת')}`;
 
 const clip = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1).trimEnd()}…` : s);
 const leafR = (rank: number) => Math.max(11, 24 - rank * 1.6);
@@ -94,8 +106,19 @@ const MeWheel: React.FC<{x: number; y: number; r: number; scores: number[]}> = (
   );
 };
 
-const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, seed, sample}) => {
+const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, seed, sample, still}) => {
   const narrow = useNarrow();
+
+  // The hidden words' typeface: only the letters they need.
+  useEffect(() => {
+    const id = 'pp-image-font';
+    if (document.getElementById(id)) return;
+    const link = document.createElement('link');
+    link.id = id;
+    link.rel = 'stylesheet';
+    link.href = IMAGE_FONT;
+    document.head.appendChild(link);
+  }, []);
   const [sel, setSel] = useState<Sel>(null);
   const [zoom, setZoom] = useState(1);
   const [focus, setFocus] = useState<[number, number] | null>(null);
@@ -117,7 +140,7 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
   const bHub = narrow ? {x: 52, y: gTop + gCount * step + 40} : {x: 700, y: 250};
   const bTop = bHub.y + (narrow ? 52 : 66);
   const H = narrow ? bTop + bCount * step + 20 : gTop + Math.max(gCount, bCount) * step + 20;
-  const labelMax = narrow ? 34 : 30;
+  const labelMax = narrow ? 32 : 30;
 
   const leafPos = (kind: GiftKind, i: number) =>
     kind === 'gift' ? {x: gHub.x, y: gTop + i * step} : {x: bHub.x, y: bTop + i * step};
@@ -142,7 +165,10 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
   const [fx, fy] = focus ?? [W / 2, H / 2];
   const transform = `translate(${W / 2}px, ${H / 2}px) scale(${zoom}) translate(${-fx}px, ${-fy}px)`;
 
-  const keyed = (fn: () => void) => ({
+  const keyed = (fn: () => void) =>
+    still
+      ? {}
+      : {
     role: 'button',
     tabIndex: 0,
     onClick: (e: React.MouseEvent) => {
@@ -155,39 +181,67 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
         fn();
       }
     },
-  });
+  };
+
+  // Each piece arrives in turn when the tree first shows: trunk, branches, then leaves.
+  const later = (seconds: number) => ({'--d': `${seconds.toFixed(2)}s`}) as React.CSSProperties;
 
   const branch = (kind: GiftKind, ids: string[], hub: {x: number; y: number}, top: number) => {
     const n = seed ? ghosts : Math.max(ids.length, 1);
     const lastY = top + (n - 1) * step;
     const title = kind === 'gift' ? 'Gifts' : 'Blind spots';
     const color = kind === 'gift' ? 'var(--pp-c)' : 'var(--pp-n)';
+    const start = me.y + me.r;
+    const rail = W - 14;
+    // On phones the blind-spot branch runs down the right edge and turns in under the last gift,
+    // so it never crosses the gift labels.
+    const limb =
+      narrow && kind === 'blind'
+        ? `M ${me.x} ${start} C ${me.x} ${start + 46}, ${rail} ${start - 6}, ${rail} ${start + 70} ` +
+          `L ${rail} ${hub.y - 78} C ${rail} ${hub.y - 30}, ${hub.x} ${hub.y - 64}, ${hub.x} ${hub.y - 16}`
+        : `M ${me.x} ${start} C ${me.x} ${hub.y - 30}, ${hub.x} ${start + 20}, ${hub.x} ${hub.y - 16}`;
+    const wait = kind === 'gift' ? 0.3 : 0.45;
     return (
       <g>
         <path
-          d={`M ${me.x} ${me.y + me.r} C ${me.x} ${hub.y - 30}, ${hub.x} ${me.y + me.r + 20}, ${hub.x} ${hub.y - 16}`}
+          className='pp-tree-draw'
+          style={later(wait)}
+          pathLength={1}
+          d={limb}
           fill='none'
           stroke='var(--tree-line)'
           strokeWidth={3}
         />
-        <rect
-          x={hub.x - (narrow ? 44 : 62)}
-          y={hub.y - 16}
-          width={narrow ? 88 : 124}
-          height={32}
-          rx={16}
-          fill={color}
+        <g className='pp-tree-pop' style={later(wait + 0.6)}>
+          <rect
+            x={hub.x - (narrow ? 44 : 62)}
+            y={hub.y - 16}
+            width={narrow ? 88 : 124}
+            height={32}
+            rx={16}
+            fill={color}
+          />
+          <text x={hub.x} y={hub.y + 6} textAnchor='middle' className='pp-tree-hub'>
+            {title}
+          </text>
+        </g>
+        <line
+          className='pp-tree-draw'
+          style={later(wait + 0.7)}
+          pathLength={1}
+          x1={hub.x}
+          y1={hub.y + 16}
+          x2={hub.x}
+          y2={lastY}
+          stroke='var(--tree-line)'
+          strokeWidth={2}
         />
-        <text x={hub.x} y={hub.y + 6} textAnchor='middle' className='pp-tree-hub'>
-          {title}
-        </text>
-        <line x1={hub.x} y1={hub.y + 16} x2={hub.x} y2={lastY} stroke='var(--tree-line)' strokeWidth={2} />
         {seed || ids.length === 0
           ? Array.from({length: seed ? ghosts : 1}).map((_, i) => {
               const y = top + i * step;
               const side = labelSide(kind);
               return (
-                <g key={i}>
+                <g key={i} className='pp-tree-pop' style={later(wait + 0.9 + i * 0.1)}>
                   <circle
                     cx={hub.x}
                     cy={y}
@@ -219,7 +273,8 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
               return (
                 <g
                   key={id}
-                  className={`pp-tree-leaf${on ? ' is-on' : ''}`}
+                  className={`pp-tree-leaf pp-tree-pop${on ? ' is-on' : ''}`}
+                  style={later(wait + 0.9 + i * 0.1)}
                   aria-label={`${kind === 'gift' ? 'Gift' : 'Blind spot'} ${i + 1}: ${item.text}`}
                   {...keyed(() => choose({type: 'item', kind, idx: i}, x, y))}>
                   {PARTS.map((part, k) => {
@@ -238,6 +293,7 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
                           strokeWidth={1.5}
                         />
                         <circle
+                          className={done ? 'pp-tree-dot is-done' : 'pp-tree-dot'}
                           cx={ox}
                           cy={oy}
                           r={5}
@@ -348,7 +404,8 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
   }
 
   return (
-    <div className='pp-tree'>
+    <div className={`pp-tree${still ? ' pp-tree--still' : ''}`}>
+      {!still && (
       <div className='pp-tree__tools'>
         <button
           type='button'
@@ -364,10 +421,28 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
           Whole tree
         </button>
       </div>
-      <div className='pp-tree__frame' onClick={reset}>
-        <svg viewBox={`0 0 ${W} ${H}`} role='group' aria-label='Your imager tree'>
+      )}
+      <div className='pp-tree__frame' onClick={still ? undefined : reset}>
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          role={still ? 'img' : 'group'}
+          aria-label={still ? 'A sample imager tree' : 'Your imager tree'}>
           <g className='pp-tree__zoom' style={{transform}}>
+            <g className={`pp-tree-unseen${sel?.type === 'imager' ? ' is-clear' : ''}`} aria-hidden='true' lang='he'>
+              <text x={imager.x + 12} y={(imager.y + imager.h / 2 + me.y - me.r) / 2 + 8} fontSize={narrow ? 20 : 24}>
+                {IMAGE_WORDS[0]}
+              </text>
+              <text
+                x={imager.x - 12}
+                y={(imager.y + imager.h / 2 + me.y - me.r) / 2 + 8}
+                fontSize={narrow ? 20 : 24}
+                textAnchor='end'>
+                {IMAGE_WORDS[1]}
+              </text>
+            </g>
             <line
+              className='pp-tree-draw'
+              pathLength={1}
               x1={imager.x}
               y1={imager.y + imager.h / 2}
               x2={me.x}
@@ -405,9 +480,11 @@ const ImagerTree: React.FC<Props> = ({name, p, gifts, blinds, entries, onWrite, 
           </g>
         </svg>
       </div>
-      <div className='pp-tree__panel' aria-live='polite'>
-        {panel}
-      </div>
+      {!still && (
+        <div className='pp-tree__panel' aria-live='polite'>
+          {panel}
+        </div>
+      )}
     </div>
   );
 };

@@ -46,16 +46,47 @@ const Bar: React.FC<{value: number; color: string; thin?: boolean}> = ({value, c
   </span>
 );
 
+/**
+ * The person's own threads on a night panel, for the empty side of the reading steps.
+ * Wide screens only (hidden by CSS below 1100px, where the reading takes the full width).
+ */
+const ThreadsBeside: React.FC<{p: (a: string) => number; focus: number | null; onPick: (i: number) => void}> = ({
+  p,
+  focus,
+  onPick,
+}) => {
+  const [motion] = useState(
+    () => typeof window !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  );
+  const scores = TRAITS.map((t) => p(t.ocean));
+  return (
+    <aside className='pp-gf-threadpanel'>
+      <Threads
+        scores={scores}
+        focus={focus}
+        swell={false}
+        motion={motion}
+        onPick={onPick}
+        label={`Your threads. ${TRAITS.map((t, i) => `${t.ocean} ${ord(scores[i])} percentile`).join(', ')}.`}
+      />
+      <p className='pp-small'>Tap a knot to open that trait.</p>
+    </aside>
+  );
+};
+
 /* ---------- 1. Discovering personality ---------- */
 
-export const Discovering: React.FC = () => {
+export const Discovering: React.FC<{p: (a: string) => number}> = ({p}) => {
   const [open, setOpen] = useState<number | null>(null);
   return (
     <div className='pp-gf-flow'>
-      <div className='pp-gf-prose'>
-        {DISCOVERING.paragraphs.map((t) => (
-          <p key={t}>{t}</p>
-        ))}
+      <div className='pp-gf-beside'>
+        <div className='pp-gf-prose'>
+          {DISCOVERING.paragraphs.map((t) => (
+            <p key={t}>{t}</p>
+          ))}
+        </div>
+        <ThreadsBeside p={p} focus={open} onPick={setOpen} />
       </div>
       <p className='pp-gf-group'>The five traits · tap one to open it</p>
       <ul className='pp-gf-cards'>
@@ -197,7 +228,8 @@ export const Anew: React.FC<{
 }> = ({p, answers, setAnswer}) => {
   const [open, setOpen] = useState(0);
   return (
-    <div className='pp-gf-flow'>
+    <div className='pp-gf-beside'>
+      <div className='pp-gf-flow'>
       <div className='pp-gf-prose'>
         {ANEW.paragraphs.map((t) => (
           <p key={t}>{t}</p>
@@ -241,6 +273,8 @@ export const Anew: React.FC<{
           );
         })}
       </ol>
+      </div>
+      <ThreadsBeside p={p} focus={open >= 0 ? open : null} onPick={setOpen} />
     </div>
   );
 };
